@@ -1,0 +1,1291 @@
+annotations:
+  - border_color: '#808080FF'
+    border_radius: 0
+    border_style: ''
+    color: '#FFFFFFFF'
+    thickness: 1
+    type: rectangle
+    x1: -320.0
+    y1: -240.0
+    x2: 640.0
+    y2: 560.0
+    z_index: 4
+  - border_color: '#00000000'
+    border_style: ''
+    color: '#808080FF'
+    rotation: 0
+    text_bold: false
+    text_content: Campus Site
+    text_font: monospace
+    text_italic: false
+    text_size: 12
+    text_unit: pt
+    thickness: 1
+    type: text
+    x1: 200.0
+    y1: -200.0
+    z_index: 5
+nodes:
+  - boot_disk_size: null
+    configuration: |2-
+
+      hostname FUSION
+      !
+      boot-start-marker
+      boot-end-marker
+      !
+      !
+      vrf definition INFRA
+       rd 65502:102
+       !
+       address-family ipv4
+        import map SHARED_to_OTHER
+        export map OTHER_to_SHARED
+        route-target export 65502:102
+        route-target import 65502:102
+        route-target import 1:500
+       exit-address-family
+      !
+      vrf definition SHARED_SERVICES
+       rd 1:500
+       !
+       address-family ipv4
+        import map OTHER_to_SHARED
+        export map SHARED_to_OTHER
+        route-target export 1:500
+        route-target import 1:500
+        route-target import 65502:102
+       exit-address-family
+      !
+      no aaa new-model
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      ip domain name demo.local
+      !
+      !
+      !
+      login on-success log
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      subscriber templating
+      !
+      multilink bundle-name authenticated
+      !
+      !
+      !
+      license udi pid C8000V sn 9X2QDN3QXRG
+      diagnostic bootup level minimal
+      memory free low-watermark processor 63718
+      !
+      !
+      enable secret 9 $9$.lsCGpZsG.EG4k$qXRNgZ54RicH1uOwPLRyfFHMxHd9DL8WRBZElKd1u.Q
+      !
+      !
+      username netadmin privilege 15 password 0 Dnac123!
+      !
+      redundancy
+      !
+      !
+      cdp run
+      !
+      !
+      !
+      !
+      !
+      !
+      interface Loopback0
+       description RLOC Reachability
+       vrf forwarding INFRA
+       ip address 192.168.1.7 255.255.255.255
+      !
+      interface GigabitEthernet1
+       vrf forwarding SHARED_SERVICES
+       ip address 198.18.135.201 255.255.192.0
+       negotiation auto
+      !
+      interface GigabitEthernet2
+       no ip address
+       negotiation auto
+       cdp enable
+      !
+      interface GigabitEthernet2.2999
+       description INFRA
+       encapsulation dot1Q 2999
+       vrf forwarding INFRA
+       ip address 192.168.10.2 255.255.255.252
+       no ip redirects
+      !
+      interface GigabitEthernet3
+       no ip address
+       negotiation auto
+       cdp enable
+      !
+      interface GigabitEthernet3.2997
+       description INFRA
+       encapsulation dot1Q 2997
+       vrf forwarding INFRA
+       ip address 192.168.10.9 255.255.255.252
+       no ip redirects
+      !
+      interface GigabitEthernet4
+       no ip address
+       negotiation auto
+       cdp enable
+      !
+      interface GigabitEthernet4.2998
+       description INFRA
+       encapsulation dot1Q 2998
+       vrf forwarding INFRA
+       ip address 192.168.10.5 255.255.255.252
+       no ip redirects
+      !
+      router bgp 65000
+       bgp router-id 192.168.180.10
+       bgp log-neighbor-changes
+       !
+       address-family ipv4
+       exit-address-family
+       !
+       address-family ipv4 vrf INFRA
+        network 192.168.1.7 mask 255.255.255.255
+        network 192.168.10.0 mask 255.255.255.252
+        neighbor 192.168.10.1 remote-as 65001
+        neighbor 192.168.10.1 fall-over bfd
+        neighbor 192.168.10.1 activate
+        neighbor 192.168.10.1 distribute-list out-to-borders out
+        neighbor 192.168.10.6 remote-as 65004
+        neighbor 192.168.10.6 activate
+        neighbor 192.168.10.6 distribute-list out-to-borders out
+        neighbor 192.168.10.10 remote-as 65004
+        neighbor 192.168.10.10 activate
+        neighbor 192.168.10.10 distribute-list out-to-borders out
+        maximum-paths 2
+       exit-address-family
+       !
+       address-family ipv4 vrf SHARED_SERVICES
+        network 0.0.0.0
+        network 198.18.128.0
+        network 198.18.128.0 mask 255.255.192.0
+        maximum-paths 2
+       exit-address-family
+      !
+      ip forward-protocol nd
+      no ip http server
+      ip http authentication local
+      ip http secure-server
+      !
+      ip route vrf SHARED_SERVICES 0.0.0.0 0.0.0.0 198.18.128.1
+      ip ssh source-interface Loopback0
+      ip ssh version 2
+      !
+      ip access-list standard in-from-borders
+      ip access-list standard out-to-borders
+       10 permit 198.18.128.0 0.0.63.255
+      !
+      !
+      !
+      ip prefix-list INFRA_Prefix seq 5 permit 192.168.0.0/16
+      !
+      ip prefix-list OTHER_to_SHARED seq 5 permit 192.168.1.0/24 le 32
+      ip prefix-list OTHER_to_SHARED seq 10 permit 172.16.4.0/24
+      ip prefix-list OTHER_to_SHARED seq 15 permit 172.16.14.0/24
+      !
+      ip prefix-list SHARED_Prefix seq 5 permit 198.18.128.0/18
+      !
+      ip prefix-list SHARED_to_OTHER seq 5 permit 198.18.128.0/18
+      ip prefix-list SHARED_to_OTHER seq 10 permit 0.0.0.0/0
+      !
+      route-map SHARED_map permit 10
+       match ip address prefix-list SHARED_Prefix
+      !
+      route-map SHARED_to_OTHER permit 10
+       match ip address prefix-list SHARED_to_OTHER
+      !
+      route-map OTHER_to_SHARED permit 10
+       match ip address prefix-list OTHER_to_SHARED
+      !
+      route-map INFRA_map permit 10
+       match ip address prefix-list INFRA_Prefix
+      !
+      snmp-server community Dnac123!! RW
+      snmp-server community Dnac123! RO
+      !
+      !
+      control-plane
+      !
+      !
+      line con 0
+       stopbits 1
+      line aux 0
+      line vty 0 4
+       exec-timeout 600 0
+       login local
+       transport input ssh
+      line vty 5 15
+       login local
+       transport input ssh
+      line vty 16 31
+       login
+       transport input ssh
+      !
+      call-home
+       ! If contact email address in call-home is configured as sch-smart-licensing@cisco.com
+       ! the email address configured in Cisco Smart License Portal will be used as contact email address to send SCH notifications.
+       contact-email-addr sch-smart-licensing@cisco.com
+       profile "CiscoTAC-1"
+        active
+        destination transport-method http
+      !
+      !
+      !
+      !
+      !
+      !
+      netconf-yang
+      end
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n0
+    image_definition: null
+    label: Fusion
+    node_definition: cat8000v
+    ram: null
+    tags: []
+    x: -400
+    y: -200
+    interfaces:
+      - id: i0
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet1
+        slot: 0
+        type: physical
+      - id: i2
+        label: GigabitEthernet2
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet3
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet4
+        slot: 3
+        type: physical
+  - boot_disk_size: null
+    configuration: System Bridge
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n1
+    image_definition: null
+    label: Internet&DC
+    node_definition: external_connector
+    ram: null
+    tags: []
+    x: -680
+    y: -200
+    interfaces:
+      - id: i0
+        label: port
+        slot: 0
+        type: physical
+  - boot_disk_size: null
+    configuration: |2-
+
+      hostname CPS-FE1
+      !
+      !
+      vrf definition Mgmt-vrf
+       !
+       address-family ipv4
+       exit-address-family
+       !
+       address-family ipv6
+       exit-address-family
+      !
+      no aaa new-model
+      switch 1 provision c9kv-uadp-8p
+      !
+      !
+      !
+      !
+      ip routing
+      !
+      !
+      !
+      !
+      !
+      ip domain name demo.local
+      !
+      !
+      !
+      login on-success log
+      vtp mode transparent
+      vtp version 1
+      !
+      !
+      !
+      license boot level network-advantage addon dna-advantage
+      memory free low-watermark processor 74862
+      !
+      system mtu 8000
+      diagnostic bootup level minimal
+      !
+      spanning-tree mode rapid-pvst
+      spanning-tree extend system-id
+      !
+      !
+      enable secret 9 $9$JVyr66Q88tlQaU$sj1BBbbkCsfs2T4fm7KQg41j99CLF91UKw.oliKNh1I
+      !
+      username netadmin privilege 15 password 0 Dnac123!
+      !
+      redundancy
+       mode sso
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      interface Loopback0
+       description RLOC Reachability
+       ip address 192.168.1.8 255.255.255.255
+       ip router isis
+      !
+      interface GigabitEthernet0/0
+       vrf forwarding Mgmt-vrf
+       ip address 198.18.160.5 255.255.192.0
+       negotiation auto
+      !
+      interface GigabitEthernet1/0/1
+       description CPS-BDR2 1/0/22
+       no switchport
+       dampening
+       ip address 192.168.10.38 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1400
+      !
+      interface GigabitEthernet1/0/2
+       description CPS-BDR1 1/0/22
+       no switchport
+       dampening
+       ip address 192.168.10.30 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1440
+      !
+      interface GigabitEthernet1/0/3
+      !
+      interface GigabitEthernet1/0/4
+      !
+      interface GigabitEthernet1/0/5
+      !
+      interface GigabitEthernet1/0/6
+      !
+      interface GigabitEthernet1/0/7
+      !
+      interface GigabitEthernet1/0/8
+      !
+      interface Vlan1
+       no ip address
+       shutdown
+      !
+      router isis
+       net 49.0000.0000.0000.0008.00
+       is-type level-2-only
+       domain-password ciscodna
+       metric-style transition
+       log-adjacency-changes
+      !
+      ip forward-protocol nd
+      ip tcp mss 1280
+      ip tcp window-size 212000
+      ip http server
+      ip http authentication local
+      ip http secure-server
+      ip ssh bulk-mode 131072
+      !
+      !
+      !
+      !
+      snmp-server community Dnac123!! RW
+      snmp-server community Dnac123! RO
+      !
+      !
+      control-plane
+       service-policy input system-cpp-policy
+      !
+      !
+      !
+      line con 0
+       stopbits 1
+      line vty 0 1
+       exec-timeout 600 0
+       login local
+       transport input ssh
+      line vty 2
+       exec-timeout 600 0
+       login local
+       length 0
+       transport input ssh
+      line vty 3 4
+       exec-timeout 600 0
+       login local
+       transport input ssh
+      line vty 5 31
+       login local
+       transport input ssh
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      end
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n2
+    image_definition: null
+    label: CPS-FE1
+    node_definition: catalyst9000v_uadp
+    ram: null
+    tags: []
+    x: -160
+    y: 80
+    interfaces:
+      - id: i0
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet0/0
+        slot: 0
+        type: physical
+      - id: i2
+        label: GigabitEthernet1/0/1
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet1/0/2
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet1/0/3
+        slot: 3
+        type: physical
+      - id: i5
+        label: GigabitEthernet1/0/4
+        slot: 4
+        type: physical
+      - id: i6
+        label: GigabitEthernet1/0/5
+        slot: 5
+        type: physical
+      - id: i7
+        label: GigabitEthernet1/0/6
+        slot: 6
+        type: physical
+      - id: i8
+        label: GigabitEthernet1/0/7
+        slot: 7
+        type: physical
+      - id: i9
+        label: GigabitEthernet1/0/8
+        slot: 8
+        type: physical
+  - boot_disk_size: null
+    configuration: |2-
+
+      hostname CPS-FE2
+      !
+      !
+      vrf definition Mgmt-vrf
+       !
+       address-family ipv4
+       exit-address-family
+       !
+       address-family ipv6
+       exit-address-family
+      !
+      no aaa new-model
+      switch 1 provision c9kv-uadp-8p
+      !
+      !
+      !
+      !
+      ip routing
+      !
+      !
+      !
+      !
+      !
+      ip domain name demo.local
+      !
+      !
+      !
+      login on-success log
+      vtp mode transparent
+      vtp version 1
+      !
+      !
+      !
+      !
+      !
+      !
+      license boot level network-advantage addon dna-advantage
+      memory free low-watermark processor 74862
+      !
+      system mtu 8000
+      diagnostic bootup level minimal
+      !
+      spanning-tree mode rapid-pvst
+      spanning-tree extend system-id
+      !
+      !
+      enable secret 9 $9$7BKNRE1CrqbTLk$RLcaXrvOSl08VtbjlKZ1CVzrgmXx/1pXHQ1la9f5wNc
+      !
+      username netadmin privilege 15 password 0 Dnac123!
+      !
+      redundancy
+       mode sso
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      interface Loopback0
+       description RLOC Reachability
+       ip address 192.168.1.9 255.255.255.255
+       ip router isis
+      !
+      interface GigabitEthernet0/0
+       vrf forwarding Mgmt-vrf
+       ip address 198.18.160.6 255.255.192.0
+       negotiation auto
+      !
+      interface GigabitEthernet1/0/1
+       description CPS-BDR2 Gi1/0/21
+       no switchport
+       dampening
+       ip address 192.168.10.42 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1400
+      !
+      interface GigabitEthernet1/0/2
+       description CPS-BDR1 Gi1/0/22
+       no switchport
+       dampening
+       ip address 192.168.10.34 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1400
+      !
+      interface GigabitEthernet1/0/3
+      !
+      interface GigabitEthernet1/0/4
+      !
+      interface GigabitEthernet1/0/5
+      !
+      interface GigabitEthernet1/0/6
+      !
+      interface GigabitEthernet1/0/7
+      !
+      interface GigabitEthernet1/0/8
+      !
+      interface Vlan1
+       no ip address
+       shutdown
+      !
+      router isis
+       net 49.0000.0000.0000.0009.00
+       is-type level-2-only
+       domain-password ciscodna
+       metric-style transition
+       log-adjacency-changes
+      !
+      ip forward-protocol nd
+      ip tcp mss 1280
+      ip tcp window-size 212000
+      ip http server
+      ip http authentication local
+      ip http secure-server
+      ip ssh bulk-mode 131072
+      !
+      !
+      !
+      !
+      snmp-server community Dnac123!! RW
+      snmp-server community Dnac123! RO
+      !
+      !
+      control-plane
+       service-policy input system-cpp-policy
+      !
+      !
+      !
+      line con 0
+       stopbits 1
+      line vty 0 1
+       login local
+       transport input ssh
+      line vty 2
+       login local
+       length 0
+       transport input ssh
+      line vty 3 4
+       login local
+       transport input ssh
+      line vty 5 31
+       login local
+       transport input ssh
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      end
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n3
+    image_definition: null
+    label: CPS-FE2
+    node_definition: catalyst9000v_uadp
+    ram: null
+    tags: []
+    x: 80
+    y: 80
+    interfaces:
+      - id: i0
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet0/0
+        slot: 0
+        type: physical
+      - id: i2
+        label: GigabitEthernet1/0/1
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet1/0/2
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet1/0/3
+        slot: 3
+        type: physical
+      - id: i5
+        label: GigabitEthernet1/0/4
+        slot: 4
+        type: physical
+      - id: i6
+        label: GigabitEthernet1/0/5
+        slot: 5
+        type: physical
+      - id: i7
+        label: GigabitEthernet1/0/6
+        slot: 6
+        type: physical
+      - id: i8
+        label: GigabitEthernet1/0/7
+        slot: 7
+        type: physical
+      - id: i9
+        label: GigabitEthernet1/0/8
+        slot: 8
+        type: physical
+  - boot_disk_size: null
+    configuration: |2
+
+      hostname CPS-BDR2
+      !
+      !
+      vrf definition Mgmt-vrf
+       !
+       address-family ipv4
+       exit-address-family
+       !
+       address-family ipv6
+       exit-address-family
+      !
+      no aaa new-model
+      switch 1 provision c9kv-q200-8p
+      !
+      !
+      !
+      !
+      ip routing
+      !
+      !
+      !
+      !
+      !
+      ip domain name demo.local
+      !
+      !
+      !
+      login on-success log
+      vtp mode transparent
+      vtp version 1
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      license boot level network-advantage addon dna-advantage
+      memory free low-watermark processor 179720
+      !
+      system mtu 8000
+      diagnostic bootup level minimal
+      !
+      spanning-tree mode rapid-pvst
+      spanning-tree extend system-id
+      !
+      !
+      enable secret 9 $9$bJKjWEZ3iuDnck$xPoqrphv5pztn1hxcavsFGebPd4ttE1W/NlWrVLAXDM
+      !
+      username netadmin privilege 15 password 7 096840081A5445414A
+      !
+      redundancy
+       mode sso
+      !
+      !
+      !
+      !
+      !
+      vlan 2997
+      !
+      !
+      !
+      interface Loopback0
+       description RLOC Reachability
+       ip address 192.168.1.5 255.255.255.255
+       ip router isis
+      !
+      interface GigabitEthernet0/0
+       vrf forwarding Mgmt-vrf
+       ip address 198.18.160.2 255.255.192.0
+       negotiation auto
+      !
+      interface GigabitEthernet1/0/1
+       description CPS-FE2 Gi1/0/23
+       no switchport
+       dampening
+       ip address 192.168.10.41 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1400
+      !
+      interface GigabitEthernet1/0/2
+       description CPS-FE1 Gi1/0/23
+       no switchport
+       dampening
+       ip address 192.168.10.37 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1400
+      !
+      interface GigabitEthernet1/0/3
+       description FUSION SW Gi1/0/26
+       switchport mode trunk
+      !
+      !
+      interface GigabitEthernet1/0/7
+      !
+      interface GigabitEthernet1/0/8
+      !
+      interface Vlan1
+       no ip address
+       shutdown
+      !
+      interface Vlan2997
+       ip address 192.168.10.10 255.255.255.252
+      !
+      router isis
+       net 49.0000.0000.0000.0005.00
+       is-type level-2-only
+       domain-password ciscodna
+       metric-style transition
+       log-adjacency-changes
+       redistribute connected
+       redistribute bgp 65004 route-map INFRA1
+      !
+      router bgp 65004
+       bgp log-neighbor-changes
+       neighbor 192.168.10.9 remote-as 65000
+       neighbor 192.168.10.9 update-source Vlan2997
+       !
+       address-family ipv4
+        network 192.168.1.5 mask 255.255.255.255
+        network 192.168.10.8 mask 255.255.255.252
+        redistribute isis route-map LOOPBACKS
+        neighbor 192.168.10.9 activate
+        neighbor 192.168.10.9 weight 65535
+       exit-address-family
+      !
+      ip forward-protocol nd
+      ip tcp mss 1280
+      ip tcp window-size 212000
+      ip http server
+      ip http authentication local
+      ip http secure-server
+      ip ssh bulk-mode 131072
+      !
+      !
+      !
+      !
+      ip prefix-list INFRA1 seq 5 permit 198.18.128.0/18
+      !
+      ip prefix-list LOOPBACKS seq 5 permit 192.168.1.4/32
+      ip prefix-list LOOPBACKS seq 10 permit 192.168.1.5/32
+      ip prefix-list LOOPBACKS seq 15 permit 192.168.1.8/32
+      ip prefix-list LOOPBACKS seq 20 permit 192.168.1.9/32
+      ip prefix-list LOOPBACKS seq 25 permit 172.16.6.0/24 le 32
+      ip prefix-list LOOPBACKS seq 30 permit 192.168.1.3/32
+      ip prefix-list LOOPBACKS seq 35 permit 172.16.4.0/24 le 32
+      ip prefix-list LOOPBACKS seq 40 permit 192.168.1.10/32
+      logging source-interface Loopback0
+      logging host 198.18.129.101
+      !
+      route-map LOOPBACKS permit 10
+       match ip address prefix-list LOOPBACKS
+      !
+      route-map INFRA1 permit 10
+       match ip address prefix-list INFRA1
+      !
+      snmp-server community Dnac123!! RW
+      snmp-server community Dnac123! RO
+      !
+      !
+      control-plane
+       service-policy input system-cpp-policy
+      !
+      !
+      !
+      line con 0
+       stopbits 1
+      line vty 0 1
+       exec-timeout 600 0
+       login local
+       transport input ssh
+      line vty 2
+       exec-timeout 600 0
+       login local
+       length 0
+       transport input ssh
+      line vty 3 4
+       exec-timeout 600 0
+       login local
+       transport input ssh
+      line vty 5 31
+       login local
+       transport input ssh
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      netconf-yang
+      end
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n4
+    image_definition: null
+    label: CPS-BDR2
+    node_definition: catalyst9000v_q200
+    ram: null
+    tags: []
+    x: 80
+    y: -80
+    interfaces:
+      - id: i0
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet0/0
+        slot: 0
+        type: physical
+      - id: i2
+        label: GigabitEthernet1/0/1
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet1/0/2
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet1/0/3
+        slot: 3
+        type: physical
+      - id: i5
+        label: GigabitEthernet1/0/4
+        slot: 4
+        type: physical
+      - id: i6
+        label: GigabitEthernet1/0/5
+        slot: 5
+        type: physical
+      - id: i7
+        label: GigabitEthernet1/0/6
+        slot: 6
+        type: physical
+      - id: i8
+        label: GigabitEthernet1/0/7
+        slot: 7
+        type: physical
+      - id: i9
+        label: GigabitEthernet1/0/8
+        slot: 8
+        type: physical
+  - boot_disk_size: null
+    configuration: |2-
+
+      hostname CPS-BDR1
+      !
+      !
+      vrf definition Mgmt-vrf
+       !
+       address-family ipv4
+       exit-address-family
+       !
+       address-family ipv6
+       exit-address-family
+      !
+      no aaa new-model
+      switch 1 provision c9kv-q200-8p
+      !
+      !
+      !
+      !
+      ip routing
+      !
+      !
+      !
+      !
+      !
+      ip domain name demo.local
+      !
+      !
+      !
+      login on-success log
+      vtp mode transparent
+      vtp version 1
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      license boot level network-advantage addon dna-advantage
+      memory free low-watermark processor 179720
+      !
+      system mtu 8000
+      diagnostic bootup level minimal
+      !
+      spanning-tree mode rapid-pvst
+      spanning-tree extend system-id
+      !
+      !
+      enable secret 9 $9$gcB7y8xv1x/yGk$BY/Q/r.YtTdYYCe8FaORNO3yruE/HriDpitcXh0EthA
+      !
+      username netadmin privilege 15 password 7 047F05070C701E1D48
+      !
+      redundancy
+       mode sso
+      !
+      !
+      !
+      !
+      !
+      vlan 2998
+      !
+      !
+      !
+      !
+      !
+      interface Loopback0
+       description RLOC Reachability
+       ip address 192.168.1.4 255.255.255.255
+       ip router isis
+      !
+      interface GigabitEthernet0/0
+       vrf forwarding Mgmt-vrf
+       ip address 198.18.160.1 255.255.192.0
+       negotiation auto
+      !
+      interface GigabitEthernet1/0/1
+       description CPS-FE2 Gi1/0/24
+       no switchport
+       dampening
+       ip address 192.168.10.33 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1440
+      !
+      interface GigabitEthernet1/0/2
+       description CPS-FE1 Gi1/0/24
+       no switchport
+       dampening
+       ip address 192.168.10.29 255.255.255.252
+       no ip redirects
+       no ip proxy-arp
+       ip router isis
+       clns mtu 1440
+      !
+      interface GigabitEthernet1/0/3
+       description FUSION SW Gi1/0/25
+       switchport mode trunk
+      !
+      interface GigabitEthernet1/0/7
+      !
+      interface GigabitEthernet1/0/8
+      !
+      interface Vlan1
+       no ip address
+       shutdown
+      !
+      interface Vlan2998
+       ip address 192.168.10.6 255.255.255.252
+      !
+      router isis
+       net 49.0000.0000.0000.0004.00
+       is-type level-2-only
+       domain-password ciscodna
+       metric-style transition
+       log-adjacency-changes
+       redistribute bgp 65004 route-map INFRA1
+      !
+      router bgp 65004
+       bgp log-neighbor-changes
+       neighbor 192.168.10.5 remote-as 65000
+       neighbor 192.168.10.5 update-source Vlan2998
+       !
+       address-family ipv4
+        network 192.168.1.4 mask 255.255.255.255
+        network 192.168.10.4 mask 255.255.255.252
+        redistribute isis route-map LOOPBACKS
+        neighbor 192.168.10.5 activate
+        neighbor 192.168.10.5 weight 65535
+       exit-address-family
+      !
+      ip forward-protocol nd
+      ip tcp mss 1280
+      ip tcp window-size 212000
+      ip http server
+      ip http authentication local
+      ip http secure-server
+      ip ssh bulk-mode 131072
+      !
+      !
+      !
+      !
+      ip prefix-list INFRA1 seq 5 permit 198.18.128.0/18
+      !
+      ip prefix-list LOOPBACKS seq 5 permit 192.168.1.4/32
+      ip prefix-list LOOPBACKS seq 10 permit 192.168.1.5/32
+      ip prefix-list LOOPBACKS seq 15 permit 192.168.1.8/32
+      ip prefix-list LOOPBACKS seq 20 permit 192.168.1.9/32
+      ip prefix-list LOOPBACKS seq 25 permit 172.16.6.0/24 le 32
+      ip prefix-list LOOPBACKS seq 30 permit 192.168.1.3/32
+      ip prefix-list LOOPBACKS seq 35 permit 172.16.4.0/24 le 32
+      ip prefix-list LOOPBACKS seq 40 permit 192.168.1.10/32
+      logging source-interface Loopback0
+      logging host 198.18.129.101
+      !
+      route-map LOOPBACKS permit 10
+       match ip address prefix-list LOOPBACKS
+      !
+      route-map INFRA1 permit 10
+       match ip address prefix-list INFRA1
+      !
+      snmp-server community Dnac123!! RW
+      snmp-server community Dnac123! RO
+      !
+      !
+      control-plane
+       service-policy input system-cpp-policy
+      !
+      !
+      !
+      line con 0
+       stopbits 1
+      line vty 0 1
+       exec-timeout 600 0
+       login local
+       transport input ssh
+      line vty 2
+       exec-timeout 600 0
+       login local
+       length 0
+       transport input ssh
+      line vty 3 4
+       exec-timeout 600 0
+       login local
+       transport input ssh
+      line vty 5 31
+       login local
+       transport input ssh
+      !
+      !
+      !
+      !
+      !
+      !
+      !
+      netconf-yang
+      end
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n5
+    image_definition: null
+    label: CPS-BDR1
+    node_definition: catalyst9000v_q200
+    ram: null
+    tags: []
+    x: -160
+    y: -80
+    interfaces:
+      - id: i0
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet0/0
+        slot: 0
+        type: physical
+      - id: i2
+        label: GigabitEthernet1/0/1
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet1/0/2
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet1/0/3
+        slot: 3
+        type: physical
+      - id: i5
+        label: GigabitEthernet1/0/4
+        slot: 4
+        type: physical
+      - id: i6
+        label: GigabitEthernet1/0/5
+        slot: 5
+        type: physical
+      - id: i7
+        label: GigabitEthernet1/0/6
+        slot: 6
+        type: physical
+      - id: i8
+        label: GigabitEthernet1/0/7
+        slot: 7
+        type: physical
+      - id: i9
+        label: GigabitEthernet1/0/8
+        slot: 8
+        type: physical
+links:
+  - id: l0
+    n1: n0
+    n2: n1
+    i1: i1
+    i2: i0
+    conditioning: {}
+    label: Fusion-GigabitEthernet1<->Internet&DC-port
+  - id: l1
+    n1: n4
+    n2: n3
+    i1: i2
+    i2: i2
+    conditioning: {}
+    label: cat9kvq200-0-GigabitEthernet1/0/1<->CPS-FE2-GigabitEthernet1/0/1
+  - id: l2
+    n1: n4
+    n2: n2
+    i1: i3
+    i2: i2
+    conditioning: {}
+    label: cat9kvq200-0-GigabitEthernet1/0/2<->CPS-FE1-GigabitEthernet1/0/1
+  - id: l3
+    n1: n4
+    n2: n0
+    i1: i4
+    i2: i3
+    conditioning: {}
+    label: cat9kvq200-0-GigabitEthernet1/0/3<->Fusion-GigabitEthernet3
+  - id: l4
+    n1: n5
+    n2: n3
+    i1: i2
+    i2: i3
+    conditioning: {}
+    label: cat9kvq200-1-GigabitEthernet1/0/1<->CPS-FE2-GigabitEthernet1/0/2
+  - id: l5
+    n1: n5
+    n2: n2
+    i1: i3
+    i2: i3
+    conditioning: {}
+    label: cat9kvq200-1-GigabitEthernet1/0/2<->CPS-FE1-GigabitEthernet1/0/2
+  - id: l6
+    n1: n5
+    n2: n0
+    i1: i4
+    i2: i4
+    conditioning: {}
+    label: cat9kvq200-1-GigabitEthernet1/0/3<->Fusion-GigabitEthernet4
+lab:
+  description: ''
+  notes: ''
+  title: Lab at Mon 18:20 PM
+  version: 0.2.1
