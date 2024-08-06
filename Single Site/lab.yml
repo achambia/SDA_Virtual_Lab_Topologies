@@ -1,948 +1,1325 @@
-annotations:
-  - border_color: '#808080FF'
-    border_radius: 0
-    border_style: ''
-    color: '#FFFFFFFF'
-    thickness: 1
-    type: rectangle
-    x1: -320.0
-    y1: -240.0
-    x2: 640.0
-    y2: 560.0
-    z_index: 4
-  - border_color: '#00000000'
-    border_style: ''
-    color: '#808080FF'
-    rotation: 0
-    text_bold: false
-    text_content: Campus Site
-    text_font: monospace
-    text_italic: false
-    text_size: 12
-    text_unit: pt
-    thickness: 1
-    type: text
-    x1: 200.0
-    y1: -200.0
-    z_index: 5
+annotations: []
 nodes:
   - boot_disk_size: null
-    configuration: |2-
-
-      hostname FUSION
-      !
-      boot-start-marker
-      boot-end-marker
-      !
-      !
-      vrf definition INFRA
-       rd 65502:102
-       !
-       address-family ipv4
-        import map SHARED_to_OTHER
-        export map OTHER_to_SHARED
-        route-target export 65502:102
-        route-target import 65502:102
-        route-target import 1:500
-       exit-address-family
-      !
-      vrf definition SHARED_SERVICES
-       rd 1:500
-       !
-       address-family ipv4
-        import map OTHER_to_SHARED
-        export map SHARED_to_OTHER
-        route-target export 1:500
-        route-target import 1:500
-        route-target import 65502:102
-       exit-address-family
-      !
-      no aaa new-model
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      ip domain name demo.local
-      !
-      !
-      !
-      login on-success log
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      subscriber templating
-      !
-      multilink bundle-name authenticated
-      !
-      !
-      !
-      license udi pid C8000V sn 9X2QDN3QXRG
-      diagnostic bootup level minimal
-      memory free low-watermark processor 63718
-      !
-      !
-      enable secret 9 $9$.lsCGpZsG.EG4k$qXRNgZ54RicH1uOwPLRyfFHMxHd9DL8WRBZElKd1u.Q
-      !
-      !
-      username netadmin privilege 15 password 0 Dnac123!
-      !
-      redundancy
-      !
-      !
-      cdp run
-      !
-      !
-      !
-      !
-      !
-      !
-      interface Loopback0
-       description RLOC Reachability
-       vrf forwarding INFRA
-       ip address 192.168.1.7 255.255.255.255
-      !
-      interface GigabitEthernet1
-       vrf forwarding SHARED_SERVICES
-       ip address 198.18.135.201 255.255.192.0
-       negotiation auto
-      !
-      interface GigabitEthernet2
-       no ip address
-       negotiation auto
-       cdp enable
-      !
-      interface GigabitEthernet2.2999
-       description INFRA
-       encapsulation dot1Q 2999
-       vrf forwarding INFRA
-       ip address 192.168.10.2 255.255.255.252
-       no ip redirects
-      !
-      interface GigabitEthernet3
-       no ip address
-       negotiation auto
-       cdp enable
-      !
-      interface GigabitEthernet3.2997
-       description INFRA
-       encapsulation dot1Q 2997
-       vrf forwarding INFRA
-       ip address 192.168.10.9 255.255.255.252
-       no ip redirects
-      !
-      interface GigabitEthernet4
-       no ip address
-       negotiation auto
-       cdp enable
-      !
-      interface GigabitEthernet4.2998
-       description INFRA
-       encapsulation dot1Q 2998
-       vrf forwarding INFRA
-       ip address 192.168.10.5 255.255.255.252
-       no ip redirects
-      !
-      router bgp 65000
-       bgp router-id 192.168.180.10
-       bgp log-neighbor-changes
-       !
-       address-family ipv4
-       exit-address-family
-       !
-       address-family ipv4 vrf INFRA
-        network 192.168.1.7 mask 255.255.255.255
-        network 192.168.10.0 mask 255.255.255.252
-        neighbor 192.168.10.1 remote-as 65001
-        neighbor 192.168.10.1 fall-over bfd
-        neighbor 192.168.10.1 activate
-        neighbor 192.168.10.1 distribute-list out-to-borders out
-        neighbor 192.168.10.6 remote-as 65004
-        neighbor 192.168.10.6 activate
-        neighbor 192.168.10.6 distribute-list out-to-borders out
-        neighbor 192.168.10.10 remote-as 65004
-        neighbor 192.168.10.10 activate
-        neighbor 192.168.10.10 distribute-list out-to-borders out
-        maximum-paths 2
-       exit-address-family
-       !
-       address-family ipv4 vrf SHARED_SERVICES
-        network 0.0.0.0
-        network 198.18.128.0
-        network 198.18.128.0 mask 255.255.192.0
-        maximum-paths 2
-       exit-address-family
-      !
-      ip forward-protocol nd
-      no ip http server
-      ip http authentication local
-      ip http secure-server
-      !
-      ip route vrf SHARED_SERVICES 0.0.0.0 0.0.0.0 198.18.128.1
-      ip ssh source-interface Loopback0
-      ip ssh version 2
-      !
-      ip access-list standard in-from-borders
-      ip access-list standard out-to-borders
-       10 permit 198.18.128.0 0.0.63.255
-      !
-      !
-      !
-      ip prefix-list INFRA_Prefix seq 5 permit 192.168.0.0/16
-      !
-      ip prefix-list OTHER_to_SHARED seq 5 permit 192.168.1.0/24 le 32
-      ip prefix-list OTHER_to_SHARED seq 10 permit 172.16.4.0/24
-      ip prefix-list OTHER_to_SHARED seq 15 permit 172.16.14.0/24
-      !
-      ip prefix-list SHARED_Prefix seq 5 permit 198.18.128.0/18
-      !
-      ip prefix-list SHARED_to_OTHER seq 5 permit 198.18.128.0/18
-      ip prefix-list SHARED_to_OTHER seq 10 permit 0.0.0.0/0
-      !
-      route-map SHARED_map permit 10
-       match ip address prefix-list SHARED_Prefix
-      !
-      route-map SHARED_to_OTHER permit 10
-       match ip address prefix-list SHARED_to_OTHER
-      !
-      route-map OTHER_to_SHARED permit 10
-       match ip address prefix-list OTHER_to_SHARED
-      !
-      route-map INFRA_map permit 10
-       match ip address prefix-list INFRA_Prefix
-      !
-      snmp-server community Dnac123!! RW
-      snmp-server community Dnac123! RO
-      !
-      !
-      control-plane
-      !
-      !
-      line con 0
-       stopbits 1
-      line aux 0
-      line vty 0 4
-       exec-timeout 600 0
-       login local
-       transport input ssh
-      line vty 5 15
-       login local
-       transport input ssh
-      line vty 16 31
-       login
-       transport input ssh
-      !
-      call-home
-       ! If contact email address in call-home is configured as sch-smart-licensing@cisco.com
-       ! the email address configured in Cisco Smart License Portal will be used as contact email address to send SCH notifications.
-       contact-email-addr sch-smart-licensing@cisco.com
-       profile "CiscoTAC-1"
-        active
-        destination transport-method http
-      !
-      !
-      !
-      !
-      !
-      !
-      netconf-yang
-      end
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname CPS-BDR1
+          !
+          !
+          vrf definition Mgmt-vrf
+           !
+           address-family ipv4
+           exit-address-family
+           !
+           address-family ipv6
+           exit-address-family
+          !
+          no aaa new-model
+          no process cpu autoprofile hog
+          switch 1 provision c9kv-q200-8p
+          !
+          !
+          !
+          !
+          ip routing
+          !
+          !
+          !
+          !
+          !
+          ip domain name demo.local
+          !
+          ip dhcp pool webuidhcp
+          !
+          !
+          !
+          login on-success log
+          ipv6 unicast-routing
+          vtp mode transparent
+          vtp version 1
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          crypto pki trustpoint TP-self-signed-2710989922
+           enrollment selfsigned
+           subject-name cn=IOS-Self-Signed-Certificate-2710989922
+           revocation-check none
+           rsakeypair TP-self-signed-2710989922
+           hash sha256
+          !
+          crypto pki trustpoint SLA-TrustPoint
+           enrollment pkcs12
+           revocation-check crl
+           hash sha256
+          !
+          !
+          crypto pki certificate chain TP-self-signed-2710989922
+           certificate self-signed 01
+            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
+            69666963 6174652D 32373130 39383939 3232301E 170D3234 30373135 31323435
+            30365A17 0D333430 37313531 32343530 365A3031 312F302D 06035504 030C2649
+            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 37313039
+            38393932 32308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+            0A028201 0100B1F8 741E264E 1FB8C31A 838A45DB DA56AB8F FA5737F9 49294C80
+            D3A8AA7D 6300568D A4E78B97 9BD1F0C5 B4F7721C AF6EA000 F26F56AC EF9A8D01
+            6AAF2CA2 E97DC752 03935987 82EA10DB 3A759697 FADD6B4C F93B1DF8 9257DE7F
+            0D5BD5C9 A616C8A1 F1899FB8 AF96D42C 7C00F13F 348AA4D7 83880DF8 C06377F6
+            C7BF071C EF7D78FF F58F1A49 D8B9F5C3 E938128D A975CCF3 486231D1 A8F28C70
+            F04175D4 C67D61A0 3AA96D8C 9AAA435C 3B2DC238 C3E4DC9A C8BE3345 6AE1CB99
+            DB75EBF8 253DF0F7 4CB12165 F7AAAD1C 35D7EB82 32CC468A 42F5E531 E5E66846
+            EC6E0C4B 6B36B022 5DC7E016 0A90BBB2 89894E0A ECBF02A4 7E396828 C5A12515
+            0EE7DF01 F09B0203 010001A3 53305130 1D060355 1D0E0416 0414DECC D445E2DA
+            BE5533DC 5781303C FBCCC5C5 9CDD301F 0603551D 23041830 168014DE CCD445E2
+            DABE5533 DC578130 3CFBCCC5 C59CDD30 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 843FAB43 BF32CBA2 1435A311
+            B73EA73A 66F93AD4 3C4C4110 E85CC120 8F3F50D5 319A4C2C 952DD8FA 47AC64F3
+            5DF4A79E 9544E46C 1850D9EA 69416C9B F470CC44 D2197294 5AC30D85 994A48B8
+            88473469 094EA5E7 2A2AE4AC CB9A346A 74D5E957 B5C5ADD5 A0E3E4A3 9F8A43C8
+            4D2F1226 D51755DD 0007B5DA 4435178C A1F82B5B 4273E511 F91BEC96 0E37B73D
+            CB6E608C 2BDC124D 6CF846DC 844828A2 0356AA09 B93FBFBF 860D4737 A332749E
+            C784701E D56D308E A793A4B0 DB5F9B1B 92953E5A CBF1D2C5 3E2DADC4 0425348A
+            FCD492E3 60FB0A7D 330E9A17 CCC58E04 B13436C9 8B671C35 02D69C03 947312E9
+            B367B7FC 5FB63662 A03F1C45 578C13A9 6BD8A9BB
+                  quit
+          crypto pki certificate chain SLA-TrustPoint
+           certificate ca 01
+            30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363
+            6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934
+            3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305
+            43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720
+            526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030
+            82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D
+            CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520
+            1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE
+            4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC
+            7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188
+            68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7
+            C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191
+            C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44
+            DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201
+            06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85
+            4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500
+            03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905
+            604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B
+            D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8
+            467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C
+            7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B
+            5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678
+            80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB
+            418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
+            D697DF7F 28
+                  quit
+          !
+          !
+          license boot level network-advantage addon dna-advantage
+          memory free low-watermark processor 131696
+          !
+          system mtu 8000
+          diagnostic bootup level minimal
+          !
+          spanning-tree mode rapid-pvst
+          spanning-tree extend system-id
+          !
+          !
+          enable password cisco
+          !
+          username netadmin privilege 15 password 0 cisco
+          !
+          redundancy
+           mode sso
+          !
+          !
+          !
+          !
+          !
+          vlan 2999
+          no cdp run
+          !
+          !
+          class-map match-any system-cpp-police-mac-learning
+            description MAC Learning
+          class-map match-any system-cpp-police-mcast-data
+            description MCAST Data traffic
+          class-map match-any system-cpp-police-topology-control
+            description Topology control - STP
+          class-map match-any system-cpp-police-unknown-uc
+            description Unknown UC Packets
+          class-map match-any system-cpp-police-sw-forward
+            description Software forwarding
+          class-map match-any system-cpp-police-proto-snoop-v6
+            description Protocol snooping v6
+          class-map match-any system-cpp-default
+            description Inter FED Traffic
+          class-map match-any system-cpp-police-proto-snoop-v4
+            description Protocol snooping v4
+          class-map match-any system-cpp-police-rip-bc
+            description RIP Broadcast
+          class-map match-any system-cpp-police-svl-ctrl
+            description NGSVL IPC Traffic
+          class-map match-any system-cpp-police-mpls-oam
+            description MPLS OAM (traceroute, ping etc)
+          class-map match-any system-cpp-police-dhcp-v6
+            description DHCP V6
+          class-map match-any system-cpp-police-dhcp-v4
+            description DHCP V4
+          class-map match-any system-cpp-police-forus
+            description Forus Address resolution and Forus traffic
+          class-map match-any system-cpp-police-icmp-v6
+            description ICMP redirect, ICMP_GEN over IPv6
+          class-map match-any system-cpp-police-icmp-v4
+            description ICMP redirect, ICMP_GEN over IPv4
+          class-map match-any system-cpp-police-ospf-v6
+            description OSPF over IPv6
+          class-map match-any system-cpp-police-ospf-v4
+            description OSPF over IPv4
+          class-map match-any system-cpp-police-arp
+            description Address Resolution Protocol
+          class-map match-any system-cpp-police-igrp-v4
+            description IGRP and EIGRP over IPv4
+          class-map match-any system-cpp-police-fhrp-v4
+            description VRRP, HSRP, GLBP over IPv4
+          class-map match-any system-cpp-police-igrp-v6
+            description IGRP and EIGRP over IPv6
+          class-map match-any system-cpp-police-fhrp-v6
+            description VRRP, HSRP, GLBP over IPv6
+          class-map match-any system-cpp-police-fragment-v4
+            description IPv4 Fragmented Packets
+          class-map match-any system-cpp-police-fragment-v6
+            description IPv6 Fragmented Packets
+          class-map match-any system-cpp-police-ldp-v4
+            description LDP (MPLS) over IPv4
+          class-map match-any system-cpp-police-ldp-v6
+            description LDP (MPLS) over IPv6
+          class-map match-any system-cpp-police-l2-control
+            description L2 control
+          class-map match-any system-cpp-police-lacp
+            description LACP control traffic for ether channel
+          class-map match-any system-cpp-police-bgp-v4
+            description BGP sessions over IPv4
+          class-map match-any system-cpp-police-bgp-v6
+            description BGP sessions over IPv6
+          class-map match-any system-cpp-police-rip-v6
+            description RIP over IPv6
+          class-map match-any system-cpp-police-alt-sw-forward
+            description Alternate Software forwarding
+          class-map match-any system-cpp-police-rip-v4
+            description RIP over IPv4
+          class-map match-any system-cpp-police-mtu-ttl-fail
+            description MTU/TTL 0/TTL 1 failures
+          class-map match-any system-cpp-police-isis
+            description IS-IS protocol
+          class-map match-any system-cpp-police-bfd-v4
+            description BFD and BFD Echo over IPv4
+          class-map match-any system-cpp-police-udp-v4
+            description UDP V4
+          class-map match-any system-cpp-police-mcast-rpf-fail
+            description MCAST Data RPF fail
+          class-map match-any system-cpp-police-bfd-v6
+            description BFD and BFD Echo over IPv6
+          class-map match-any system-cpp-police-udp-v6
+            description UDP V6
+          class-map match-any non-client-nrt-class
+          class-map match-any system-cpp-police-tcp-v6
+            description TCP V6
+          class-map match-any system-cpp-police-tcp-v4
+            description TCP V4
+          class-map match-any system-cpp-default-v6
+            description Inter FED Traffic
+          class-map match-any system-cpp-default-v4
+            description Inter FED Traffic
+          class-map match-any system-cpp-police-dhcp-snooping
+            description DHCP snooping
+          class-map match-any system-cpp-police-svl-ipc
+            description NGSVL IPC Traffic
+          class-map match-any system-cpp-police-mcast-ctrl-v4
+            description MCAST control packets over IPv4
+          class-map match-any system-cpp-police-system-critical
+            description System Critical and Gold Pkt
+          class-map match-any system-cpp-police-mcast-register-v4
+            description MCAST v4 Register traffic
+          class-map match-any system-cpp-police-lisp-ctrl
+            description LISP Control Packets
+          class-map match-any system-cpp-police-mcast-ctrl-v6
+            description MCAST control packets over IPv6
+          class-map match-any system-cpp-police-mcast-register-v6
+            description MCAST v6 Register traffic
+          !
+          policy-map system-cpp-policy
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          interface Loopback0
+           description RLOC Reachability
+           ip address 192.168.1.4 255.255.255.255
+           ip router isis
+          !
+          interface GigabitEthernet0/0
+           vrf forwarding Mgmt-vrf
+           ip address 198.18.128.9 255.255.192.0
+           negotiation auto
+           no cdp enable
+           ipv6 dhcp client request vendor
+           ipv6 address dhcp
+           ipv6 address autoconfig
+           ipv6 enable
+          !
+          interface GigabitEthernet1/0/1
+           description FUSION
+           switchport mode trunk
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/2
+           description CPS-FE1
+           no switchport
+           dampening
+           ip address 192.168.10.29 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/3
+           description CPS-FE2
+           no switchport
+           dampening
+           ip address 192.168.10.33 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/4
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/5
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/6
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/7
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/8
+           no cdp enable
+          !
+          interface Vlan1
+           no ip address
+           shutdown
+          !
+          interface Vlan2999
+           description FUSION SW
+           ip address 192.168.10.1 255.255.255.252
+          !
+          router isis
+           net 49.0000.0000.0000.0004.00
+           is-type level-2-only
+           domain-password ciscodna
+           metric-style transition
+           log-adjacency-changes
+           summary-address 192.168.10.0 255.255.255.0 level-2
+           redistribute connected
+           default-information originate
+           bfd all-interfaces
+          !
+          router bgp 65001
+           bgp router-id interface Loopback0
+           bgp log-neighbor-changes
+           bgp graceful-restart
+           neighbor 192.168.10.2 remote-as 65000
+           neighbor 192.168.10.2 update-source Vlan2999
+           !
+           address-family ipv4
+            bgp aggregate-timer 0
+            network 192.168.10.0 mask 255.255.255.252
+            redistribute isis route-map LOOPBACKS
+            neighbor 192.168.10.2 activate
+            neighbor 192.168.10.2 weight 65535
+           exit-address-family
+          !
+          ip forward-protocol nd
+          ip tcp mss 1280
+          ip tcp window-size 212000
+          ip http server
+          ip http authentication local
+          ip http secure-server
+          ip ssh bulk-mode 131072
+          !
+          !
+          !
+          !
+          ip prefix-list LOOPBACKS seq 5 permit 192.168.1.0/24 le 32
+          !
+          route-map LOOPBACKS permit 10
+           match ip address prefix-list LOOPBACKS
+          !
+          snmp-server community RO RO
+          snmp-server community RW RW
+          !
+          !
+          control-plane
+           service-policy input system-cpp-policy
+          !
+          !
+          !
+          line con 0
+           stopbits 1
+          line vty 0 1
+           login local
+           transport input all
+          line vty 2
+           login local
+           length 0
+           transport input all
+          line vty 3 4
+           login local
+           transport input all
+          line vty 5 15
+           login local
+           transport input all
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          netconf-yang
+          end
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
     id: n0
     image_definition: null
-    label: Fusion
-    node_definition: cat8000v
+    label: CPS_BDR1
+    node_definition: cat9000v-q200
+    parameters: {}
     ram: null
     tags: []
-    x: -400
-    y: -200
+    x: 560
+    y: -40
     interfaces:
       - id: i0
         label: Loopback0
         type: loopback
       - id: i1
-        label: GigabitEthernet1
+        label: GigabitEthernet0/0
         slot: 0
         type: physical
       - id: i2
-        label: GigabitEthernet2
+        label: GigabitEthernet1/0/1
         slot: 1
         type: physical
       - id: i3
-        label: GigabitEthernet3
+        label: GigabitEthernet1/0/2
         slot: 2
         type: physical
       - id: i4
-        label: GigabitEthernet4
+        label: GigabitEthernet1/0/3
         slot: 3
         type: physical
+      - id: i5
+        label: GigabitEthernet1/0/4
+        slot: 4
+        type: physical
+      - id: i6
+        label: GigabitEthernet1/0/5
+        slot: 5
+        type: physical
+      - id: i7
+        label: GigabitEthernet1/0/6
+        slot: 6
+        type: physical
+      - id: i8
+        label: GigabitEthernet1/0/7
+        slot: 7
+        type: physical
+      - id: i9
+        label: GigabitEthernet1/0/8
+        slot: 8
+        type: physical
   - boot_disk_size: null
-    configuration: System Bridge
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname CPS-BDR2
+          !
+          !
+          vrf definition Mgmt-vrf
+           !
+           address-family ipv4
+           exit-address-family
+           !
+           address-family ipv6
+           exit-address-family
+          !
+          no aaa new-model
+          no process cpu autoprofile hog
+          switch 1 provision c9kv-q200-8p
+          !
+          !
+          !
+          !
+          ip routing
+          !
+          !
+          !
+          !
+          !
+          ip multicast-routing
+          no ip domain lookup
+          ip domain name demo.local
+          !
+          ip dhcp pool webuidhcp
+          !
+          !
+          !
+          login on-success log
+          ipv6 unicast-routing
+          vtp mode transparent
+          vtp version 1
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          crypto pki trustpoint TP-self-signed-2710989922
+           enrollment selfsigned
+           subject-name cn=IOS-Self-Signed-Certificate-2710989922
+           revocation-check none
+           rsakeypair TP-self-signed-2710989922
+           hash sha256
+          !
+          crypto pki trustpoint SLA-TrustPoint
+           enrollment pkcs12
+           revocation-check crl
+           hash sha256
+          !
+          !
+          crypto pki certificate chain TP-self-signed-2710989922
+           certificate self-signed 01
+            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
+            69666963 6174652D 32373130 39383939 3232301E 170D3234 30373135 31323435
+            31315A17 0D333430 37313531 32343531 315A3031 312F302D 06035504 030C2649
+            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 37313039
+            38393932 32308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+            0A028201 01009C5D 6184B0EA 6CA168B0 2412B2B5 7CCBF0FF 65609BF9 1D420AAF
+            761143F9 1ADA986A 38F28595 3C6C5F6D C24BC11E F5A4A1BB 78B9C6D7 C4A936BC
+            FCF2C7BD 9190D916 939C0DE8 A019DB97 466C3302 F305029D AA8242FB 6209ED0D
+            676B1C5E A7CFF1D8 157C8B2E E447D876 EB151563 2349168E 7060DCC1 FC41A763
+            4D282AED 9ADD703C AA8DDA54 688782E1 40F53913 43CBE8E9 D96C6E85 9A3AB1D6
+            DDD4027B F1C629CE 36C96A70 70B4ED4B 618F3985 9D3D18CE D963866D 74FC6B43
+            F975DA8C 4CF4A5CD 425B8657 C3D9028D A60A2939 9DF9D703 6263622F C1313FD3
+            DDCBAAB5 91C4A718 FEE7271A 1165FBCC CA6A6A62 4A7E488B CFD0BBAA B5B92086
+            5DE18D41 AA270203 010001A3 53305130 1D060355 1D0E0416 0414DC8C 43809890
+            5ADC3919 9F4D1A1D D760800F 7B6A301F 0603551D 23041830 168014DC 8C438098
+            905ADC39 199F4D1A 1DD76080 0F7B6A30 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 818C3966 8421179D E4A5FCD8
+            6A5D66AE 116D3155 4B57DCC4 DF5D1181 8149874C D26E0D02 C93BDB96 862E2257
+            9EE37360 5A375836 83E88361 80A99088 366C149A 67D3A8FA F751C24D 1FF7AF14
+            C4AF376F 05136648 5DE0A5B4 DABFEEC4 F7305047 5645DA8F 511F69A6 B30AC7BB
+            E37A1027 513211EA 0305D943 FE9AF448 441900B6 A4483B81 B1BD9B75 3EF2F316
+            87C3B634 10628B18 982D0356 BF5E5B50 592B4510 9DBDED3F 0273ED95 C21F662B
+            B486D2E0 46BA2398 B2C62FA4 634211E2 8B2A5537 B49A25CD D4147862 27768E53
+            1E03803B 67BD3D1B D807C1C8 509789EF DF61F464 2189CC17 85C4BD03 EDBE4187
+            1F582819 2CD3CC2C C46F6121 B28704D1 7DC5831D
+                  quit
+          crypto pki certificate chain SLA-TrustPoint
+           certificate ca 01
+            30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363
+            6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934
+            3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305
+            43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720
+            526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030
+            82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D
+            CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520
+            1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE
+            4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC
+            7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188
+            68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7
+            C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191
+            C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44
+            DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201
+            06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85
+            4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500
+            03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905
+            604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B
+            D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8
+            467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C
+            7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B
+            5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678
+            80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB
+            418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
+            D697DF7F 28
+                  quit
+          !
+          !
+          license boot level network-advantage addon dna-advantage
+          memory free low-watermark processor 131696
+          !
+          system mtu 8000
+          diagnostic bootup level minimal
+          !
+          spanning-tree mode rapid-pvst
+          spanning-tree extend system-id
+          !
+          !
+          enable password cisco
+          !
+          username netadmin privilege 15 password 0 cisco
+          !
+          redundancy
+           mode sso
+          !
+          !
+          !
+          !
+          !
+          vlan 2998
+          no cdp run
+          !
+          !
+          class-map match-any system-cpp-police-mac-learning
+            description MAC Learning
+          class-map match-any system-cpp-police-mcast-data
+            description MCAST Data traffic
+          class-map match-any system-cpp-police-topology-control
+            description Topology control - STP
+          class-map match-any system-cpp-police-unknown-uc
+            description Unknown UC Packets
+          class-map match-any system-cpp-police-sw-forward
+            description Software forwarding
+          class-map match-any system-cpp-police-proto-snoop-v6
+            description Protocol snooping v6
+          class-map match-any system-cpp-default
+            description Inter FED Traffic
+          class-map match-any system-cpp-police-proto-snoop-v4
+            description Protocol snooping v4
+          class-map match-any system-cpp-police-rip-bc
+            description RIP Broadcast
+          class-map match-any system-cpp-police-svl-ctrl
+            description NGSVL IPC Traffic
+          class-map match-any system-cpp-police-mpls-oam
+            description MPLS OAM (traceroute, ping etc)
+          class-map match-any system-cpp-police-dhcp-v6
+            description DHCP V6
+          class-map match-any system-cpp-police-dhcp-v4
+            description DHCP V4
+          class-map match-any system-cpp-police-forus
+            description Forus Address resolution and Forus traffic
+          class-map match-any system-cpp-police-icmp-v6
+            description ICMP redirect, ICMP_GEN over IPv6
+          class-map match-any system-cpp-police-icmp-v4
+            description ICMP redirect, ICMP_GEN over IPv4
+          class-map match-any system-cpp-police-ospf-v6
+            description OSPF over IPv6
+          class-map match-any system-cpp-police-ospf-v4
+            description OSPF over IPv4
+          class-map match-any system-cpp-police-arp
+            description Address Resolution Protocol
+          class-map match-any system-cpp-police-igrp-v4
+            description IGRP and EIGRP over IPv4
+          class-map match-any system-cpp-police-fhrp-v4
+            description VRRP, HSRP, GLBP over IPv4
+          class-map match-any system-cpp-police-igrp-v6
+            description IGRP and EIGRP over IPv6
+          class-map match-any system-cpp-police-fhrp-v6
+            description VRRP, HSRP, GLBP over IPv6
+          class-map match-any system-cpp-police-fragment-v4
+            description IPv4 Fragmented Packets
+          class-map match-any system-cpp-police-fragment-v6
+            description IPv6 Fragmented Packets
+          class-map match-any system-cpp-police-ldp-v4
+            description LDP (MPLS) over IPv4
+          class-map match-any system-cpp-police-ldp-v6
+            description LDP (MPLS) over IPv6
+          class-map match-any system-cpp-police-l2-control
+            description L2 control
+          class-map match-any system-cpp-police-lacp
+            description LACP control traffic for ether channel
+          class-map match-any system-cpp-police-bgp-v4
+            description BGP sessions over IPv4
+          class-map match-any system-cpp-police-bgp-v6
+            description BGP sessions over IPv6
+          class-map match-any system-cpp-police-rip-v6
+            description RIP over IPv6
+          class-map match-any system-cpp-police-alt-sw-forward
+            description Alternate Software forwarding
+          class-map match-any system-cpp-police-rip-v4
+            description RIP over IPv4
+          class-map match-any system-cpp-police-mtu-ttl-fail
+            description MTU/TTL 0/TTL 1 failures
+          class-map match-any system-cpp-police-isis
+            description IS-IS protocol
+          class-map match-any system-cpp-police-bfd-v4
+            description BFD and BFD Echo over IPv4
+          class-map match-any system-cpp-police-udp-v4
+            description UDP V4
+          class-map match-any system-cpp-police-mcast-rpf-fail
+            description MCAST Data RPF fail
+          class-map match-any system-cpp-police-bfd-v6
+            description BFD and BFD Echo over IPv6
+          class-map match-any system-cpp-police-udp-v6
+            description UDP V6
+          class-map match-any non-client-nrt-class
+          class-map match-any system-cpp-police-tcp-v6
+            description TCP V6
+          class-map match-any system-cpp-police-tcp-v4
+            description TCP V4
+          class-map match-any system-cpp-default-v6
+            description Inter FED Traffic
+          class-map match-any system-cpp-default-v4
+            description Inter FED Traffic
+          class-map match-any system-cpp-police-dhcp-snooping
+            description DHCP snooping
+          class-map match-any system-cpp-police-svl-ipc
+            description NGSVL IPC Traffic
+          class-map match-any system-cpp-police-mcast-ctrl-v4
+            description MCAST control packets over IPv4
+          class-map match-any system-cpp-police-system-critical
+            description System Critical and Gold Pkt
+          class-map match-any system-cpp-police-mcast-register-v4
+            description MCAST v4 Register traffic
+          class-map match-any system-cpp-police-lisp-ctrl
+            description LISP Control Packets
+          class-map match-any system-cpp-police-mcast-ctrl-v6
+            description MCAST control packets over IPv6
+          class-map match-any system-cpp-police-mcast-register-v6
+            description MCAST v6 Register traffic
+          !
+          policy-map system-cpp-policy
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          interface Loopback0
+           description RLOC Reachability
+           ip address 192.168.1.5 255.255.255.255
+           ip router isis
+          !
+          interface GigabitEthernet0/0
+           vrf forwarding Mgmt-vrf
+           ip address 198.18.128.10 255.255.192.0
+           negotiation auto
+           no cdp enable
+           ipv6 dhcp client request vendor
+           ipv6 address dhcp
+           ipv6 address autoconfig
+           ipv6 enable
+          !
+          interface GigabitEthernet1/0/1
+           description FUSION
+           switchport mode trunk
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/2
+           description CPS-FE1
+           no switchport
+           dampening
+           ip address 192.168.10.37 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/3
+           description CPS-FE2
+           no switchport
+           dampening
+           ip address 192.168.10.41 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/4
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/5
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/6
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/7
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/8
+           no cdp enable
+          !
+          interface Vlan1
+           no ip address
+           shutdown
+          !
+          interface Vlan2998
+           description FUSION
+           ip address 192.168.10.5 255.255.255.252
+          !
+          router isis
+           net 49.0000.0000.0000.0005.00
+           is-type level-2-only
+           domain-password ciscodna
+           metric-style transition
+           log-adjacency-changes
+           summary-address 192.168.10.0 255.255.255.0 level-2
+           redistribute connected
+           default-information originate
+           bfd all-interfaces
+          !
+          router bgp 65001
+           bgp router-id interface Loopback0
+           bgp log-neighbor-changes
+           bgp graceful-restart
+           neighbor 192.168.10.6 remote-as 65000
+           neighbor 192.168.10.6 update-source Vlan2998
+           !
+           address-family ipv4
+            bgp aggregate-timer 0
+            network 192.168.10.4 mask 255.255.255.252
+            redistribute isis route-map LOOPBACKS
+            neighbor 192.168.10.6 activate
+            neighbor 192.168.10.6 weight 65535
+           exit-address-family
+          !
+          ip forward-protocol nd
+          ip tcp mss 1280
+          ip tcp window-size 212000
+          ip http server
+          ip http authentication local
+          ip http secure-server
+          ip ssh bulk-mode 131072
+          !
+          !
+          !
+          !
+          ip prefix-list LOOPBACKS seq 5 permit 192.168.1.0/24 le 32
+          !
+          route-map LOOPBACKS permit 10
+           match ip address prefix-list LOOPBACKS
+          !
+          snmp-server community RO RO
+          snmp-server community RW RW
+          !
+          !
+          control-plane
+           service-policy input system-cpp-policy
+          !
+          !
+          !
+          line con 0
+           stopbits 1
+          line vty 0 1
+           login local
+           transport input all
+          line vty 2
+           login local
+           length 0
+           transport input all
+          line vty 3 4
+           login local
+           transport input all
+          line vty 5 15
+           login local
+           transport input all
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          netconf-yang
+          end
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
     id: n1
     image_definition: null
-    label: Internet&DC
-    node_definition: external_connector
+    label: CPS_BDR2
+    node_definition: cat9000v-q200
+    parameters: {}
     ram: null
     tags: []
-    x: -680
-    y: -200
+    x: 760
+    y: -40
     interfaces:
       - id: i0
-        label: port
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet0/0
         slot: 0
         type: physical
+      - id: i2
+        label: GigabitEthernet1/0/1
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet1/0/2
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet1/0/3
+        slot: 3
+        type: physical
+      - id: i5
+        label: GigabitEthernet1/0/4
+        slot: 4
+        type: physical
+      - id: i6
+        label: GigabitEthernet1/0/5
+        slot: 5
+        type: physical
+      - id: i7
+        label: GigabitEthernet1/0/6
+        slot: 6
+        type: physical
+      - id: i8
+        label: GigabitEthernet1/0/7
+        slot: 7
+        type: physical
+      - id: i9
+        label: GigabitEthernet1/0/8
+        slot: 8
+        type: physical
   - boot_disk_size: null
-    configuration: |2-
-
-      hostname CPS-FE1
-      !
-      !
-      vrf definition Mgmt-vrf
-       !
-       address-family ipv4
-       exit-address-family
-       !
-       address-family ipv6
-       exit-address-family
-      !
-      no aaa new-model
-      switch 1 provision c9kv-uadp-8p
-      !
-      !
-      !
-      !
-      ip routing
-      !
-      !
-      !
-      !
-      !
-      ip domain name demo.local
-      !
-      !
-      !
-      login on-success log
-      vtp mode transparent
-      vtp version 1
-      !
-      !
-      !
-      license boot level network-advantage addon dna-advantage
-      memory free low-watermark processor 74862
-      !
-      system mtu 8000
-      diagnostic bootup level minimal
-      !
-      spanning-tree mode rapid-pvst
-      spanning-tree extend system-id
-      !
-      !
-      enable secret 9 $9$JVyr66Q88tlQaU$sj1BBbbkCsfs2T4fm7KQg41j99CLF91UKw.oliKNh1I
-      !
-      username netadmin privilege 15 password 0 Dnac123!
-      !
-      redundancy
-       mode sso
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      interface Loopback0
-       description RLOC Reachability
-       ip address 192.168.1.8 255.255.255.255
-       ip router isis
-      !
-      interface GigabitEthernet0/0
-       vrf forwarding Mgmt-vrf
-       ip address 198.18.160.5 255.255.192.0
-       negotiation auto
-      !
-      interface GigabitEthernet1/0/1
-       description CPS-BDR2 1/0/22
-       no switchport
-       dampening
-       ip address 192.168.10.38 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1400
-      !
-      interface GigabitEthernet1/0/2
-       description CPS-BDR1 1/0/22
-       no switchport
-       dampening
-       ip address 192.168.10.30 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1440
-      !
-      interface GigabitEthernet1/0/3
-      !
-      interface GigabitEthernet1/0/4
-      !
-      interface GigabitEthernet1/0/5
-      !
-      interface GigabitEthernet1/0/6
-      !
-      interface GigabitEthernet1/0/7
-      !
-      interface GigabitEthernet1/0/8
-      !
-      interface Vlan1
-       no ip address
-       shutdown
-      !
-      router isis
-       net 49.0000.0000.0000.0008.00
-       is-type level-2-only
-       domain-password ciscodna
-       metric-style transition
-       log-adjacency-changes
-      !
-      ip forward-protocol nd
-      ip tcp mss 1280
-      ip tcp window-size 212000
-      ip http server
-      ip http authentication local
-      ip http secure-server
-      ip ssh bulk-mode 131072
-      !
-      !
-      !
-      !
-      snmp-server community Dnac123!! RW
-      snmp-server community Dnac123! RO
-      !
-      !
-      control-plane
-       service-policy input system-cpp-policy
-      !
-      !
-      !
-      line con 0
-       stopbits 1
-      line vty 0 1
-       exec-timeout 600 0
-       login local
-       transport input ssh
-      line vty 2
-       exec-timeout 600 0
-       login local
-       length 0
-       transport input ssh
-      line vty 3 4
-       exec-timeout 600 0
-       login local
-       transport input ssh
-      line vty 5 31
-       login local
-       transport input ssh
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      end
+    configuration:
+      - name: default
+        content: System Bridge
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
     id: n2
     image_definition: null
-    label: CPS-FE1
-    node_definition: catalyst9000v_uadp
+    label: BDR1_2_FUSION
+    node_definition: external_connector
+    parameters: {}
     ram: null
     tags: []
-    x: -160
-    y: 80
+    x: 560
+    y: -160
     interfaces:
       - id: i0
-        label: Loopback0
-        type: loopback
-      - id: i1
-        label: GigabitEthernet0/0
+        label: port
         slot: 0
         type: physical
-      - id: i2
-        label: GigabitEthernet1/0/1
-        slot: 1
-        type: physical
-      - id: i3
-        label: GigabitEthernet1/0/2
-        slot: 2
-        type: physical
-      - id: i4
-        label: GigabitEthernet1/0/3
-        slot: 3
-        type: physical
-      - id: i5
-        label: GigabitEthernet1/0/4
-        slot: 4
-        type: physical
-      - id: i6
-        label: GigabitEthernet1/0/5
-        slot: 5
-        type: physical
-      - id: i7
-        label: GigabitEthernet1/0/6
-        slot: 6
-        type: physical
-      - id: i8
-        label: GigabitEthernet1/0/7
-        slot: 7
-        type: physical
-      - id: i9
-        label: GigabitEthernet1/0/8
-        slot: 8
-        type: physical
   - boot_disk_size: null
-    configuration: |2-
-
-      hostname CPS-FE2
-      !
-      !
-      vrf definition Mgmt-vrf
-       !
-       address-family ipv4
-       exit-address-family
-       !
-       address-family ipv6
-       exit-address-family
-      !
-      no aaa new-model
-      switch 1 provision c9kv-uadp-8p
-      !
-      !
-      !
-      !
-      ip routing
-      !
-      !
-      !
-      !
-      !
-      ip domain name demo.local
-      !
-      !
-      !
-      login on-success log
-      vtp mode transparent
-      vtp version 1
-      !
-      !
-      !
-      !
-      !
-      !
-      license boot level network-advantage addon dna-advantage
-      memory free low-watermark processor 74862
-      !
-      system mtu 8000
-      diagnostic bootup level minimal
-      !
-      spanning-tree mode rapid-pvst
-      spanning-tree extend system-id
-      !
-      !
-      enable secret 9 $9$7BKNRE1CrqbTLk$RLcaXrvOSl08VtbjlKZ1CVzrgmXx/1pXHQ1la9f5wNc
-      !
-      username netadmin privilege 15 password 0 Dnac123!
-      !
-      redundancy
-       mode sso
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      interface Loopback0
-       description RLOC Reachability
-       ip address 192.168.1.9 255.255.255.255
-       ip router isis
-      !
-      interface GigabitEthernet0/0
-       vrf forwarding Mgmt-vrf
-       ip address 198.18.160.6 255.255.192.0
-       negotiation auto
-      !
-      interface GigabitEthernet1/0/1
-       description CPS-BDR2 Gi1/0/21
-       no switchport
-       dampening
-       ip address 192.168.10.42 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1400
-      !
-      interface GigabitEthernet1/0/2
-       description CPS-BDR1 Gi1/0/22
-       no switchport
-       dampening
-       ip address 192.168.10.34 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1400
-      !
-      interface GigabitEthernet1/0/3
-      !
-      interface GigabitEthernet1/0/4
-      !
-      interface GigabitEthernet1/0/5
-      !
-      interface GigabitEthernet1/0/6
-      !
-      interface GigabitEthernet1/0/7
-      !
-      interface GigabitEthernet1/0/8
-      !
-      interface Vlan1
-       no ip address
-       shutdown
-      !
-      router isis
-       net 49.0000.0000.0000.0009.00
-       is-type level-2-only
-       domain-password ciscodna
-       metric-style transition
-       log-adjacency-changes
-      !
-      ip forward-protocol nd
-      ip tcp mss 1280
-      ip tcp window-size 212000
-      ip http server
-      ip http authentication local
-      ip http secure-server
-      ip ssh bulk-mode 131072
-      !
-      !
-      !
-      !
-      snmp-server community Dnac123!! RW
-      snmp-server community Dnac123! RO
-      !
-      !
-      control-plane
-       service-policy input system-cpp-policy
-      !
-      !
-      !
-      line con 0
-       stopbits 1
-      line vty 0 1
-       login local
-       transport input ssh
-      line vty 2
-       login local
-       length 0
-       transport input ssh
-      line vty 3 4
-       login local
-       transport input ssh
-      line vty 5 31
-       login local
-       transport input ssh
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      end
+    configuration:
+      - name: default
+        content: System Bridge
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
     id: n3
     image_definition: null
-    label: CPS-FE2
-    node_definition: catalyst9000v_uadp
+    label: BDR2_2_FUSION
+    node_definition: external_connector
+    parameters: {}
     ram: null
     tags: []
-    x: 80
-    y: 80
+    x: 760
+    y: -160
     interfaces:
       - id: i0
-        label: Loopback0
-        type: loopback
-      - id: i1
-        label: GigabitEthernet0/0
+        label: port
         slot: 0
         type: physical
-      - id: i2
-        label: GigabitEthernet1/0/1
-        slot: 1
-        type: physical
-      - id: i3
-        label: GigabitEthernet1/0/2
-        slot: 2
-        type: physical
-      - id: i4
-        label: GigabitEthernet1/0/3
-        slot: 3
-        type: physical
-      - id: i5
-        label: GigabitEthernet1/0/4
-        slot: 4
-        type: physical
-      - id: i6
-        label: GigabitEthernet1/0/5
-        slot: 5
-        type: physical
-      - id: i7
-        label: GigabitEthernet1/0/6
-        slot: 6
-        type: physical
-      - id: i8
-        label: GigabitEthernet1/0/7
-        slot: 7
-        type: physical
-      - id: i9
-        label: GigabitEthernet1/0/8
-        slot: 8
-        type: physical
   - boot_disk_size: null
-    configuration: |2
-
-      hostname CPS-BDR2
-      !
-      !
-      vrf definition Mgmt-vrf
-       !
-       address-family ipv4
-       exit-address-family
-       !
-       address-family ipv6
-       exit-address-family
-      !
-      no aaa new-model
-      switch 1 provision c9kv-q200-8p
-      !
-      !
-      !
-      !
-      ip routing
-      !
-      !
-      !
-      !
-      !
-      ip domain name demo.local
-      !
-      !
-      !
-      login on-success log
-      vtp mode transparent
-      vtp version 1
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      license boot level network-advantage addon dna-advantage
-      memory free low-watermark processor 179720
-      !
-      system mtu 8000
-      diagnostic bootup level minimal
-      !
-      spanning-tree mode rapid-pvst
-      spanning-tree extend system-id
-      !
-      !
-      enable secret 9 $9$bJKjWEZ3iuDnck$xPoqrphv5pztn1hxcavsFGebPd4ttE1W/NlWrVLAXDM
-      !
-      username netadmin privilege 15 password 7 096840081A5445414A
-      !
-      redundancy
-       mode sso
-      !
-      !
-      !
-      !
-      !
-      vlan 2997
-      !
-      !
-      !
-      interface Loopback0
-       description RLOC Reachability
-       ip address 192.168.1.5 255.255.255.255
-       ip router isis
-      !
-      interface GigabitEthernet0/0
-       vrf forwarding Mgmt-vrf
-       ip address 198.18.160.2 255.255.192.0
-       negotiation auto
-      !
-      interface GigabitEthernet1/0/1
-       description CPS-FE2 Gi1/0/23
-       no switchport
-       dampening
-       ip address 192.168.10.41 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1400
-      !
-      interface GigabitEthernet1/0/2
-       description CPS-FE1 Gi1/0/23
-       no switchport
-       dampening
-       ip address 192.168.10.37 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1400
-      !
-      interface GigabitEthernet1/0/3
-       description FUSION SW Gi1/0/26
-       switchport mode trunk
-      !
-      !
-      interface GigabitEthernet1/0/7
-      !
-      interface GigabitEthernet1/0/8
-      !
-      interface Vlan1
-       no ip address
-       shutdown
-      !
-      interface Vlan2997
-       ip address 192.168.10.10 255.255.255.252
-      !
-      router isis
-       net 49.0000.0000.0000.0005.00
-       is-type level-2-only
-       domain-password ciscodna
-       metric-style transition
-       log-adjacency-changes
-       redistribute connected
-       redistribute bgp 65004 route-map INFRA1
-      !
-      router bgp 65004
-       bgp log-neighbor-changes
-       neighbor 192.168.10.9 remote-as 65000
-       neighbor 192.168.10.9 update-source Vlan2997
-       !
-       address-family ipv4
-        network 192.168.1.5 mask 255.255.255.255
-        network 192.168.10.8 mask 255.255.255.252
-        redistribute isis route-map LOOPBACKS
-        neighbor 192.168.10.9 activate
-        neighbor 192.168.10.9 weight 65535
-       exit-address-family
-      !
-      ip forward-protocol nd
-      ip tcp mss 1280
-      ip tcp window-size 212000
-      ip http server
-      ip http authentication local
-      ip http secure-server
-      ip ssh bulk-mode 131072
-      !
-      !
-      !
-      !
-      ip prefix-list INFRA1 seq 5 permit 198.18.128.0/18
-      !
-      ip prefix-list LOOPBACKS seq 5 permit 192.168.1.4/32
-      ip prefix-list LOOPBACKS seq 10 permit 192.168.1.5/32
-      ip prefix-list LOOPBACKS seq 15 permit 192.168.1.8/32
-      ip prefix-list LOOPBACKS seq 20 permit 192.168.1.9/32
-      ip prefix-list LOOPBACKS seq 25 permit 172.16.6.0/24 le 32
-      ip prefix-list LOOPBACKS seq 30 permit 192.168.1.3/32
-      ip prefix-list LOOPBACKS seq 35 permit 172.16.4.0/24 le 32
-      ip prefix-list LOOPBACKS seq 40 permit 192.168.1.10/32
-      logging source-interface Loopback0
-      logging host 198.18.129.101
-      !
-      route-map LOOPBACKS permit 10
-       match ip address prefix-list LOOPBACKS
-      !
-      route-map INFRA1 permit 10
-       match ip address prefix-list INFRA1
-      !
-      snmp-server community Dnac123!! RW
-      snmp-server community Dnac123! RO
-      !
-      !
-      control-plane
-       service-policy input system-cpp-policy
-      !
-      !
-      !
-      line con 0
-       stopbits 1
-      line vty 0 1
-       exec-timeout 600 0
-       login local
-       transport input ssh
-      line vty 2
-       exec-timeout 600 0
-       login local
-       length 0
-       transport input ssh
-      line vty 3 4
-       exec-timeout 600 0
-       login local
-       transport input ssh
-      line vty 5 31
-       login local
-       transport input ssh
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      netconf-yang
-      end
+    configuration: []
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
     id: n4
     image_definition: null
-    label: CPS-BDR2
-    node_definition: catalyst9000v_q200
+    label: EMP1
+    node_definition: Windows 10
+    parameters: {}
     ram: null
     tags: []
-    x: 80
-    y: -80
+    x: 560
+    y: 320
+    interfaces:
+      - id: i0
+        label: eth0
+        slot: 0
+        type: physical
+      - id: i1
+        label: eth1
+        slot: 1
+        type: physical
+  - boot_disk_size: null
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname CPS-FE1
+          !
+          !
+          vrf definition Mgmt-vrf
+           !
+           address-family ipv4
+           exit-address-family
+           !
+           address-family ipv6
+           exit-address-family
+          !
+          no aaa new-model
+          switch 1 provision c9kv-uadp-8p
+          !
+          !
+          !
+          !
+          ip routing
+          !
+          !
+          !
+          !
+          !
+          ip multicast-routing
+          no ip domain lookup
+          ip domain name demo.local
+          !
+          !
+          !
+          login on-success log
+          vtp mode transparent
+          vtp version 1
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          crypto pki trustpoint TP-self-signed-3608606433
+           enrollment selfsigned
+           subject-name cn=IOS-Self-Signed-Certificate-3608606433
+           revocation-check none
+           rsakeypair TP-self-signed-3608606433
+           hash sha256
+          !
+          crypto pki trustpoint SLA-TrustPoint
+           enrollment pkcs12
+           revocation-check crl
+           hash sha256
+          !
+          !
+          crypto pki certificate chain TP-self-signed-3608606433
+           certificate self-signed 01
+            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
+            69666963 6174652D 33363038 36303634 3333301E 170D3234 30373139 31323533
+            35395A17 0D333430 37313931 32353335 395A3031 312F302D 06035504 030C2649
+            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 36303836
+            30363433 33308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+            0A028201 010090D0 332CCA00 00952AA3 E3E20271 6DF68158 B4B4E739 630389F9
+            7EDFB522 449C1D9C 99BDC463 A316A4ED E35873C6 ECE51189 562ED3A1 F3A2600C
+            773CCF03 87CAF790 EBA6CD21 4F1232F9 F980D97D E4D02A96 70D18489 85AE4D49
+            B4DE6070 07F50221 BE4130C7 E80CE797 4319246C 8CA6E8A9 7E808C1A C28DDB00
+            E9577A96 512ABFFB 49F158C6 1616E014 DA9E4BAC 773D51D1 CCF2EED5 BB17226A
+            D870E81F C1AC67EB A09BA2BD 80061CE9 9BEFE63A 31C57551 EED8EA97 0B3C8747
+            F3F50C26 173C5F4B BC00C825 0068AC26 891E1A3E 80FBDED9 424AF4C1 369A8A54
+            2DD883AB F4027543 27B54A81 4C46CBB4 AE747D66 D19E2DE6 ADAAD72B FF917450
+            570FC360 C8330203 010001A3 53305130 1D060355 1D0E0416 041499FB 17533ABE
+            DE1694D1 A49B062E 7363222B F735301F 0603551D 23041830 16801499 FB17533A
+            BEDE1694 D1A49B06 2E736322 2BF73530 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 846A6E8D 6FFCE898 107E2DC1
+            CC5C13EA E704EDC7 7E1BF2A2 8F52D92A 162A8048 C38A0E0D 87014BF8 63B8D42B
+            8798034C B780C406 C3EE8617 D63B3980 A92F4256 CF580353 C6B28BF4 BA732AAB
+            10938DBC CC7D5C4D 04F4C182 1A33B263 7BA4C146 E2E8AEBF 12519D98 5F7C3ACA
+            6B543158 95DB8115 CAEB82F0 062DFC18 44CE7E53 5840E604 343AB095 E44A8EE3
+            929FBA89 8592CF6E D020C7C8 8C918F6A 5C1D9083 EAD9CB00 EBAF4F1E F33578DF
+            6C6C2561 103D870F 761EEE57 EF1B44E6 D131A3E9 64338F55 97D8CC00 FA9D0892
+            E3283758 067DC978 6FC8CE35 FB2472FC 7E64C099 598677A9 D4FCA4AD 721888B3
+            2C17FE23 884B7118 BC9E8438 BC30C2C4 C55CA908
+                  quit
+          crypto pki certificate chain SLA-TrustPoint
+           certificate ca 01
+            30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363
+            6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934
+            3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305
+            43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720
+            526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030
+            82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D
+            CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520
+            1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE
+            4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC
+            7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188
+            68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7
+            C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191
+            C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44
+            DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201
+            06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85
+            4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500
+            03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905
+            604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B
+            D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8
+            467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C
+            7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B
+            5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678
+            80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB
+            418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
+            D697DF7F 28
+                  quit
+          !
+          !
+          license boot level network-advantage addon dna-advantage
+          memory free low-watermark processor 74862
+          !
+          system mtu 8000
+          diagnostic bootup level minimal
+          !
+          spanning-tree mode rapid-pvst
+          spanning-tree extend system-id
+          !
+          !
+          enable password cisco
+          !
+          username netadmin privilege 15 password 0 cisco
+          !
+          redundancy
+           mode sso
+          !
+          !
+          !
+          !
+          !
+          !
+          class-map match-any system-cpp-police-topology-control
+            description Topology control
+          class-map match-any system-cpp-police-sw-forward
+            description Sw forwarding, L2 LVX data, LOGGING
+          class-map match-any system-cpp-default
+            description EWLC control, EWLC data, Inter FED
+          class-map match-any system-cpp-police-sys-data
+            description Learning cache ovfl, High Rate App, Exception, EGR Exception, NFL SAMPLED DATA, RPF Failed
+          class-map match-any system-cpp-police-punt-webauth
+            description Punt Webauth
+          class-map match-any system-cpp-police-l2lvx-control
+            description L2 LVX control packets
+          class-map match-any system-cpp-police-forus
+            description Forus Address resolution and Forus traffic
+          class-map match-any system-cpp-police-multicast-end-station
+            description MCAST END STATION
+          class-map match-any system-cpp-police-multicast
+            description Transit Traffic and MCAST Data
+          class-map match-any system-cpp-police-l2-control
+            description L2 control
+          class-map match-any system-cpp-police-dot1x-auth
+            description DOT1X Auth
+          class-map match-any system-cpp-police-data
+            description ICMP redirect, ICMP_GEN and BROADCAST
+          class-map match-any system-cpp-police-stackwise-virt-control
+            description Stackwise Virtual
+          class-map match-any non-client-nrt-class
+          class-map match-any system-cpp-police-routing-control
+            description Routing control and Low Latency
+          class-map match-any system-cpp-police-protocol-snooping
+            description Protocol snooping
+          class-map match-any system-cpp-police-dhcp-snooping
+            description DHCP snooping
+          class-map match-any system-cpp-police-system-critical
+            description System Critical and Gold Pkt
+          !
+          policy-map system-cpp-policy
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          interface Loopback0
+           description RLOC Reachability
+           ip address 192.168.1.8 255.255.255.255
+           ip router isis
+          !
+          interface GigabitEthernet0/0
+           vrf forwarding Mgmt-vrf
+           ip address 198.18.128.11 255.255.192.0
+           negotiation auto
+           no cdp enable
+           ipv6 dhcp client request vendor
+           ipv6 address dhcp
+           ipv6 address autoconfig
+           ipv6 enable
+          !
+          interface GigabitEthernet1/0/1
+           description CPS-BDR1
+           no switchport
+           dampening
+           ip address 192.168.10.30 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/2
+           description CPS-BDR2
+           no switchport
+           dampening
+           ip address 192.168.10.38 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/3
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/4
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/5
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/6
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/7
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/8
+          !
+          interface Vlan1
+           no ip address
+           shutdown
+          !
+          router isis
+           net 49.0000.0000.0000.0008.00
+           is-type level-2-only
+           domain-password ciscodna
+           metric-style transition
+           log-adjacency-changes
+           bfd all-interfaces
+          !
+          ip forward-protocol nd
+          ip tcp mss 1280
+          ip tcp window-size 212000
+          ip http server
+          ip http authentication local
+          ip http secure-server
+          ip ssh bulk-mode 131072
+          !
+          !
+          !
+          !
+          snmp-server community RO RO
+          snmp-server community RW RW
+          !
+          !
+          control-plane
+           service-policy input system-cpp-policy
+          !
+          !
+          !
+          line con 0
+           stopbits 1
+          line vty 0
+           login local
+           transport input all
+          line vty 1 2
+           login local
+           length 0
+           transport input all
+          line vty 3 4
+           login local
+           transport input all
+          line vty 5 15
+           login local
+           transport input all
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          netconf-yang
+          end
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n5
+    image_definition: null
+    label: CPS-FE1
+    node_definition: cat9000v-uadp
+    parameters: {}
+    ram: null
+    tags: []
+    x: 560
+    y: 160
     interfaces:
       - id: i0
         label: Loopback0
@@ -984,216 +1361,325 @@ nodes:
         slot: 8
         type: physical
   - boot_disk_size: null
-    configuration: |2-
-
-      hostname CPS-BDR1
-      !
-      !
-      vrf definition Mgmt-vrf
-       !
-       address-family ipv4
-       exit-address-family
-       !
-       address-family ipv6
-       exit-address-family
-      !
-      no aaa new-model
-      switch 1 provision c9kv-q200-8p
-      !
-      !
-      !
-      !
-      ip routing
-      !
-      !
-      !
-      !
-      !
-      ip domain name demo.local
-      !
-      !
-      !
-      login on-success log
-      vtp mode transparent
-      vtp version 1
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      license boot level network-advantage addon dna-advantage
-      memory free low-watermark processor 179720
-      !
-      system mtu 8000
-      diagnostic bootup level minimal
-      !
-      spanning-tree mode rapid-pvst
-      spanning-tree extend system-id
-      !
-      !
-      enable secret 9 $9$gcB7y8xv1x/yGk$BY/Q/r.YtTdYYCe8FaORNO3yruE/HriDpitcXh0EthA
-      !
-      username netadmin privilege 15 password 7 047F05070C701E1D48
-      !
-      redundancy
-       mode sso
-      !
-      !
-      !
-      !
-      !
-      vlan 2998
-      !
-      !
-      !
-      !
-      !
-      interface Loopback0
-       description RLOC Reachability
-       ip address 192.168.1.4 255.255.255.255
-       ip router isis
-      !
-      interface GigabitEthernet0/0
-       vrf forwarding Mgmt-vrf
-       ip address 198.18.160.1 255.255.192.0
-       negotiation auto
-      !
-      interface GigabitEthernet1/0/1
-       description CPS-FE2 Gi1/0/24
-       no switchport
-       dampening
-       ip address 192.168.10.33 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1440
-      !
-      interface GigabitEthernet1/0/2
-       description CPS-FE1 Gi1/0/24
-       no switchport
-       dampening
-       ip address 192.168.10.29 255.255.255.252
-       no ip redirects
-       no ip proxy-arp
-       ip router isis
-       clns mtu 1440
-      !
-      interface GigabitEthernet1/0/3
-       description FUSION SW Gi1/0/25
-       switchport mode trunk
-      !
-      interface GigabitEthernet1/0/7
-      !
-      interface GigabitEthernet1/0/8
-      !
-      interface Vlan1
-       no ip address
-       shutdown
-      !
-      interface Vlan2998
-       ip address 192.168.10.6 255.255.255.252
-      !
-      router isis
-       net 49.0000.0000.0000.0004.00
-       is-type level-2-only
-       domain-password ciscodna
-       metric-style transition
-       log-adjacency-changes
-       redistribute bgp 65004 route-map INFRA1
-      !
-      router bgp 65004
-       bgp log-neighbor-changes
-       neighbor 192.168.10.5 remote-as 65000
-       neighbor 192.168.10.5 update-source Vlan2998
-       !
-       address-family ipv4
-        network 192.168.1.4 mask 255.255.255.255
-        network 192.168.10.4 mask 255.255.255.252
-        redistribute isis route-map LOOPBACKS
-        neighbor 192.168.10.5 activate
-        neighbor 192.168.10.5 weight 65535
-       exit-address-family
-      !
-      ip forward-protocol nd
-      ip tcp mss 1280
-      ip tcp window-size 212000
-      ip http server
-      ip http authentication local
-      ip http secure-server
-      ip ssh bulk-mode 131072
-      !
-      !
-      !
-      !
-      ip prefix-list INFRA1 seq 5 permit 198.18.128.0/18
-      !
-      ip prefix-list LOOPBACKS seq 5 permit 192.168.1.4/32
-      ip prefix-list LOOPBACKS seq 10 permit 192.168.1.5/32
-      ip prefix-list LOOPBACKS seq 15 permit 192.168.1.8/32
-      ip prefix-list LOOPBACKS seq 20 permit 192.168.1.9/32
-      ip prefix-list LOOPBACKS seq 25 permit 172.16.6.0/24 le 32
-      ip prefix-list LOOPBACKS seq 30 permit 192.168.1.3/32
-      ip prefix-list LOOPBACKS seq 35 permit 172.16.4.0/24 le 32
-      ip prefix-list LOOPBACKS seq 40 permit 192.168.1.10/32
-      logging source-interface Loopback0
-      logging host 198.18.129.101
-      !
-      route-map LOOPBACKS permit 10
-       match ip address prefix-list LOOPBACKS
-      !
-      route-map INFRA1 permit 10
-       match ip address prefix-list INFRA1
-      !
-      snmp-server community Dnac123!! RW
-      snmp-server community Dnac123! RO
-      !
-      !
-      control-plane
-       service-policy input system-cpp-policy
-      !
-      !
-      !
-      line con 0
-       stopbits 1
-      line vty 0 1
-       exec-timeout 600 0
-       login local
-       transport input ssh
-      line vty 2
-       exec-timeout 600 0
-       login local
-       length 0
-       transport input ssh
-      line vty 3 4
-       exec-timeout 600 0
-       login local
-       transport input ssh
-      line vty 5 31
-       login local
-       transport input ssh
-      !
-      !
-      !
-      !
-      !
-      !
-      !
-      netconf-yang
-      end
+    configuration:
+      - name: iosxe_config.txt
+        content: |-
+          hostname CPS-FE2
+          !
+          !
+          vrf definition Mgmt-vrf
+           !
+           address-family ipv4
+           exit-address-family
+           !
+           address-family ipv6
+           exit-address-family
+          !
+          no aaa new-model
+          switch 1 provision c9kv-uadp-8p
+          !
+          !
+          !
+          !
+          ip routing
+          !
+          !
+          !
+          !
+          !
+          ip multicast-routing
+          no ip domain lookup
+          ip domain name demo.local
+          !
+          !
+          !
+          login on-success log
+          vtp mode transparent
+          vtp version 1
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          crypto pki trustpoint TP-self-signed-1469543359
+           enrollment selfsigned
+           subject-name cn=IOS-Self-Signed-Certificate-1469543359
+           revocation-check none
+           rsakeypair TP-self-signed-1469543359
+           hash sha256
+          !
+          crypto pki trustpoint SLA-TrustPoint
+           enrollment pkcs12
+           revocation-check crl
+           hash sha256
+          !
+          !
+          crypto pki certificate chain TP-self-signed-1469543359
+           certificate self-signed 01
+            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
+            69666963 6174652D 31343639 35343333 3539301E 170D3234 30373139 31323537
+            32315A17 0D333430 37313931 32353732 315A3031 312F302D 06035504 030C2649
+            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 34363935
+            34333335 39308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+            0A028201 0100D99C 66F4E205 C2D98BF5 8C163543 1A3E2814 18DC9ADE 939A0A16
+            343821DA 504801D1 6825B9CF 530D7498 DC0B0C1A AA4DB70A E965C5F0 9BCA5E25
+            5B940F2A CE667D15 DB5B5BF3 669A186A E0A3540A F7BC79A7 FF5B7A5B 68FEFBF8
+            0327E8F5 B9427842 FDA9878F 170A0A71 23517827 74783B37 E81C76A8 07C86B9A
+            D483DAA1 2F257373 5BD5D149 A155689B CA8BBFE9 724C8AD6 47836A6C E08A3734
+            5AF9CE69 8CD8AD24 773C2A98 2841F6BC C8F27406 DF73E71E 0BEA67D3 81095F75
+            D36655EA B13B23F5 396547DD 616CFC65 08C9D054 7EC1C258 6845661D B2C40AF1
+            10E364A4 53F32908 3A636378 078A6B3D 1F3165AC 4F97B8C6 7D9F33A0 E42E563E
+            441AC839 76190203 010001A3 53305130 1D060355 1D0E0416 04141312 8719758C
+            B4DCE29F 901B7F53 9F03D0F0 C683301F 0603551D 23041830 16801413 12871975
+            8CB4DCE2 9F901B7F 539F03D0 F0C68330 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 81A16B77 EA5C1851 FB6D5ED9
+            B95FA6A0 A1167FBA E3B1E761 98480B8C B566E602 4688A079 1BF13C8C CFCD51DB
+            6BF594C8 F41B1A38 F0113611 4FFDB0C5 9B7067D5 6EAB3ABF AEF65A13 A696DB6A
+            4DA82148 3349F8B2 5619567B 1257FF43 E1CFBA18 A916474E 0F47168A 6A4A3EBC
+            40CD5395 1DEE5886 8F9D3F6D 4F8EDED4 DDCD0FCA 1804C289 EC03CB62 F23EE380
+            CD8BA804 998D7A0B 368AE9F6 5ABBBA4C 9A32B209 1D2F8487 BD357676 F14A4B3A
+            00FC1CB6 9D119A0F D8664E5B ABBFF98C ACBF4A7D 50EF1E24 D3603161 B5A5B3A4
+            267FB0BC E4060A78 9EFD69A6 B3F1F6BB BA812AEB C0B0848F 8BAC5F0E 49FAF002
+            64E7C0AF A84659DA B6567A86 E25528E7 92AA14EB
+                  quit
+          crypto pki certificate chain SLA-TrustPoint
+           certificate ca 01
+            30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363
+            6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934
+            3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305
+            43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720
+            526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030
+            82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D
+            CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520
+            1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE
+            4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC
+            7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188
+            68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7
+            C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191
+            C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44
+            DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201
+            06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85
+            4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500
+            03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905
+            604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B
+            D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8
+            467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C
+            7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B
+            5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678
+            80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB
+            418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
+            D697DF7F 28
+                  quit
+          !
+          !
+          license boot level network-advantage addon dna-advantage
+          memory free low-watermark processor 131696
+          !
+          system mtu 8000
+          diagnostic bootup level minimal
+          !
+          spanning-tree mode rapid-pvst
+          spanning-tree extend system-id
+          !
+          !
+          enable password cisco
+          !
+          username netadmin privilege 15 password 0 cisco
+          !
+          redundancy
+           mode sso
+          !
+          !
+          !
+          !
+          !
+          !
+          class-map match-any system-cpp-police-topology-control
+            description Topology control
+          class-map match-any system-cpp-police-sw-forward
+            description Sw forwarding, L2 LVX data, LOGGING
+          class-map match-any system-cpp-default
+            description EWLC control, EWLC data, Inter FED
+          class-map match-any system-cpp-police-sys-data
+            description Learning cache ovfl, High Rate App, Exception, EGR Exception, NFL SAMPLED DATA, RPF Failed
+          class-map match-any system-cpp-police-punt-webauth
+            description Punt Webauth
+          class-map match-any system-cpp-police-l2lvx-control
+            description L2 LVX control packets
+          class-map match-any system-cpp-police-forus
+            description Forus Address resolution and Forus traffic
+          class-map match-any system-cpp-police-multicast-end-station
+            description MCAST END STATION
+          class-map match-any system-cpp-police-multicast
+            description Transit Traffic and MCAST Data
+          class-map match-any system-cpp-police-l2-control
+            description L2 control
+          class-map match-any system-cpp-police-dot1x-auth
+            description DOT1X Auth
+          class-map match-any system-cpp-police-data
+            description ICMP redirect, ICMP_GEN and BROADCAST
+          class-map match-any system-cpp-police-stackwise-virt-control
+            description Stackwise Virtual
+          class-map match-any non-client-nrt-class
+          class-map match-any system-cpp-police-routing-control
+            description Routing control and Low Latency
+          class-map match-any system-cpp-police-protocol-snooping
+            description Protocol snooping
+          class-map match-any system-cpp-police-dhcp-snooping
+            description DHCP snooping
+          class-map match-any system-cpp-police-system-critical
+            description System Critical and Gold Pkt
+          !
+          policy-map system-cpp-policy
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          interface Loopback0
+           description RLOC Reachability
+           ip address 192.168.1.9 255.255.255.255
+           ip router isis
+          !
+          interface GigabitEthernet0/0
+           vrf forwarding Mgmt-vrf
+           ip address 198.18.128.12 255.255.192.0
+           negotiation auto
+           no cdp enable
+           ipv6 dhcp client request vendor
+           ipv6 address dhcp
+           ipv6 address autoconfig
+           ipv6 enable
+          !
+          interface GigabitEthernet1/0/1
+           description CPS-FE1
+           no switchport
+           dampening
+           ip address 192.168.10.34 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/2
+           description CPS_BDR2
+           no switchport
+           dampening
+           ip address 192.168.10.42 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
+           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/3
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/4
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/5
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/6
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/7
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/8
+           no cdp enable
+          !
+          interface Vlan1
+           no ip address
+           shutdown
+          !
+          router isis
+           net 49.0000.0000.0000.0009.00
+           is-type level-2-only
+           domain-password ciscodna
+           metric-style transition
+           log-adjacency-changes
+           bfd all-interfaces
+          !
+          ip forward-protocol nd
+          ip tcp mss 1280
+          ip tcp window-size 212000
+          ip http server
+          ip http authentication local
+          ip http secure-server
+          ip ssh bulk-mode 131072
+          !
+          !
+          !
+          !
+          snmp-server community RO RO
+          snmp-server community RW RW
+          !
+          !
+          control-plane
+           service-policy input system-cpp-policy
+          !
+          !
+          !
+          line con 0
+           stopbits 1
+          line vty 0 1
+           login local
+           transport input all
+          line vty 2
+           login local
+           length 0
+           transport input all
+          line vty 3 4
+           login local
+           transport input all
+          line vty 5 15
+           login local
+           transport input all
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          netconf-yang
+          end
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
-    id: n5
+    id: n6
     image_definition: null
-    label: CPS-BDR1
-    node_definition: catalyst9000v_q200
+    label: CPS-FE2
+    node_definition: cat9000v-uadp
+    parameters: {}
     ram: null
     tags: []
-    x: -160
-    y: -80
+    x: 760
+    y: 160
     interfaces:
       - id: i0
         label: Loopback0
@@ -1236,56 +1722,56 @@ nodes:
         type: physical
 links:
   - id: l0
-    n1: n0
+    n1: n5
+    n2: n0
+    i1: i2
+    i2: i3
+    conditioning: {}
+    label: cat9000v-uadp-0-GigabitEthernet1/0/1<->CPS_BDR1-GigabitEthernet1/0/2
+  - id: l1
+    n1: n5
     n2: n1
-    i1: i1
+    i1: i3
+    i2: i3
+    conditioning: {}
+    label: cat9000v-uadp-0-GigabitEthernet1/0/2<->CPS_BDR2-GigabitEthernet1/0/2
+  - id: l2
+    n1: n5
+    n2: n4
+    i1: i4
     i2: i0
     conditioning: {}
-    label: Fusion-GigabitEthernet1<->Internet&DC-port
-  - id: l1
-    n1: n4
-    n2: n3
-    i1: i2
-    i2: i2
-    conditioning: {}
-    label: cat9kvq200-0-GigabitEthernet1/0/1<->CPS-FE2-GigabitEthernet1/0/1
-  - id: l2
-    n1: n4
-    n2: n2
-    i1: i3
-    i2: i2
-    conditioning: {}
-    label: cat9kvq200-0-GigabitEthernet1/0/2<->CPS-FE1-GigabitEthernet1/0/1
+    label: cat9000v-uadp-0-GigabitEthernet1/0/3<->EMP1-eth0
   - id: l3
-    n1: n4
+    n1: n6
     n2: n0
-    i1: i4
-    i2: i3
-    conditioning: {}
-    label: cat9kvq200-0-GigabitEthernet1/0/3<->Fusion-GigabitEthernet3
-  - id: l4
-    n1: n5
-    n2: n3
     i1: i2
-    i2: i3
-    conditioning: {}
-    label: cat9kvq200-1-GigabitEthernet1/0/1<->CPS-FE2-GigabitEthernet1/0/2
-  - id: l5
-    n1: n5
-    n2: n2
-    i1: i3
-    i2: i3
-    conditioning: {}
-    label: cat9kvq200-1-GigabitEthernet1/0/2<->CPS-FE1-GigabitEthernet1/0/2
-  - id: l6
-    n1: n5
-    n2: n0
-    i1: i4
     i2: i4
     conditioning: {}
-    label: cat9kvq200-1-GigabitEthernet1/0/3<->Fusion-GigabitEthernet4
+    label: cat9000v-uadp-1-GigabitEthernet1/0/1<->CPS_BDR1-GigabitEthernet1/0/3
+  - id: l4
+    n1: n6
+    n2: n1
+    i1: i3
+    i2: i4
+    conditioning: {}
+    label: cat9000v-uadp-1-GigabitEthernet1/0/2<->CPS_BDR2-GigabitEthernet1/0/3
+  - id: l5
+    n1: n0
+    n2: n2
+    i1: i2
+    i2: i0
+    conditioning: {}
+    label: CPS_BDR1-GigabitEthernet1/0/1<->DC-port
+  - id: l6
+    n1: n1
+    n2: n3
+    i1: i2
+    i2: i0
+    conditioning: {}
+    label: CPS_BDR2-GigabitEthernet1/0/1<->INET-port
 lab:
   description: ''
   notes: ''
-  title: Lab at Mon 18:20 PM
-  version: 0.2.1
+  title: Lab at Mon 06:31 AM
+  version: 0.2.2
