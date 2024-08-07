@@ -4,6 +4,12 @@ nodes:
     configuration:
       - name: iosxe_config.txt
         content: |-
+          !
+          version 17.12
+          service timestamps debug datetime msec
+          service timestamps log datetime msec
+          platform punt-keepalive disable-kernel-core
+          !
           hostname CPS-BDR1
           !
           !
@@ -16,7 +22,6 @@ nodes:
            exit-address-family
           !
           no aaa new-model
-          no process cpu autoprofile hog
           switch 1 provision c9kv-q200-8p
           !
           !
@@ -63,30 +68,30 @@ nodes:
            certificate self-signed 01
             30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
             31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
-            69666963 6174652D 32373130 39383939 3232301E 170D3234 30373135 31323435
-            30365A17 0D333430 37313531 32343530 365A3031 312F302D 06035504 030C2649
+            69666963 6174652D 32373130 39383939 3232301E 170D3234 30383037 30373437
+            30345A17 0D333430 38303730 37343730 345A3031 312F302D 06035504 030C2649
             4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 37313039
             38393932 32308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
-            0A028201 0100B1F8 741E264E 1FB8C31A 838A45DB DA56AB8F FA5737F9 49294C80
-            D3A8AA7D 6300568D A4E78B97 9BD1F0C5 B4F7721C AF6EA000 F26F56AC EF9A8D01
-            6AAF2CA2 E97DC752 03935987 82EA10DB 3A759697 FADD6B4C F93B1DF8 9257DE7F
-            0D5BD5C9 A616C8A1 F1899FB8 AF96D42C 7C00F13F 348AA4D7 83880DF8 C06377F6
-            C7BF071C EF7D78FF F58F1A49 D8B9F5C3 E938128D A975CCF3 486231D1 A8F28C70
-            F04175D4 C67D61A0 3AA96D8C 9AAA435C 3B2DC238 C3E4DC9A C8BE3345 6AE1CB99
-            DB75EBF8 253DF0F7 4CB12165 F7AAAD1C 35D7EB82 32CC468A 42F5E531 E5E66846
-            EC6E0C4B 6B36B022 5DC7E016 0A90BBB2 89894E0A ECBF02A4 7E396828 C5A12515
-            0EE7DF01 F09B0203 010001A3 53305130 1D060355 1D0E0416 0414DECC D445E2DA
-            BE5533DC 5781303C FBCCC5C5 9CDD301F 0603551D 23041830 168014DE CCD445E2
-            DABE5533 DC578130 3CFBCCC5 C59CDD30 0F060355 1D130101 FF040530 030101FF
-            300D0609 2A864886 F70D0101 0B050003 82010100 843FAB43 BF32CBA2 1435A311
-            B73EA73A 66F93AD4 3C4C4110 E85CC120 8F3F50D5 319A4C2C 952DD8FA 47AC64F3
-            5DF4A79E 9544E46C 1850D9EA 69416C9B F470CC44 D2197294 5AC30D85 994A48B8
-            88473469 094EA5E7 2A2AE4AC CB9A346A 74D5E957 B5C5ADD5 A0E3E4A3 9F8A43C8
-            4D2F1226 D51755DD 0007B5DA 4435178C A1F82B5B 4273E511 F91BEC96 0E37B73D
-            CB6E608C 2BDC124D 6CF846DC 844828A2 0356AA09 B93FBFBF 860D4737 A332749E
-            C784701E D56D308E A793A4B0 DB5F9B1B 92953E5A CBF1D2C5 3E2DADC4 0425348A
-            FCD492E3 60FB0A7D 330E9A17 CCC58E04 B13436C9 8B671C35 02D69C03 947312E9
-            B367B7FC 5FB63662 A03F1C45 578C13A9 6BD8A9BB
+            0A028201 0100C489 3583C9B8 AC783583 7C80DAF1 CB2055BB 4C9A757F 41777E38
+            B878EC2E 02EDEA0C 6D5A0A5B A8F55DD6 1EB3CB16 CD7B15EC FD13EB85 C2AFFA42
+            8CF0B06C 7706A731 DF7D9AFC 5265E5F3 F3E35D0A 224D2FFD C171163F 876C9025
+            B2162720 FD6E7133 3031A39F F8EC4A64 B8842F13 291A3958 E03164B8 49B2EA31
+            69BC312D 73F12A08 F2BDC2C5 F02517DB 6D7786CB 521F0ABE 6185BA89 6DB24075
+            13B7BAED 9FBA6FA3 0524D5ED 82FB203D F2995AC7 624FBE7C B5BC5033 34DFA3DE
+            3539498A 11B7A461 BC409967 DF3549D9 C9EA72DE C94202B3 F3EEE489 F6D0529C
+            C510C736 F8BA94C4 B3091AE8 927054E0 C4166F55 9B361656 0A923F51 CFC97936
+            70CFF382 73390203 010001A3 53305130 1D060355 1D0E0416 04142C57 F743E401
+            5797622C 374F28C0 6203209F ABF8301F 0603551D 23041830 1680142C 57F743E4
+            01579762 2C374F28 C0620320 9FABF830 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 17621A45 5AD1FD82 EC2CAB19
+            F74C7DEC 4E385A67 7D1F115A 9CF1E072 B27586D1 74804C45 70D4A500 92F58058
+            C5DD2377 C57DB381 EA3FD253 55253327 CA432DB1 598CDCD2 D111E097 BAD1B984
+            BE3A62B1 30597F32 B3EE808C ACF5FE93 8A583439 F035AEAA FF6BD4A1 843A3232
+            8C3F4670 E7B3367E BFB56562 BB23BA34 732C6A29 315640BE 6801246C 26F3B89D
+            7E2744D7 FB86EC94 098D8B61 8859F5B2 220AEEC6 64DC2A57 F217E7CC 9EFF442D
+            2D0B5DDE 8D674A84 B06BAA64 A1714CFE F3D9D8CC 8632D063 4C4BA729 ABEB1B30
+            91B9617E 3DEDCA7B 44D5A9E7 56836F84 4D58FC25 FF3DD193 A0D68DF4 DC84FF78
+            1D9A0228 4295E5A2 16126CB7 4AA4A195 3DBAC90D
                   quit
           crypto pki certificate chain SLA-TrustPoint
            certificate ca 01
@@ -141,7 +146,6 @@ nodes:
           !
           !
           vlan 2999
-          no cdp run
           !
           !
           class-map match-any system-cpp-police-mac-learning
@@ -272,7 +276,7 @@ nodes:
           !
           interface GigabitEthernet0/0
            vrf forwarding Mgmt-vrf
-           ip address 198.18.128.9 255.255.192.0
+           ip address 169.100.100.112 255.255.255.0
            negotiation auto
            no cdp enable
            ipv6 dhcp client request vendor
@@ -283,7 +287,6 @@ nodes:
           interface GigabitEthernet1/0/1
            description FUSION
            switchport mode trunk
-           no cdp enable
           !
           interface GigabitEthernet1/0/2
            description CPS-FE1
@@ -321,7 +324,18 @@ nodes:
            no cdp enable
           !
           interface GigabitEthernet1/0/6
+           description CPS-FE1
+           no switchport
+           dampening
+           no ip address
+           no ip redirects
+           no ip proxy-arp
+           load-interval 30
+           carrier-delay msec 0
            no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
           !
           interface GigabitEthernet1/0/7
            no cdp enable
@@ -390,10 +404,7 @@ nodes:
           !
           line con 0
            stopbits 1
-          line vty 0 1
-           login local
-           transport input all
-          line vty 2
+          line vty 0 2
            login local
            length 0
            transport input all
@@ -407,7 +418,6 @@ nodes:
           !
           !
           !
-          copy cdrom0:/iosxe_config.txt start
           !
           !
           !
@@ -470,7 +480,12 @@ nodes:
     configuration:
       - name: iosxe_config.txt
         content: |-
-          hostname CPS-BDR2
+          version 17.12
+          service timestamps debug datetime msec
+          service timestamps log datetime msec
+          platform punt-keepalive disable-kernel-core
+          !
+          hostname CPS-FE1
           !
           !
           vrf definition Mgmt-vrf
@@ -481,9 +496,9 @@ nodes:
            address-family ipv6
            exit-address-family
           !
+          no logging console
           no aaa new-model
-          no process cpu autoprofile hog
-          switch 1 provision c9kv-q200-8p
+          switch 1 provision c9kv-uadp-8p
           !
           !
           !
@@ -514,48 +529,19 @@ nodes:
           !
           !
           !
-          crypto pki trustpoint TP-self-signed-2710989922
-           enrollment selfsigned
-           subject-name cn=IOS-Self-Signed-Certificate-2710989922
-           revocation-check none
-           rsakeypair TP-self-signed-2710989922
-           hash sha256
-          !
           crypto pki trustpoint SLA-TrustPoint
            enrollment pkcs12
            revocation-check crl
            hash sha256
           !
+          crypto pki trustpoint TP-self-signed-1469543359
+           enrollment selfsigned
+           subject-name cn=IOS-Self-Signed-Certificate-1469543359
+           revocation-check none
+           rsakeypair TP-self-signed-1469543359
+           hash sha256
           !
-          crypto pki certificate chain TP-self-signed-2710989922
-           certificate self-signed 01
-            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
-            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
-            69666963 6174652D 32373130 39383939 3232301E 170D3234 30373135 31323435
-            31315A17 0D333430 37313531 32343531 315A3031 312F302D 06035504 030C2649
-            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 37313039
-            38393932 32308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
-            0A028201 01009C5D 6184B0EA 6CA168B0 2412B2B5 7CCBF0FF 65609BF9 1D420AAF
-            761143F9 1ADA986A 38F28595 3C6C5F6D C24BC11E F5A4A1BB 78B9C6D7 C4A936BC
-            FCF2C7BD 9190D916 939C0DE8 A019DB97 466C3302 F305029D AA8242FB 6209ED0D
-            676B1C5E A7CFF1D8 157C8B2E E447D876 EB151563 2349168E 7060DCC1 FC41A763
-            4D282AED 9ADD703C AA8DDA54 688782E1 40F53913 43CBE8E9 D96C6E85 9A3AB1D6
-            DDD4027B F1C629CE 36C96A70 70B4ED4B 618F3985 9D3D18CE D963866D 74FC6B43
-            F975DA8C 4CF4A5CD 425B8657 C3D9028D A60A2939 9DF9D703 6263622F C1313FD3
-            DDCBAAB5 91C4A718 FEE7271A 1165FBCC CA6A6A62 4A7E488B CFD0BBAA B5B92086
-            5DE18D41 AA270203 010001A3 53305130 1D060355 1D0E0416 0414DC8C 43809890
-            5ADC3919 9F4D1A1D D760800F 7B6A301F 0603551D 23041830 168014DC 8C438098
-            905ADC39 199F4D1A 1DD76080 0F7B6A30 0F060355 1D130101 FF040530 030101FF
-            300D0609 2A864886 F70D0101 0B050003 82010100 818C3966 8421179D E4A5FCD8
-            6A5D66AE 116D3155 4B57DCC4 DF5D1181 8149874C D26E0D02 C93BDB96 862E2257
-            9EE37360 5A375836 83E88361 80A99088 366C149A 67D3A8FA F751C24D 1FF7AF14
-            C4AF376F 05136648 5DE0A5B4 DABFEEC4 F7305047 5645DA8F 511F69A6 B30AC7BB
-            E37A1027 513211EA 0305D943 FE9AF448 441900B6 A4483B81 B1BD9B75 3EF2F316
-            87C3B634 10628B18 982D0356 BF5E5B50 592B4510 9DBDED3F 0273ED95 C21F662B
-            B486D2E0 46BA2398 B2C62FA4 634211E2 8B2A5537 B49A25CD D4147862 27768E53
-            1E03803B 67BD3D1B D807C1C8 509789EF DF61F464 2189CC17 85C4BD03 EDBE4187
-            1F582819 2CD3CC2C C46F6121 B28704D1 7DC5831D
-                  quit
+          !
           crypto pki certificate chain SLA-TrustPoint
            certificate ca 01
             30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
@@ -585,10 +571,39 @@ nodes:
             418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
             D697DF7F 28
                   quit
+          crypto pki certificate chain TP-self-signed-1469543359
+           certificate self-signed 01
+            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
+            69666963 6174652D 31343639 35343333 3539301E 170D3234 30383037 30383231
+            32305A17 0D333430 38303730 38323132 305A3031 312F302D 06035504 030C2649
+            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 34363935
+            34333335 39308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+            0A028201 01009056 81B37A3B 5C5FB2E0 59A4AE05 37D5A6FA D2097859 6E25B26B
+            6DD07865 948DB159 F0701C31 363CEAE4 CF4310B7 69C5E4A6 8A670041 95C4F41B
+            95C88133 7DF7BA02 14B4848A 69C82C6F E5F559F1 25AAEDD8 3B0C5756 AE488A4E
+            5120108D 8826E6E9 FF2308E9 01680EA8 316C4334 2440ADD0 A624089D 86CB7258
+            FEC49AED 937F82BB D0369441 3CD4AB5A 0D50083D AF81F1DE C6104987 813AD265
+            D9290334 58C71EEA F911EF89 4B98FCCA BFFB8277 602F2B33 0FE0EFE2 AC788E01
+            C2851ACD 015AF918 E0439BA3 4D49CDA4 A7908B56 AAE3558B E92B71EC 3AD17A98
+            355792C9 7A978AA7 63A7754E 12E3733D FFB447DC 147A62DA 7DEC532F 2E85D78F
+            CDC5F6B8 9D190203 010001A3 53305130 1D060355 1D0E0416 04147592 3C7AA36A
+            C56F97C7 5957ADAE 9F969FFC 8027301F 0603551D 23041830 16801475 923C7AA3
+            6AC56F97 C75957AD AE9F969F FC802730 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 583B6502 D0FAB3DC 22C83DFD
+            6AB3BAE1 21FAE090 68262183 15693CA5 B8550926 D0A2EE82 14B550BC BF942A62
+            AE6779EB 12456D83 F37CA4B2 A6F7A655 F6E64346 6090E547 AAD8176C FD69181E
+            DCAFFA5D ED3951BB C579D7E4 52209D9A 39F37C00 4250765F A19A6DF7 405E0BD1
+            545A976D C103FC5F ACEB29DF 016611B6 288B0C78 BE113BFF 20D0A442 79D83155
+            358EB998 1A3A6046 C89EB408 2448A020 0C78B8F5 8C5A9833 E1712F20 3EB906EA
+            54722D8E FDCC1B5D 9B3D2232 61E96E63 EFFF95DB 86BCD12F 4958456F 63540E84
+            7C018DD2 BE7317B4 CFE93A81 472C0BAE B981E058 95CDAE1E 6329F70B FB97B99F
+            A14B79FE CFF79E1C 9DEBBB83 8D412E2F 2A6245CE
+                  quit
           !
           !
           license boot level network-advantage addon dna-advantage
-          memory free low-watermark processor 131696
+          memory free low-watermark processor 74862
           !
           system mtu 8000
           diagnostic bootup level minimal
@@ -608,117 +623,45 @@ nodes:
           !
           !
           !
-          vlan 2998
-          no cdp run
           !
-          !
-          class-map match-any system-cpp-police-mac-learning
-            description MAC Learning
-          class-map match-any system-cpp-police-mcast-data
-            description MCAST Data traffic
           class-map match-any system-cpp-police-topology-control
-            description Topology control - STP
-          class-map match-any system-cpp-police-unknown-uc
-            description Unknown UC Packets
+            description Topology control
           class-map match-any system-cpp-police-sw-forward
-            description Software forwarding
-          class-map match-any system-cpp-police-proto-snoop-v6
-            description Protocol snooping v6
+            description Sw forwarding, L2 LVX data, LOGGING
           class-map match-any system-cpp-default
-            description Inter FED Traffic
-          class-map match-any system-cpp-police-proto-snoop-v4
-            description Protocol snooping v4
-          class-map match-any system-cpp-police-rip-bc
-            description RIP Broadcast
-          class-map match-any system-cpp-police-svl-ctrl
-            description NGSVL IPC Traffic
-          class-map match-any system-cpp-police-mpls-oam
-            description MPLS OAM (traceroute, ping etc)
-          class-map match-any system-cpp-police-dhcp-v6
-            description DHCP V6
-          class-map match-any system-cpp-police-dhcp-v4
-            description DHCP V4
+            description EWLC control, EWLC data, Inter FED
+          class-map match-any system-cpp-police-sys-data
+            description Learning cache ovfl, High Rate App, Exception, EGR Exception, NFL SAMPLED
+          %Log packet overrun, PC 0x5B5BAB3BE930, format:
+          %s
+           DATA, RPF Failed
+          class-map match-any system-cpp-police-punt-webauth
+            description Punt Webauth
+          class-map match-any system-cpp-police-l2lvx-control
+            description L2 LVX control packets
           class-map match-any system-cpp-police-forus
             description Forus Address resolution and Forus traffic
-          class-map match-any system-cpp-police-icmp-v6
-            description ICMP redirect, ICMP_GEN over IPv6
-          class-map match-any system-cpp-police-icmp-v4
-            description ICMP redirect, ICMP_GEN over IPv4
-          class-map match-any system-cpp-police-ospf-v6
-            description OSPF over IPv6
-          class-map match-any system-cpp-police-ospf-v4
-            description OSPF over IPv4
-          class-map match-any system-cpp-police-arp
-            description Address Resolution Protocol
-          class-map match-any system-cpp-police-igrp-v4
-            description IGRP and EIGRP over IPv4
-          class-map match-any system-cpp-police-fhrp-v4
-            description VRRP, HSRP, GLBP over IPv4
-          class-map match-any system-cpp-police-igrp-v6
-            description IGRP and EIGRP over IPv6
-          class-map match-any system-cpp-police-fhrp-v6
-            description VRRP, HSRP, GLBP over IPv6
-          class-map match-any system-cpp-police-fragment-v4
-            description IPv4 Fragmented Packets
-          class-map match-any system-cpp-police-fragment-v6
-            description IPv6 Fragmented Packets
-          class-map match-any system-cpp-police-ldp-v4
-            description LDP (MPLS) over IPv4
-          class-map match-any system-cpp-police-ldp-v6
-            description LDP (MPLS) over IPv6
+          class-map match-any system-cpp-police-multicast-end-station
+            description MCAST END STATION
+          class-map match-any system-cpp-police-multicast
+            description Transit Traffic and MCAST Data
           class-map match-any system-cpp-police-l2-control
             description L2 control
-          class-map match-any system-cpp-police-lacp
-            description LACP control traffic for ether channel
-          class-map match-any system-cpp-police-bgp-v4
-            description BGP sessions over IPv4
-          class-map match-any system-cpp-police-bgp-v6
-            description BGP sessions over IPv6
-          class-map match-any system-cpp-police-rip-v6
-            description RIP over IPv6
-          class-map match-any system-cpp-police-alt-sw-forward
-            description Alternate Software forwarding
-          class-map match-any system-cpp-police-rip-v4
-            description RIP over IPv4
-          class-map match-any system-cpp-police-mtu-ttl-fail
-            description MTU/TTL 0/TTL 1 failures
-          class-map match-any system-cpp-police-isis
-            description IS-IS protocol
-          class-map match-any system-cpp-police-bfd-v4
-            description BFD and BFD Echo over IPv4
-          class-map match-any system-cpp-police-udp-v4
-            description UDP V4
-          class-map match-any system-cpp-police-mcast-rpf-fail
-            description MCAST Data RPF fail
-          class-map match-any system-cpp-police-bfd-v6
-            description BFD and BFD Echo over IPv6
-          class-map match-any system-cpp-police-udp-v6
-            description UDP V6
+          class-map match-any system-cpp-police-dot1x-auth
+            description DOT1X Auth
+          class-map match-any system-cpp-police-data
+            description ICMP redirect, ICMP_GEN and BROADCAST
+          class-map match-any system-cpp-police-stackwise-virt-control
+            description Stackwise Virtual
           class-map match-any non-client-nrt-class
-          class-map match-any system-cpp-police-tcp-v6
-            description TCP V6
-          class-map match-any system-cpp-police-tcp-v4
-            description TCP V4
-          class-map match-any system-cpp-default-v6
-            description Inter FED Traffic
-          class-map match-any system-cpp-default-v4
-            description Inter FED Traffic
+          class-map match-any system-cpp-police-routing-control
+            description Routing control and Low Latency
+          class-map match-any system-cpp-police-protocol-snooping
+            description Protocol snooping
           class-map match-any system-cpp-police-dhcp-snooping
             description DHCP snooping
-          class-map match-any system-cpp-police-svl-ipc
-            description NGSVL IPC Traffic
-          class-map match-any system-cpp-police-mcast-ctrl-v4
-            description MCAST control packets over IPv4
           class-map match-any system-cpp-police-system-critical
             description System Critical and Gold Pkt
-          class-map match-any system-cpp-police-mcast-register-v4
-            description MCAST v4 Register traffic
-          class-map match-any system-cpp-police-lisp-ctrl
-            description LISP Control Packets
-          class-map match-any system-cpp-police-mcast-ctrl-v6
-            description MCAST control packets over IPv6
-          class-map match-any system-cpp-police-mcast-register-v6
-            description MCAST v6 Register traffic
           !
           policy-map system-cpp-policy
           !
@@ -735,12 +678,12 @@ nodes:
           !
           interface Loopback0
            description RLOC Reachability
-           ip address 192.168.1.5 255.255.255.255
+           ip address 192.168.1.8 255.255.255.255
            ip router isis
           !
           interface GigabitEthernet0/0
            vrf forwarding Mgmt-vrf
-           ip address 198.18.128.10 255.255.192.0
+           ip address 169.100.100.114 255.255.255.0
            negotiation auto
            no cdp enable
            ipv6 dhcp client request vendor
@@ -749,39 +692,35 @@ nodes:
            ipv6 enable
           !
           interface GigabitEthernet1/0/1
-           description FUSION
-           switchport mode trunk
-           no cdp enable
-          !
-          interface GigabitEthernet1/0/2
-           description CPS-FE1
+           description CPS-BDR1
            no switchport
            dampening
-           ip address 192.168.10.37 255.255.255.252
+           ip address 192.168.10.30 255.255.255.252
            no ip redirects
            no ip proxy-arp
            ip router isis
            load-interval 30
            carrier-delay msec 0
-           no cdp enable
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+           clns mtu 1440
+          !
+          interface GigabitEthernet1/0/2
+           description CPS-BDR2
+           no switchport
+           dampening
+           ip address 192.168.10.38 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           ip router isis
+           load-interval 30
+           carrier-delay msec 0
            bfd interval 300 min_rx 300 multiplier 3
            no bfd echo
            clns mtu 1440
           !
           interface GigabitEthernet1/0/3
-           description CPS-FE2
-           no switchport
-           dampening
-           ip address 192.168.10.41 255.255.255.252
-           no ip redirects
-           no ip proxy-arp
-           ip router isis
-           load-interval 30
-           carrier-delay msec 0
            no cdp enable
-           bfd interval 300 min_rx 300 multiplier 3
-           no bfd echo
-           clns mtu 1440
           !
           interface GigabitEthernet1/0/4
            no cdp enable
@@ -796,41 +735,18 @@ nodes:
            no cdp enable
           !
           interface GigabitEthernet1/0/8
-           no cdp enable
           !
           interface Vlan1
            no ip address
            shutdown
           !
-          interface Vlan2998
-           description FUSION
-           ip address 192.168.10.5 255.255.255.252
-          !
           router isis
-           net 49.0000.0000.0000.0005.00
+           net 49.0000.0000.0000.0008.00
            is-type level-2-only
            domain-password ciscodna
            metric-style transition
            log-adjacency-changes
-           summary-address 192.168.10.0 255.255.255.0 level-2
-           redistribute connected
-           default-information originate
            bfd all-interfaces
-          !
-          router bgp 65001
-           bgp router-id interface Loopback0
-           bgp log-neighbor-changes
-           bgp graceful-restart
-           neighbor 192.168.10.6 remote-as 65000
-           neighbor 192.168.10.6 update-source Vlan2998
-           !
-           address-family ipv4
-            bgp aggregate-timer 0
-            network 192.168.10.4 mask 255.255.255.252
-            redistribute isis route-map LOOPBACKS
-            neighbor 192.168.10.6 activate
-            neighbor 192.168.10.6 weight 65535
-           exit-address-family
           !
           ip forward-protocol nd
           ip tcp mss 1280
@@ -843,11 +759,6 @@ nodes:
           !
           !
           !
-          ip prefix-list LOOPBACKS seq 5 permit 192.168.1.0/24 le 32
-          !
-          route-map LOOPBACKS permit 10
-           match ip address prefix-list LOOPBACKS
-          !
           snmp-server community RO RO
           snmp-server community RW RW
           !
@@ -858,15 +769,15 @@ nodes:
           !
           !
           line con 0
+           exec-timeout 0 0
            stopbits 1
-          line vty 0 1
-           login local
-           transport input all
-          line vty 2
+          line vty 0 2
+           exec-timeout 0 0
            login local
            length 0
            transport input all
           line vty 3 4
+           exec-timeout 0 0
            login local
            transport input all
           line vty 5 15
@@ -877,7 +788,6 @@ nodes:
           !
           !
           !
-          copy cdrom0:/iosxe_config.txt start
           !
           !
           netconf-yang
@@ -1006,310 +916,127 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: |-
-          hostname CPS-FE1
-          !
-          !
-          vrf definition Mgmt-vrf
-           !
-           address-family ipv4
-           exit-address-family
-           !
-           address-family ipv6
-           exit-address-family
-          !
-          no aaa new-model
-          switch 1 provision c9kv-uadp-8p
-          !
-          !
-          !
-          !
-          ip routing
-          !
-          !
-          !
-          !
-          !
-          ip multicast-routing
-          no ip domain lookup
-          ip domain name demo.local
-          !
-          !
-          !
-          login on-success log
-          vtp mode transparent
-          vtp version 1
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          crypto pki trustpoint TP-self-signed-3608606433
-           enrollment selfsigned
-           subject-name cn=IOS-Self-Signed-Certificate-3608606433
-           revocation-check none
-           rsakeypair TP-self-signed-3608606433
-           hash sha256
-          !
-          crypto pki trustpoint SLA-TrustPoint
-           enrollment pkcs12
-           revocation-check crl
-           hash sha256
-          !
-          !
-          crypto pki certificate chain TP-self-signed-3608606433
-           certificate self-signed 01
-            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
-            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
-            69666963 6174652D 33363038 36303634 3333301E 170D3234 30373139 31323533
-            35395A17 0D333430 37313931 32353335 395A3031 312F302D 06035504 030C2649
-            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 36303836
-            30363433 33308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
-            0A028201 010090D0 332CCA00 00952AA3 E3E20271 6DF68158 B4B4E739 630389F9
-            7EDFB522 449C1D9C 99BDC463 A316A4ED E35873C6 ECE51189 562ED3A1 F3A2600C
-            773CCF03 87CAF790 EBA6CD21 4F1232F9 F980D97D E4D02A96 70D18489 85AE4D49
-            B4DE6070 07F50221 BE4130C7 E80CE797 4319246C 8CA6E8A9 7E808C1A C28DDB00
-            E9577A96 512ABFFB 49F158C6 1616E014 DA9E4BAC 773D51D1 CCF2EED5 BB17226A
-            D870E81F C1AC67EB A09BA2BD 80061CE9 9BEFE63A 31C57551 EED8EA97 0B3C8747
-            F3F50C26 173C5F4B BC00C825 0068AC26 891E1A3E 80FBDED9 424AF4C1 369A8A54
-            2DD883AB F4027543 27B54A81 4C46CBB4 AE747D66 D19E2DE6 ADAAD72B FF917450
-            570FC360 C8330203 010001A3 53305130 1D060355 1D0E0416 041499FB 17533ABE
-            DE1694D1 A49B062E 7363222B F735301F 0603551D 23041830 16801499 FB17533A
-            BEDE1694 D1A49B06 2E736322 2BF73530 0F060355 1D130101 FF040530 030101FF
-            300D0609 2A864886 F70D0101 0B050003 82010100 846A6E8D 6FFCE898 107E2DC1
-            CC5C13EA E704EDC7 7E1BF2A2 8F52D92A 162A8048 C38A0E0D 87014BF8 63B8D42B
-            8798034C B780C406 C3EE8617 D63B3980 A92F4256 CF580353 C6B28BF4 BA732AAB
-            10938DBC CC7D5C4D 04F4C182 1A33B263 7BA4C146 E2E8AEBF 12519D98 5F7C3ACA
-            6B543158 95DB8115 CAEB82F0 062DFC18 44CE7E53 5840E604 343AB095 E44A8EE3
-            929FBA89 8592CF6E D020C7C8 8C918F6A 5C1D9083 EAD9CB00 EBAF4F1E F33578DF
-            6C6C2561 103D870F 761EEE57 EF1B44E6 D131A3E9 64338F55 97D8CC00 FA9D0892
-            E3283758 067DC978 6FC8CE35 FB2472FC 7E64C099 598677A9 D4FCA4AD 721888B3
-            2C17FE23 884B7118 BC9E8438 BC30C2C4 C55CA908
-                  quit
-          crypto pki certificate chain SLA-TrustPoint
-           certificate ca 01
-            30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
-            32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363
-            6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934
-            3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305
-            43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720
-            526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030
-            82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D
-            CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520
-            1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE
-            4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC
-            7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188
-            68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7
-            C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191
-            C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44
-            DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201
-            06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85
-            4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500
-            03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905
-            604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B
-            D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8
-            467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C
-            7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B
-            5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678
-            80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB
-            418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
-            D697DF7F 28
-                  quit
-          !
-          !
-          license boot level network-advantage addon dna-advantage
-          memory free low-watermark processor 74862
-          !
-          system mtu 8000
-          diagnostic bootup level minimal
-          !
-          spanning-tree mode rapid-pvst
-          spanning-tree extend system-id
-          !
-          !
-          enable password cisco
-          !
-          username netadmin privilege 15 password 0 cisco
-          !
-          redundancy
-           mode sso
-          !
-          !
-          !
-          !
-          !
-          !
-          class-map match-any system-cpp-police-topology-control
-            description Topology control
-          class-map match-any system-cpp-police-sw-forward
-            description Sw forwarding, L2 LVX data, LOGGING
-          class-map match-any system-cpp-default
-            description EWLC control, EWLC data, Inter FED
-          class-map match-any system-cpp-police-sys-data
-            description Learning cache ovfl, High Rate App, Exception, EGR Exception, NFL SAMPLED DATA, RPF Failed
-          class-map match-any system-cpp-police-punt-webauth
-            description Punt Webauth
-          class-map match-any system-cpp-police-l2lvx-control
-            description L2 LVX control packets
-          class-map match-any system-cpp-police-forus
-            description Forus Address resolution and Forus traffic
-          class-map match-any system-cpp-police-multicast-end-station
-            description MCAST END STATION
-          class-map match-any system-cpp-police-multicast
-            description Transit Traffic and MCAST Data
-          class-map match-any system-cpp-police-l2-control
-            description L2 control
-          class-map match-any system-cpp-police-dot1x-auth
-            description DOT1X Auth
-          class-map match-any system-cpp-police-data
-            description ICMP redirect, ICMP_GEN and BROADCAST
-          class-map match-any system-cpp-police-stackwise-virt-control
-            description Stackwise Virtual
-          class-map match-any non-client-nrt-class
-          class-map match-any system-cpp-police-routing-control
-            description Routing control and Low Latency
-          class-map match-any system-cpp-police-protocol-snooping
-            description Protocol snooping
-          class-map match-any system-cpp-police-dhcp-snooping
-            description DHCP snooping
-          class-map match-any system-cpp-police-system-critical
-            description System Critical and Gold Pkt
-          !
-          policy-map system-cpp-policy
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          !
-          interface Loopback0
-           description RLOC Reachability
-           ip address 192.168.1.8 255.255.255.255
-           ip router isis
-          !
-          interface GigabitEthernet0/0
-           vrf forwarding Mgmt-vrf
-           ip address 198.18.128.11 255.255.192.0
-           negotiation auto
-           no cdp enable
-           ipv6 dhcp client request vendor
-           ipv6 address dhcp
-           ipv6 address autoconfig
-           ipv6 enable
-          !
-          interface GigabitEthernet1/0/1
-           description CPS-BDR1
-           no switchport
-           dampening
-           ip address 192.168.10.30 255.255.255.252
-           no ip redirects
-           no ip proxy-arp
-           ip router isis
-           load-interval 30
-           carrier-delay msec 0
-           no cdp enable
-           bfd interval 300 min_rx 300 multiplier 3
-           no bfd echo
-           clns mtu 1440
-          !
-          interface GigabitEthernet1/0/2
-           description CPS-BDR2
-           no switchport
-           dampening
-           ip address 192.168.10.38 255.255.255.252
-           no ip redirects
-           no ip proxy-arp
-           ip router isis
-           load-interval 30
-           carrier-delay msec 0
-           no cdp enable
-           bfd interval 300 min_rx 300 multiplier 3
-           no bfd echo
-           clns mtu 1440
-          !
-          interface GigabitEthernet1/0/3
-           no cdp enable
-          !
-          interface GigabitEthernet1/0/4
-           no cdp enable
-          !
-          interface GigabitEthernet1/0/5
-           no cdp enable
-          !
-          interface GigabitEthernet1/0/6
-           no cdp enable
-          !
-          interface GigabitEthernet1/0/7
-           no cdp enable
-          !
-          interface GigabitEthernet1/0/8
-          !
-          interface Vlan1
-           no ip address
-           shutdown
-          !
-          router isis
-           net 49.0000.0000.0000.0008.00
-           is-type level-2-only
-           domain-password ciscodna
-           metric-style transition
-           log-adjacency-changes
-           bfd all-interfaces
-          !
-          ip forward-protocol nd
-          ip tcp mss 1280
-          ip tcp window-size 212000
-          ip http server
-          ip http authentication local
-          ip http secure-server
-          ip ssh bulk-mode 131072
-          !
-          !
-          !
-          !
-          snmp-server community RO RO
-          snmp-server community RW RW
-          !
-          !
-          control-plane
-           service-policy input system-cpp-policy
-          !
-          !
-          !
-          line con 0
-           stopbits 1
-          line vty 0
-           login local
-           transport input all
-          line vty 1 2
-           login local
-           length 0
-           transport input all
-          line vty 3 4
-           login local
-           transport input all
-          line vty 5 15
-           login local
-           transport input all
-          !
-          !
-          !
-          !
-          copy cdrom0:/iosxe_config.txt start
-          !
-          !
-          !
-          netconf-yang
-          end
+        content: "Building configuration...\n\nCurrent configuration : 8820 bytes\n\
+          !\n! Last configuration change at 09:08:01 UTC Wed Aug 7 2024\n!\nversion\
+          \ 17.12\nservice timestamps debug datetime msec\nservice timestamps log\
+          \ datetime msec\nplatform punt-keepalive disable-kernel-core\n!\nhostname\
+          \ CPS-FE1\n!\n!\nvrf definition Mgmt-vrf\n !\n address-family ipv4\n exit-address-family\n\
+          \ !\n address-family ipv6\n exit-address-family\n!\nno logging console\n\
+          no aaa new-model\nswitch 1 provision c9kv-uadp-8p\n!\n!\n!\n!\nip routing\n\
+          !\n!\n!\n!\n!\nip multicast-routing\nno ip domain lookup\nip domain name\
+          \ demo.local\n!\nip dhcp pool webuidhcp\n!\n!\n!\nlogin on-success log\n\
+          ipv6 unicast-routing\nvtp mode transparent\nvtp version 1\n!\n!\n!\n!\n\
+          !\n!\n!\n!\ncrypto pki trustpoint SLA-TrustPoint\n enrollment pkcs12\n revocation-check\
+          \ crl\n hash sha256\n!\ncrypto pki trustpoint TP-self-signed-1469543359\n\
+          \ enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-1469543359\n\
+          \ revocation-check none\n rsakeypair TP-self-signed-1469543359\n hash sha256\n\
+          !\n!\ncrypto pki certificate chain SLA-TrustPoint\n certificate ca 01\n\
+          \  30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030\n\
+          \  32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363\n\
+          \  6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934\n\
+          \  3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305\n\
+          \  43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720\n\
+          \  526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030\n\
+          \  82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D\n\
+          \  CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520\n\
+          \  1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE\n\
+          \  4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC\n\
+          \  7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188\n\
+          \  68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7\n\
+          \  C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191\n\
+          \  C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44\n\
+          \  DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201\n\
+          \  06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85\n\
+          \  4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500\n\
+          \  03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905\n\
+          \  604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B\n\
+          \  D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8\n\
+          \  467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C\n\
+          \  7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B\n\
+          \  5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678\n\
+          \  80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB\n\
+          \  418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0\n\
+          \  D697DF7F 28\n  \tquit\ncrypto pki certificate chain TP-self-signed-1469543359\n\
+          \ certificate self-signed 01\n  30820330 30820218 A0030201 02020101 300D0609\
+          \ 2A864886 F70D0101 0B050030\n  31312F30 2D060355 04030C26 494F532D 53656C66\
+          \ 2D536967 6E65642D 43657274\n  69666963 6174652D 31343639 35343333 3539301E\
+          \ 170D3234 30383037 30383231\n  32305A17 0D333430 38303730 38323132 305A3031\
+          \ 312F302D 06035504 030C2649\n  4F532D53 656C662D 5369676E 65642D43 65727469\
+          \ 66696361 74652D31 34363935\n  34333335 39308201 22300D06 092A8648 86F70D01\
+          \ 01010500 0382010F 00308201\n  0A028201 01009056 81B37A3B 5C5FB2E0 59A4AE05\
+          \ 37D5A6FA D2097859 6E25B26B\n  6DD07865 948DB159 F0701C31 363CEAE4 CF4310B7\
+          \ 69C5E4A6 8A670041 95C4F41B\n  95C88133 7DF7BA02 14B4848A 69C82C6F E5F559F1\
+          \ 25AAEDD8 3B0C5756 AE488A4E\n  5120108D 8826E6E9 FF2308E9 01680EA8 316C4334\
+          \ 2440ADD0 A624089D 86CB7258\n  FEC49AED 937F82BB D0369441 3CD4AB5A 0D50083D\
+          \ AF81F1DE C6104987 813AD265\n  D9290334 58C71EEA F911EF89 4B98FCCA BFFB8277\
+          \ 602F2B33 0FE0EFE2 AC788E01\n  C2851ACD 015AF918 E0439BA3 4D49CDA4 A7908B56\
+          \ AAE3558B E92B71EC 3AD17A98\n  355792C9 7A978AA7 63A7754E 12E3733D FFB447DC\
+          \ 147A62DA 7DEC532F 2E85D78F\n  CDC5F6B8 9D190203 010001A3 53305130 1D060355\
+          \ 1D0E0416 04147592 3C7AA36A\n  C56F97C7 5957ADAE 9F969FFC 8027301F 0603551D\
+          \ 23041830 16801475 923C7AA3\n  6AC56F97 C75957AD AE9F969F FC802730 0F060355\
+          \ 1D130101 FF040530 030101FF\n  300D0609 2A864886 F70D0101 0B050003 82010100\
+          \ 583B6502 D0FAB3DC 22C83DFD\n  6AB3BAE1 21FAE090 68262183 15693CA5 B8550926\
+          \ D0A2EE82 14B550BC BF942A62\n  AE6779EB 12456D83 F37CA4B2 A6F7A655 F6E64346\
+          \ 6090E547 AAD8176C FD69181E\n  DCAFFA5D ED3951BB C579D7E4 52209D9A 39F37C00\
+          \ 4250765F A19A6DF7 405E0BD1\n  545A976D C103FC5F ACEB29DF 016611B6 288B0C78\
+          \ BE113BFF 20D0A442 79D83155\n  358EB998 1A3A6046 C89EB408 2448A020 0C78B8F5\
+          \ 8C5A9833 E1712F20 3EB906EA\n  54722D8E FDCC1B5D 9B3D2232 61E96E63 EFFF95DB\
+          \ 86BCD12F 4958456F 63540E84\n  7C018DD2 BE7317B4 CFE93A81 472C0BAE B981E058\
+          \ 95CDAE1E 6329F70B FB97B99F\n  A14B79FE CFF79E1C 9DEBBB83 8D412E2F 2A6245CE\n\
+          \  \tquit\n!\n!\nlicense boot level network-advantage addon dna-advantage\n\
+          memory free low-watermark processor 74862\n!\nsystem mtu 8000\ndiagnostic\
+          \ bootup level minimal\n!\nspanning-tree mode rapid-pvst\nspanning-tree\
+          \ extend system-id\n!\n!\nenable password cisco\n!\nusername netadmin privilege\
+          \ 15 password 0 cisco\n!\nredundancy\n mode sso\n!\n!\n!\n!\n!\n!\nclass-map\
+          \ match-any system-cpp-police-topology-control\n  description Topology control\n\
+          class-map match-any system-cpp-police-sw-forward\n  description Sw forwarding,\
+          \ L2 LVX data, LOGGING\nclass-map match-any system-cpp-default\n  description\
+          \ EWLC control, EWLC data, Inter FED\nclass-map match-any system-cpp-police-sys-data\n\
+          \  description Learning cache ovfl, High Rate App, Exception, EGR Exception,\
+          \ NFL SAMPLED DATA, RPF Failed\nclass-map match-any system-cpp-police-punt-webauth\n\
+          \  description Punt Webauth\nclass-map match-any system-cpp-police-l2lvx-control\n\
+          \  description L2 LVX control packets\nclass-map match-any system-cpp-police-forus\n\
+          \  description Forus Address resolution and Forus traffic\nclass-map match-any\
+          \ system-cpp-police-multicast-end-station\n  description MCAST END STATION\n\
+          class-map match-any system-cpp-police-multicast\n  description Transit Traffic\
+          \ and MCAST Data\nclass-map match-any system-cpp-police-l2-control\n  description\
+          \ L2 control\nclass-map match-any system-cpp-police-dot1x-auth\n  description\
+          \ DOT1X Auth\nclass-map match-any system-cpp-police-data\n  description\
+          \ ICMP redirect, ICMP_GEN and BROADCAST\nclass-map match-any system-cpp-police-stackwise-virt-control\n\
+          \  description Stackwise Virtual\nclass-map match-any non-client-nrt-class\n\
+          class-map match-any system-cpp-police-routing-control\n  description Routing\
+          \ control and Low Latency\nclass-map match-any system-cpp-police-protocol-snooping\n\
+          \  description Protocol snooping\nclass-map match-any system-cpp-police-dhcp-snooping\n\
+          \  description DHCP snooping\nclass-map match-any system-cpp-police-system-critical\n\
+          \  description System Critical and Gold Pkt\n!\npolicy-map system-cpp-policy\n\
+          !\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Loopback0\n description RLOC\
+          \ Reachability\n ip address 192.168.1.8 255.255.255.255\n ip router isis\n\
+          !\ninterface GigabitEthernet0/0\n vrf forwarding Mgmt-vrf\n ip address 169.100.100.114\
+          \ 255.255.255.0\n negotiation auto\n no cdp enable\n ipv6 dhcp client request\
+          \ vendor\n ipv6 address dhcp\n ipv6 address autoconfig\n ipv6 enable\n!\n\
+          interface GigabitEthernet1/0/1\n description CPS-BDR1\n no switchport\n\
+          \ dampening\n ip address 192.168.10.30 255.255.255.252\n no ip redirects\n\
+          \ no ip proxy-arp\n ip router isis\n load-interval 30\n carrier-delay msec\
+          \ 0\n bfd interval 300 min_rx 300 multiplier 3\n no bfd echo\n clns mtu\
+          \ 1440\n!\ninterface GigabitEthernet1/0/2\n description CPS-BDR2\n no switchport\n\
+          \ dampening\n ip address 192.168.10.38 255.255.255.252\n no ip redirects\n\
+          \ no ip proxy-arp\n ip router isis\n load-interval 30\n carrier-delay msec\
+          \ 0\n bfd interval 300 min_rx 300 multiplier 3\n no bfd echo\n clns mtu\
+          \ 1440\n!\ninterface GigabitEthernet1/0/3\n no cdp enable\n!\ninterface\
+          \ GigabitEthernet1/0/4\n no cdp enable\n!\ninterface GigabitEthernet1/0/5\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/6\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/7\n no cdp enable\n!\ninterface GigabitEthernet1/0/8\n\
+          !\ninterface Vlan1\n no ip address\n shutdown\n!\nrouter isis\n net 49.0000.0000.0000.0008.00\n\
+          \ is-type level-2-only\n domain-password ciscodna\n metric-style transition\n\
+          \ log-adjacency-changes\n bfd all-interfaces\n!\nip forward-protocol nd\n\
+          ip tcp mss 1280\nip tcp window-size 212000\nip http server\nip http authentication\
+          \ local\nip http secure-server\nip ssh bulk-mode 131072\n!\n!\n!\n!\nsnmp-server\
+          \ community RO RO\nsnmp-server community RW RW\n!\n!\ncontrol-plane\n service-policy\
+          \ input system-cpp-policy\n!\n!\n!\nline con 0\n exec-timeout 0 0\n stopbits\
+          \ 1\nline vty 0 2\n exec-timeout 0 0\n login local\n length 0\n transport\
+          \ input all\nline vty 3 4\n exec-timeout 0 0\n login local\n transport input\
+          \ all\nline vty 5 15\n login local\n transport input all\n!\n!\n!\n!\n!\n\
+          !\n!\nnetconf-yang\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -1367,6 +1094,11 @@ nodes:
     configuration:
       - name: iosxe_config.txt
         content: |-
+          version 17.12
+          service timestamps debug datetime msec
+          service timestamps log datetime msec
+          platform punt-keepalive disable-kernel-core
+          !
           hostname CPS-FE2
           !
           !
@@ -1378,6 +1110,7 @@ nodes:
            address-family ipv6
            exit-address-family
           !
+          no logging console
           no aaa new-model
           switch 1 provision c9kv-uadp-8p
           !
@@ -1394,9 +1127,12 @@ nodes:
           no ip domain lookup
           ip domain name demo.local
           !
+          ip dhcp pool webuidhcp
+          !
           !
           !
           login on-success log
+          ipv6 unicast-routing
           vtp mode transparent
           vtp version 1
           !
@@ -1407,6 +1143,11 @@ nodes:
           !
           !
           !
+          crypto pki trustpoint SLA-TrustPoint
+           enrollment pkcs12
+           revocation-check crl
+           hash sha256
+          !
           crypto pki trustpoint TP-self-signed-1469543359
            enrollment selfsigned
            subject-name cn=IOS-Self-Signed-Certificate-1469543359
@@ -1414,41 +1155,7 @@ nodes:
            rsakeypair TP-self-signed-1469543359
            hash sha256
           !
-          crypto pki trustpoint SLA-TrustPoint
-           enrollment pkcs12
-           revocation-check crl
-           hash sha256
           !
-          !
-          crypto pki certificate chain TP-self-signed-1469543359
-           certificate self-signed 01
-            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
-            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
-            69666963 6174652D 31343639 35343333 3539301E 170D3234 30373139 31323537
-            32315A17 0D333430 37313931 32353732 315A3031 312F302D 06035504 030C2649
-            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 34363935
-            34333335 39308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
-            0A028201 0100D99C 66F4E205 C2D98BF5 8C163543 1A3E2814 18DC9ADE 939A0A16
-            343821DA 504801D1 6825B9CF 530D7498 DC0B0C1A AA4DB70A E965C5F0 9BCA5E25
-            5B940F2A CE667D15 DB5B5BF3 669A186A E0A3540A F7BC79A7 FF5B7A5B 68FEFBF8
-            0327E8F5 B9427842 FDA9878F 170A0A71 23517827 74783B37 E81C76A8 07C86B9A
-            D483DAA1 2F257373 5BD5D149 A155689B CA8BBFE9 724C8AD6 47836A6C E08A3734
-            5AF9CE69 8CD8AD24 773C2A98 2841F6BC C8F27406 DF73E71E 0BEA67D3 81095F75
-            D36655EA B13B23F5 396547DD 616CFC65 08C9D054 7EC1C258 6845661D B2C40AF1
-            10E364A4 53F32908 3A636378 078A6B3D 1F3165AC 4F97B8C6 7D9F33A0 E42E563E
-            441AC839 76190203 010001A3 53305130 1D060355 1D0E0416 04141312 8719758C
-            B4DCE29F 901B7F53 9F03D0F0 C683301F 0603551D 23041830 16801413 12871975
-            8CB4DCE2 9F901B7F 539F03D0 F0C68330 0F060355 1D130101 FF040530 030101FF
-            300D0609 2A864886 F70D0101 0B050003 82010100 81A16B77 EA5C1851 FB6D5ED9
-            B95FA6A0 A1167FBA E3B1E761 98480B8C B566E602 4688A079 1BF13C8C CFCD51DB
-            6BF594C8 F41B1A38 F0113611 4FFDB0C5 9B7067D5 6EAB3ABF AEF65A13 A696DB6A
-            4DA82148 3349F8B2 5619567B 1257FF43 E1CFBA18 A916474E 0F47168A 6A4A3EBC
-            40CD5395 1DEE5886 8F9D3F6D 4F8EDED4 DDCD0FCA 1804C289 EC03CB62 F23EE380
-            CD8BA804 998D7A0B 368AE9F6 5ABBBA4C 9A32B209 1D2F8487 BD357676 F14A4B3A
-            00FC1CB6 9D119A0F D8664E5B ABBFF98C ACBF4A7D 50EF1E24 D3603161 B5A5B3A4
-            267FB0BC E4060A78 9EFD69A6 B3F1F6BB BA812AEB C0B0848F 8BAC5F0E 49FAF002
-            64E7C0AF A84659DA B6567A86 E25528E7 92AA14EB
-                  quit
           crypto pki certificate chain SLA-TrustPoint
            certificate ca 01
             30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
@@ -1477,6 +1184,35 @@ nodes:
             80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB
             418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
             D697DF7F 28
+                  quit
+          crypto pki certificate chain TP-self-signed-1469543359
+           certificate self-signed 01
+            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
+            69666963 6174652D 31343639 35343333 3539301E 170D3234 30383037 30383231
+            33305A17 0D333430 38303730 38323133 305A3031 312F302D 06035504 030C2649
+            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 34363935
+            34333335 39308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+            0A028201 0100A55F 06E852C4 5C516450 9A42F71D 566876FC 46A439BE CC32DFD9
+            E7C49B1E 77594622 DD979660 59EF99AE 91B308B9 491A0DC9 31D95DB1 545F8AF9
+            04D14C47 3B8A9A7B 254A2297 DABC0EDB F4C2C29A FD002A7D AD55A241 87939E58
+            D2FADECD C77D07E0 72DE8971 5C29D241 D6920F99 5B549D53 6FA50435 CD3542B8
+            2C2919DE 8F5EB253 6CCA3DA3 2540A89B C7DD4FB8 F3C95119 7F916627 A78B4DF9
+            7A45F1E0 50433B01 F93C8962 0A1A0344 12250A38 7B9CE4F1 CDBB3556 83648C33
+            60035758 7465D520 FA149B32 E749C21B F124D80F 43A2AF91 ADF25E9E C754CAFC
+            3D1A2B4D C1E084EF C477580D 48DBE98E E0860AD3 01E29D46 73387CF8 C7AE36F0
+            B1EBD75B 4B590203 010001A3 53305130 1D060355 1D0E0416 0414A35A BAEF2550
+            305DE282 D2093522 A3C961D0 BB37301F 0603551D 23041830 168014A3 5ABAEF25
+            50305DE2 82D20935 22A3C961 D0BB3730 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 1ACEA286 9D129575 C9E3287C
+            536E50B7 F277C3B3 56FEFA9F D2D8A034 37FF572D 557757FE 7F4695C1 D89A81AE
+            247E8E7C 2B4C2CE8 D6588451 6D0F11F9 3B79A170 5BFC98C1 A12681AC 964CCD89
+            7A682C6A 389FAFF9 250FDB43 E748F4A0 BF333FD4 E2A85AF9 F3785BBC 7BE229BE
+            29D824CE 2E8D9342 73987E59 EE793727 026772D6 4E12CD78 7314B0D3 5897519A
+            EC732296 0CEF3DC8 DD7819E0 5EC6BB3B B15B7DDE 75A08DD5 8AD853FA 87EA1CCB
+            595EB591 4C7AA285 639EF9D5 393146EF 3E9BB5BD 51968EBA 8EE20869 6D7545A6
+            78F50161 5819A018 3B5009D9 03C0C301 737EF860 CBAF82ED 1B3D46B7 3CDEAAFE
+            70740DD5 F8B9BBFA 8D44BE35 F9F00CA0 FB7BA92A
                   quit
           !
           !
@@ -1558,7 +1294,7 @@ nodes:
           !
           interface GigabitEthernet0/0
            vrf forwarding Mgmt-vrf
-           ip address 198.18.128.12 255.255.192.0
+           ip address 169.100.100.115 255.255.255.0
            negotiation auto
            no cdp enable
            ipv6 dhcp client request vendor
@@ -1576,7 +1312,6 @@ nodes:
            ip router isis
            load-interval 30
            carrier-delay msec 0
-           no cdp enable
            bfd interval 300 min_rx 300 multiplier 3
            no bfd echo
            clns mtu 1440
@@ -1591,7 +1326,6 @@ nodes:
            ip router isis
            load-interval 30
            carrier-delay msec 0
-           no cdp enable
            bfd interval 300 min_rx 300 multiplier 3
            no bfd echo
            clns mtu 1440
@@ -1647,15 +1381,15 @@ nodes:
           !
           !
           line con 0
+           exec-timeout 0 0
            stopbits 1
-          line vty 0 1
-           login local
-           transport input all
-          line vty 2
+          line vty 0 2
+           exec-timeout 0 0
            login local
            length 0
            transport input all
           line vty 3 4
+           exec-timeout 0 0
            login local
            transport input all
           line vty 5 15
@@ -1665,7 +1399,6 @@ nodes:
           !
           !
           !
-          copy cdrom0:/iosxe_config.txt start
           !
           !
           !
@@ -1724,6 +1457,67 @@ nodes:
         label: GigabitEthernet1/0/8
         slot: 8
         type: physical
+  - boot_disk_size: null
+    configuration:
+      - name: default
+        content: System Bridge
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: true
+    id: n7
+    image_definition: null
+    label: ext-conn-0
+    node_definition: external_connector
+    parameters: {}
+    ram: null
+    tags: []
+    x: 80
+    y: 200
+    interfaces:
+      - id: i0
+        label: port
+        slot: 0
+        type: physical
+  - boot_disk_size: null
+    configuration: []
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: true
+    id: n8
+    image_definition: null
+    label: iosvl2-0
+    node_definition: iosvl2
+    parameters: {}
+    ram: null
+    tags: []
+    x: 240
+    y: 120
+    interfaces:
+      - id: i0
+        label: Loopback0
+        type: loopback
+      - id: i1
+        label: GigabitEthernet0/0
+        slot: 0
+        type: physical
+      - id: i2
+        label: GigabitEthernet0/1
+        slot: 1
+        type: physical
+      - id: i3
+        label: GigabitEthernet0/2
+        slot: 2
+        type: physical
+      - id: i4
+        label: GigabitEthernet0/3
+        slot: 3
+        type: physical
+      - id: i5
+        label: GigabitEthernet1/0
+        slot: 4
+        type: physical
 links:
   - id: l0
     n1: n5
@@ -1731,49 +1525,84 @@ links:
     i1: i2
     i2: i3
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet1/0/1<->CPS_BDR1-GigabitEthernet1/0/2
+    label: CPS-FE1-GigabitEthernet1/0/1<->CPS_BDR1-GigabitEthernet1/0/2
   - id: l1
     n1: n5
     n2: n1
     i1: i3
     i2: i3
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet1/0/2<->CPS_BDR2-GigabitEthernet1/0/2
+    label: CPS-FE1-GigabitEthernet1/0/2<->CPS_BDR2-GigabitEthernet1/0/2
   - id: l2
     n1: n5
     n2: n4
     i1: i4
     i2: i0
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet1/0/3<->EMP1-eth0
+    label: CPS-FE1-GigabitEthernet1/0/3<->EMP1-eth0
   - id: l3
     n1: n6
     n2: n0
     i1: i2
     i2: i4
     conditioning: {}
-    label: cat9000v-uadp-1-GigabitEthernet1/0/1<->CPS_BDR1-GigabitEthernet1/0/3
+    label: CPS-FE2-GigabitEthernet1/0/1<->CPS_BDR1-GigabitEthernet1/0/3
   - id: l4
     n1: n6
     n2: n1
     i1: i3
     i2: i4
     conditioning: {}
-    label: cat9000v-uadp-1-GigabitEthernet1/0/2<->CPS_BDR2-GigabitEthernet1/0/3
+    label: CPS-FE2-GigabitEthernet1/0/2<->CPS_BDR2-GigabitEthernet1/0/3
   - id: l5
     n1: n0
     n2: n2
     i1: i2
     i2: i0
     conditioning: {}
-    label: CPS_BDR1-GigabitEthernet1/0/1<->DC-port
+    label: CPS_BDR1-GigabitEthernet1/0/1<->BDR1_2_FUSION-port
   - id: l6
     n1: n1
     n2: n3
     i1: i2
     i2: i0
     conditioning: {}
-    label: CPS_BDR2-GigabitEthernet1/0/1<->INET-port
+    label: CPS_BDR2-GigabitEthernet1/0/1<->BDR2_2_FUSION-port
+  - id: l7
+    n1: n8
+    n2: n0
+    i1: i1
+    i2: i1
+    conditioning: {}
+    label: iosvl2-0-GigabitEthernet0/0<->CPS_BDR1-GigabitEthernet0/0
+  - id: l8
+    n1: n8
+    n2: n1
+    i1: i2
+    i2: i1
+    conditioning: {}
+    label: iosvl2-0-GigabitEthernet0/1<->CPS_BDR2-GigabitEthernet0/0
+  - id: l9
+    n1: n8
+    n2: n5
+    i1: i3
+    i2: i1
+    conditioning: {}
+    label: iosvl2-0-GigabitEthernet0/2<->CPS-FE1-GigabitEthernet0/0
+  - id: l10
+    n1: n8
+    n2: n6
+    i1: i4
+    i2: i1
+    conditioning: {}
+    label: iosvl2-0-GigabitEthernet0/3<->CPS-FE2-GigabitEthernet0/0
+  - id: l11
+    n1: n8
+    n2: n7
+    i1: i5
+    i2: i0
+    conditioning: {}
+    label: iosvl2-0-GigabitEthernet1/0<->ext-conn-0-port
 lab:
   description: ''
   notes: ''
