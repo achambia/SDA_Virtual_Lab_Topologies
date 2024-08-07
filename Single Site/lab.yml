@@ -407,6 +407,7 @@ nodes:
           !
           !
           !
+          copy bootflash:iosxe_config.txt start
           !
           !
           !
@@ -876,6 +877,7 @@ nodes:
           !
           !
           !
+          copy bootflash:iosxe_config.txt start
           !
           !
           netconf-yang
@@ -1302,6 +1304,7 @@ nodes:
           !
           !
           !
+          copy bootflash:iosxe_config.txt start
           !
           !
           !
@@ -1662,6 +1665,7 @@ nodes:
           !
           !
           !
+          copy bootflash:iosxe_config.txt start
           !
           !
           !
