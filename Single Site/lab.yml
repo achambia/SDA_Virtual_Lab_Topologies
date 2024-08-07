@@ -262,6 +262,7 @@ nodes:
           !
           !
           !
+          cdp run
           !
           !
           !
@@ -287,6 +288,7 @@ nodes:
           interface GigabitEthernet1/0/1
            description FUSION
            switchport mode trunk
+           cdp enable
           !
           interface GigabitEthernet1/0/2
            description CPS-FE1
@@ -298,7 +300,7 @@ nodes:
            ip router isis
            load-interval 30
            carrier-delay msec 0
-           no cdp enable
+           cdp enable
            bfd interval 300 min_rx 300 multiplier 3
            no bfd echo
            clns mtu 1440
@@ -312,7 +314,7 @@ nodes:
            no ip proxy-arp
            ip router isis
            load-interval 30
-           no cdp enable
+           cdp enable
            bfd interval 300 min_rx 300 multiplier 3
            no bfd echo
            clns mtu 1440
@@ -770,6 +772,7 @@ nodes:
           !
           !
           !
+          cdp run
           !
           !
           !
@@ -1052,127 +1055,299 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 8820 bytes\n\
-          !\n! Last configuration change at 09:08:01 UTC Wed Aug 7 2024\n!\nversion\
-          \ 17.12\nservice timestamps debug datetime msec\nservice timestamps log\
-          \ datetime msec\nplatform punt-keepalive disable-kernel-core\n!\nhostname\
-          \ CPS-FE1\n!\n!\nvrf definition Mgmt-vrf\n !\n address-family ipv4\n exit-address-family\n\
-          \ !\n address-family ipv6\n exit-address-family\n!\nno logging console\n\
-          no aaa new-model\nswitch 1 provision c9kv-uadp-8p\n!\n!\n!\n!\nip routing\n\
-          !\n!\n!\n!\n!\nip multicast-routing\nno ip domain lookup\nip domain name\
-          \ demo.local\n!\nip dhcp pool webuidhcp\n!\n!\n!\nlogin on-success log\n\
-          ipv6 unicast-routing\nvtp mode transparent\nvtp version 1\n!\n!\n!\n!\n\
-          !\n!\n!\n!\ncrypto pki trustpoint SLA-TrustPoint\n enrollment pkcs12\n revocation-check\
-          \ crl\n hash sha256\n!\ncrypto pki trustpoint TP-self-signed-1469543359\n\
-          \ enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-1469543359\n\
-          \ revocation-check none\n rsakeypair TP-self-signed-1469543359\n hash sha256\n\
-          !\n!\ncrypto pki certificate chain SLA-TrustPoint\n certificate ca 01\n\
-          \  30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030\n\
-          \  32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363\n\
-          \  6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934\n\
-          \  3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305\n\
-          \  43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720\n\
-          \  526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030\n\
-          \  82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D\n\
-          \  CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520\n\
-          \  1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE\n\
-          \  4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC\n\
-          \  7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188\n\
-          \  68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7\n\
-          \  C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191\n\
-          \  C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44\n\
-          \  DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201\n\
-          \  06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85\n\
-          \  4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500\n\
-          \  03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905\n\
-          \  604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B\n\
-          \  D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8\n\
-          \  467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C\n\
-          \  7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B\n\
-          \  5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678\n\
-          \  80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB\n\
-          \  418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0\n\
-          \  D697DF7F 28\n  \tquit\ncrypto pki certificate chain TP-self-signed-1469543359\n\
-          \ certificate self-signed 01\n  30820330 30820218 A0030201 02020101 300D0609\
-          \ 2A864886 F70D0101 0B050030\n  31312F30 2D060355 04030C26 494F532D 53656C66\
-          \ 2D536967 6E65642D 43657274\n  69666963 6174652D 31343639 35343333 3539301E\
-          \ 170D3234 30383037 30383231\n  32305A17 0D333430 38303730 38323132 305A3031\
-          \ 312F302D 06035504 030C2649\n  4F532D53 656C662D 5369676E 65642D43 65727469\
-          \ 66696361 74652D31 34363935\n  34333335 39308201 22300D06 092A8648 86F70D01\
-          \ 01010500 0382010F 00308201\n  0A028201 01009056 81B37A3B 5C5FB2E0 59A4AE05\
-          \ 37D5A6FA D2097859 6E25B26B\n  6DD07865 948DB159 F0701C31 363CEAE4 CF4310B7\
-          \ 69C5E4A6 8A670041 95C4F41B\n  95C88133 7DF7BA02 14B4848A 69C82C6F E5F559F1\
-          \ 25AAEDD8 3B0C5756 AE488A4E\n  5120108D 8826E6E9 FF2308E9 01680EA8 316C4334\
-          \ 2440ADD0 A624089D 86CB7258\n  FEC49AED 937F82BB D0369441 3CD4AB5A 0D50083D\
-          \ AF81F1DE C6104987 813AD265\n  D9290334 58C71EEA F911EF89 4B98FCCA BFFB8277\
-          \ 602F2B33 0FE0EFE2 AC788E01\n  C2851ACD 015AF918 E0439BA3 4D49CDA4 A7908B56\
-          \ AAE3558B E92B71EC 3AD17A98\n  355792C9 7A978AA7 63A7754E 12E3733D FFB447DC\
-          \ 147A62DA 7DEC532F 2E85D78F\n  CDC5F6B8 9D190203 010001A3 53305130 1D060355\
-          \ 1D0E0416 04147592 3C7AA36A\n  C56F97C7 5957ADAE 9F969FFC 8027301F 0603551D\
-          \ 23041830 16801475 923C7AA3\n  6AC56F97 C75957AD AE9F969F FC802730 0F060355\
-          \ 1D130101 FF040530 030101FF\n  300D0609 2A864886 F70D0101 0B050003 82010100\
-          \ 583B6502 D0FAB3DC 22C83DFD\n  6AB3BAE1 21FAE090 68262183 15693CA5 B8550926\
-          \ D0A2EE82 14B550BC BF942A62\n  AE6779EB 12456D83 F37CA4B2 A6F7A655 F6E64346\
-          \ 6090E547 AAD8176C FD69181E\n  DCAFFA5D ED3951BB C579D7E4 52209D9A 39F37C00\
-          \ 4250765F A19A6DF7 405E0BD1\n  545A976D C103FC5F ACEB29DF 016611B6 288B0C78\
-          \ BE113BFF 20D0A442 79D83155\n  358EB998 1A3A6046 C89EB408 2448A020 0C78B8F5\
-          \ 8C5A9833 E1712F20 3EB906EA\n  54722D8E FDCC1B5D 9B3D2232 61E96E63 EFFF95DB\
-          \ 86BCD12F 4958456F 63540E84\n  7C018DD2 BE7317B4 CFE93A81 472C0BAE B981E058\
-          \ 95CDAE1E 6329F70B FB97B99F\n  A14B79FE CFF79E1C 9DEBBB83 8D412E2F 2A6245CE\n\
-          \  \tquit\n!\n!\nlicense boot level network-advantage addon dna-advantage\n\
-          memory free low-watermark processor 74862\n!\nsystem mtu 8000\ndiagnostic\
-          \ bootup level minimal\n!\nspanning-tree mode rapid-pvst\nspanning-tree\
-          \ extend system-id\n!\n!\nenable password cisco\n!\nusername netadmin privilege\
-          \ 15 password 0 cisco\n!\nredundancy\n mode sso\n!\n!\n!\n!\n!\n!\nclass-map\
-          \ match-any system-cpp-police-topology-control\n  description Topology control\n\
-          class-map match-any system-cpp-police-sw-forward\n  description Sw forwarding,\
-          \ L2 LVX data, LOGGING\nclass-map match-any system-cpp-default\n  description\
-          \ EWLC control, EWLC data, Inter FED\nclass-map match-any system-cpp-police-sys-data\n\
-          \  description Learning cache ovfl, High Rate App, Exception, EGR Exception,\
-          \ NFL SAMPLED DATA, RPF Failed\nclass-map match-any system-cpp-police-punt-webauth\n\
-          \  description Punt Webauth\nclass-map match-any system-cpp-police-l2lvx-control\n\
-          \  description L2 LVX control packets\nclass-map match-any system-cpp-police-forus\n\
-          \  description Forus Address resolution and Forus traffic\nclass-map match-any\
-          \ system-cpp-police-multicast-end-station\n  description MCAST END STATION\n\
-          class-map match-any system-cpp-police-multicast\n  description Transit Traffic\
-          \ and MCAST Data\nclass-map match-any system-cpp-police-l2-control\n  description\
-          \ L2 control\nclass-map match-any system-cpp-police-dot1x-auth\n  description\
-          \ DOT1X Auth\nclass-map match-any system-cpp-police-data\n  description\
-          \ ICMP redirect, ICMP_GEN and BROADCAST\nclass-map match-any system-cpp-police-stackwise-virt-control\n\
-          \  description Stackwise Virtual\nclass-map match-any non-client-nrt-class\n\
-          class-map match-any system-cpp-police-routing-control\n  description Routing\
-          \ control and Low Latency\nclass-map match-any system-cpp-police-protocol-snooping\n\
-          \  description Protocol snooping\nclass-map match-any system-cpp-police-dhcp-snooping\n\
-          \  description DHCP snooping\nclass-map match-any system-cpp-police-system-critical\n\
-          \  description System Critical and Gold Pkt\n!\npolicy-map system-cpp-policy\n\
-          !\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Loopback0\n description RLOC\
-          \ Reachability\n ip address 192.168.1.8 255.255.255.255\n ip router isis\n\
-          !\ninterface GigabitEthernet0/0\n vrf forwarding Mgmt-vrf\n ip address 169.100.100.114\
-          \ 255.255.255.0\n negotiation auto\n no cdp enable\n ipv6 dhcp client request\
-          \ vendor\n ipv6 address dhcp\n ipv6 address autoconfig\n ipv6 enable\n!\n\
-          interface GigabitEthernet1/0/1\n description CPS-BDR1\n no switchport\n\
-          \ dampening\n ip address 192.168.10.30 255.255.255.252\n no ip redirects\n\
-          \ no ip proxy-arp\n ip router isis\n load-interval 30\n carrier-delay msec\
-          \ 0\n bfd interval 300 min_rx 300 multiplier 3\n no bfd echo\n clns mtu\
-          \ 1440\n!\ninterface GigabitEthernet1/0/2\n description CPS-BDR2\n no switchport\n\
-          \ dampening\n ip address 192.168.10.38 255.255.255.252\n no ip redirects\n\
-          \ no ip proxy-arp\n ip router isis\n load-interval 30\n carrier-delay msec\
-          \ 0\n bfd interval 300 min_rx 300 multiplier 3\n no bfd echo\n clns mtu\
-          \ 1440\n!\ninterface GigabitEthernet1/0/3\n no cdp enable\n!\ninterface\
-          \ GigabitEthernet1/0/4\n no cdp enable\n!\ninterface GigabitEthernet1/0/5\n\
-          \ no cdp enable\n!\ninterface GigabitEthernet1/0/6\n no cdp enable\n!\n\
-          interface GigabitEthernet1/0/7\n no cdp enable\n!\ninterface GigabitEthernet1/0/8\n\
-          !\ninterface Vlan1\n no ip address\n shutdown\n!\nrouter isis\n net 49.0000.0000.0000.0008.00\n\
-          \ is-type level-2-only\n domain-password ciscodna\n metric-style transition\n\
-          \ log-adjacency-changes\n bfd all-interfaces\n!\nip forward-protocol nd\n\
-          ip tcp mss 1280\nip tcp window-size 212000\nip http server\nip http authentication\
-          \ local\nip http secure-server\nip ssh bulk-mode 131072\n!\n!\n!\n!\nsnmp-server\
-          \ community RO RO\nsnmp-server community RW RW\n!\n!\ncontrol-plane\n service-policy\
-          \ input system-cpp-policy\n!\n!\n!\nline con 0\n exec-timeout 0 0\n stopbits\
-          \ 1\nline vty 0 2\n exec-timeout 0 0\n login local\n length 0\n transport\
-          \ input all\nline vty 3 4\n exec-timeout 0 0\n login local\n transport input\
-          \ all\nline vty 5 15\n login local\n transport input all\n!\n!\n!\n!\n!\n\
-          !\n!\nnetconf-yang\nend"
+        content: |-
+          hostname CPS-FE1
+          !
+          !
+          vrf definition Mgmt-vrf
+           !
+           address-family ipv4
+           exit-address-family
+           !
+           address-family ipv6
+           exit-address-family
+          !
+          no logging console
+          no aaa new-model
+          switch 1 provision c9kv-uadp-8p
+          !
+          !
+          !
+          !
+          ip routing
+          !
+          !
+          !
+          !
+          !
+          ip multicast-routing
+          no ip domain lookup
+          ip domain name demo.local
+          !
+          ip dhcp pool webuidhcp
+          !
+          !
+          !
+          login on-success log
+          ipv6 unicast-routing
+          vtp mode transparent
+          vtp version 1
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          crypto pki trustpoint SLA-TrustPoint
+           enrollment pkcs12
+           revocation-check crl
+           hash sha256
+          !
+          crypto pki trustpoint TP-self-signed-1469543359
+           enrollment selfsigned
+           subject-name cn=IOS-Self-Signed-Certificate-1469543359
+           revocation-check none
+           rsakeypair TP-self-signed-1469543359
+           hash sha256
+          !
+          !
+          crypto pki certificate chain SLA-TrustPoint
+           certificate ca 01
+            30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363
+            6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934
+            3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305
+            43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720
+            526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030
+            82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D
+            CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520
+            1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE
+            4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC
+            7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188
+            68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7
+            C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191
+            C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44
+            DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201
+            06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85
+            4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500
+            03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905
+            604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B
+            D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8
+            467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C
+            7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B
+            5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678
+            80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB
+            418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0
+            D697DF7F 28
+                  quit
+          crypto pki certificate chain TP-self-signed-1469543359
+           certificate self-signed 01
+            30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030
+            31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274
+            69666963 6174652D 31343639 35343333 3539301E 170D3234 30383037 31333539
+            31335A17 0D333430 38303731 33353931 335A3031 312F302D 06035504 030C2649
+            4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 34363935
+            34333335 39308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+            0A028201 01009CAD 5B0F73F7 97A8E65C 224DC49C 342077FC 1D1EF058 00CB50BE
+            150B316E 954B24C1 DAA057E9 312EE224 8B81019A 7A7268FA 03796343 DAC6623C
+            9846ADB4 ED4548E5 F67F5341 C6B2C544 59A5B812 33B38818 51A67536 AA858814
+            BF3C26A4 33BFC17E BF70A464 F25B7968 328C4A6A 89BCAAF9 0AC9505B 53E998AC
+            03285D37 85BF28F0 1A1C52CA ADD57482 C366BEC4 0D89B426 63B323EA FB38F2C6
+            466F893C FE3B6D97 2FF13E64 DAE25021 D17C2D31 DAF17CD7 7B2DE862 50E7C43A
+            CAE86D0B B2618308 3979D24A F397AFAA 7E6376B2 EEDC5A22 51956950 505705E7
+            64C442FB F612FD98 4D44CBF1 5094B863 0AB90790 4B6094DC F96FCB64 91414563
+            78CBD6B7 689B0203 010001A3 53305130 1D060355 1D0E0416 04141497 D5EC17CB
+            3DF0BDFA 320DB8F3 28C153C8 819D301F 0603551D 23041830 16801414 97D5EC17
+            CB3DF0BD FA320DB8 F328C153 C8819D30 0F060355 1D130101 FF040530 030101FF
+            300D0609 2A864886 F70D0101 0B050003 82010100 6FC7F6AE 272B5004 5EDE861D
+            C313EC1E A3F2FB4F EA623D3F 5416FD9F 58840106 B465DF0C 260AD881 7701933C
+            70EC0D26 B1B5A0F1 3622B0A0 C09EDE7A EC60D163 23ED6CDA 477DA77B 80946D19
+            0E7DD8D0 080583E3 A328D587 1E4B65F9 48ECB1BC DF244390 4C59336F 95A47F25
+            75B64977 3CC32DCF 9F1B858A AC423E2C 3FB7ED83 3727388A 6F59C14D 63A318A7
+            A57FC56A ECB21AEE DD8DBEAD 78B16CD8 3817B299 C6E2661B 9311126F 473C78D7
+            6B5C07F4 9192019E A5CF19C2 1DB155B2 3A289B65 993F783C 4FD178B9 1D923AB4
+            7C08BD42 769DC093 EA1F5518 4D64F7C2 FD38A3A2 7057B25F 8E4489C7 0B59688D
+            F15E2871 F62605FE 161B1CC1 CD2008D9 C83DDEA5
+                  quit
+          !
+          !
+          license boot level network-advantage addon dna-advantage
+          memory free low-watermark processor 74862
+          !
+          system mtu 8000
+          diagnostic bootup level minimal
+          !
+          spanning-tree mode rapid-pvst
+          spanning-tree extend system-id
+          !
+          !
+          enable password cisco
+          !
+          username netadmin privilege 15 password 0 cisco
+          !
+          redundancy
+           mode sso
+          !
+          !
+          !
+          !
+          !
+          !
+          class-map match-any system-cpp-police-topology-control
+            description Topology control
+          class-map match-any system-cpp-police-sw-forward
+            description Sw forwarding, L2 LVX data, LOGGING
+          class-map match-any system-cpp-default
+            description EWLC control, EWLC data, Inter FED
+          class-map match-any system-cpp-police-sys-data
+            description Learning cache ovfl, High Rate App, Exception, EGR Exception, NFL SAMPLED DATA, RPF Failed
+          class-map match-any system-cpp-police-punt-webauth
+            description Punt Webauth
+          class-map match-any system-cpp-police-l2lvx-control
+            description L2 LVX control packets
+          class-map match-any system-cpp-police-forus
+            description Forus Address resolution and Forus traffic
+          class-map match-any system-cpp-police-multicast-end-station
+            description MCAST END STATION
+          class-map match-any system-cpp-police-multicast
+            description Transit Traffic and MCAST Data
+          class-map match-any system-cpp-police-l2-control
+            description L2 control
+          class-map match-any system-cpp-police-dot1x-auth
+            description DOT1X Auth
+          class-map match-any system-cpp-police-data
+            description ICMP redirect, ICMP_GEN and BROADCAST
+          class-map match-any system-cpp-police-stackwise-virt-control
+            description Stackwise Virtual
+          class-map match-any non-client-nrt-class
+          class-map match-any system-cpp-police-routing-control
+            description Routing control and Low Latency
+          class-map match-any system-cpp-police-protocol-snooping
+            description Protocol snooping
+          class-map match-any system-cpp-police-dhcp-snooping
+            description DHCP snooping
+          class-map match-any system-cpp-police-system-critical
+            description System Critical and Gold Pkt
+          !
+          policy-map system-cpp-policy
+          !
+          !
+          !
+          !
+          !
+          !
+          cdp run
+          !
+          !
+          !
+          !
+          !
+          !
+          interface Loopback0
+           description RLOC Reachability
+           ip address 192.168.1.8 255.255.255.255
+          !
+          interface GigabitEthernet0/0
+           vrf forwarding Mgmt-vrf
+           ip address 169.100.100.114 255.255.255.0
+           negotiation auto
+           no cdp enable
+           ipv6 dhcp client request vendor
+           ipv6 address dhcp
+           ipv6 address autoconfig
+           ipv6 enable
+          !
+          interface GigabitEthernet1/0/1
+           description CPS-BDR1
+           no switchport
+           dampening
+           ip address 192.168.10.30 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           load-interval 30
+           carrier-delay msec 0
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+          !
+          interface GigabitEthernet1/0/2
+           description CPS-BDR2
+           no switchport
+           dampening
+           ip address 192.168.10.38 255.255.255.252
+           no ip redirects
+           no ip proxy-arp
+           load-interval 30
+           carrier-delay msec 0
+           bfd interval 300 min_rx 300 multiplier 3
+           no bfd echo
+          !
+          interface GigabitEthernet1/0/3
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/4
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/5
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/6
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/7
+           no cdp enable
+          !
+          interface GigabitEthernet1/0/8
+          !
+          interface Vlan1
+           no ip address
+           shutdown
+          !
+          ip forward-protocol nd
+          ip tcp mss 1280
+          ip tcp window-size 212000
+          ip http server
+          ip http authentication local
+          ip http secure-server
+          ip ssh bulk-mode 131072
+          !
+          !
+          !
+          !
+          snmp-server community RO RO
+          snmp-server community RW RW
+          !
+          !
+          control-plane
+           service-policy input system-cpp-policy
+          !
+          !
+          !
+          line con 0
+           exec-timeout 0 0
+           stopbits 1
+          line vty 0 2
+           exec-timeout 0 0
+           login local
+           length 0
+           transport input all
+          line vty 3 4
+           exec-timeout 0 0
+           login local
+           transport input all
+          line vty 5 15
+           login local
+           transport input all
+          !
+          !
+          !
+          !
+          !
+          !
+          !
+          netconf-yang
+          end
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -1418,6 +1593,7 @@ nodes:
           !
           !
           !
+          cdp run
           !
           !
           !
