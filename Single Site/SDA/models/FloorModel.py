@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Floor data model """
 
-from enums.RfModelEnum import RfModelEnum
+from SDA.enums.RfModelEnum import RfModelEnum
 
 
 class FloorModel:
