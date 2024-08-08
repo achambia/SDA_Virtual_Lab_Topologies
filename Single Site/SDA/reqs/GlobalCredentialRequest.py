@@ -27,10 +27,10 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for creating global credentials """
 
-from models.CliCredentialModel import CliCredentialModel
-from models.HttpsCredentialModel import HttpsCredentialModel
-from models.SnmpV2cCredentialModel import SnmpV2cCredentialModel
-from models.SnmpV3CredentialModel import SnmpV3CredentialModel
+from SDA.models.CliCredentialModel import CliCredentialModel
+from SDA.models.HttpsCredentialModel import HttpsCredentialModel
+from SDA.models.SnmpV2cCredentialModel import SnmpV2cCredentialModel
+from SDA.models.SnmpV3CredentialModel import SnmpV3CredentialModel
 
 class GlobalCredentialRequest:
     """
