@@ -27,8 +27,8 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center IP Pool data model """
 
-from enums.IPAddressSpaceEnum import IPAddressSpaceEnum
-from enums.IPPoolTypeEnum import IPPoolTypeEnum
+from SDA.enums.IPAddressSpaceEnum import IPAddressSpaceEnum
+from SDA.enums.IPPoolTypeEnum import IPPoolTypeEnum
 
 class IPPoolModel:
     """
