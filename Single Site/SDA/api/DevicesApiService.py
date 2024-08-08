@@ -27,9 +27,9 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Devices REST API """
 
-from api.ApiService import ApiService
-from params.GetDeviceCountParams import GetDeviceCountParams
-from params.GetDeviceListParams import GetDeviceListParams
+from SDA.api.ApiService import ApiService
+from SDA.params.GetDeviceCountParams import GetDeviceCountParams
+from SDA.params.GetDeviceListParams import GetDeviceListParams
 
 class DevicesApiService(ApiService):
     """
