@@ -27,11 +27,11 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Network Settings REST API """
 
-from api.ApiService import ApiService
-from reqs.GlobalPoolRequest import GlobalPoolRequest
-from reqs.NetworkSettingsRequest import NetworkSettingsRequest
-from reqs.ReserveIPPoolRequest import ReserveIpPoolReq
-from params.GetReserveIPPool import GetReserveIPPool
+from SDA.api.ApiService import ApiService
+from SDA.reqs.GlobalPoolRequest import GlobalPoolRequest
+from SDA.reqs.NetworkSettingsRequest import NetworkSettingsRequest
+from SDA.reqs.ReserveIPPoolRequest import ReserveIpPoolReq
+from SDA.params.GetReserveIPPool import GetReserveIPPool
 
 class NetworkSettingsApiService(ApiService):
     """
