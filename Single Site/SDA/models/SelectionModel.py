@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Selection data model """
 
-from enums.SelectionTypeEnum import SelectionTypeEnum
+from SDA.enums.SelectionTypeEnum import SelectionTypeEnum
 
 class SelectionModel:
     """Selection Data Model"""
