@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for creating/updating a global IP pool """
 
-from models.IPPoolSettingsModel import IPPoolSettingsModel
+from SDA.models.IPPoolSettingsModel import IPPoolSettingsModel
 
 class GlobalPoolRequest:
     """
