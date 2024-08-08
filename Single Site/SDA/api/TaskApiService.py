@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Task REST API """
 
-from api.ApiService import ApiService
+from SDA.api.ApiService import ApiService
 
 class TaskApiService(ApiService):
     """
