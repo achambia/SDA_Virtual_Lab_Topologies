@@ -27,8 +27,8 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center AAA data model """
 
-from enums.AAAProtocolEnum import AAAProtocolEnum
-from enums.AAAServerTypeEnum import AAAServerTypeEnum
+from SDA.enums.AAAProtocolEnum import AAAProtocolEnum
+from SDA.enums.AAAServerTypeEnum import AAAServerTypeEnum
 
 class AAAModel:
     """
