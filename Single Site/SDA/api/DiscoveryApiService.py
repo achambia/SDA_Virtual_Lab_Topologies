@@ -27,8 +27,8 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Discovery REST API """
 
-from api.ApiService import ApiService
-from reqs.GlobalCredentialRequest import GlobalCredentialRequest
+from SDA.api.ApiService import ApiService
+from SDA.reqs.GlobalCredentialRequest import GlobalCredentialRequest
 
 class DiscoveryApiService(ApiService):
     """
