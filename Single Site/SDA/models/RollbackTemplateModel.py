@@ -27,9 +27,9 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Rollback template data model """
 
-from models.RangeModel import RangeModel
-from models.SelectionModel import SelectionModel
-from enums.DataTypeEnum import DataTypeEnum
+from SDA.models.RangeModel import RangeModel
+from SDA.models.SelectionModel import SelectionModel
+from SDA.enums.DataTypeEnum import DataTypeEnum
 
 class RollbackTemplateModel:
     """Rollback Template Data Model"""
