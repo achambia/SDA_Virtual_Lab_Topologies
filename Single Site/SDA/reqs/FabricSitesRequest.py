@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for adding a fabric site """
 
-from enums.AuthenticationProfileNameEnum import AuthenticationProfileNameEnum
+from SDA.enums.AuthenticationProfileNameEnum import AuthenticationProfileNameEnum
 
 class FabricSitesRequest:
     """
