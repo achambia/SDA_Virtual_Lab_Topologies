@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for Deploying a Template """
 
-from models.TemplateTargetInfoModel import TemplateTargetInfoModel
+from SDA.models.TemplateTargetInfoModel import TemplateTargetInfoModel
 
 class DeployTemplateRequest:
     """
