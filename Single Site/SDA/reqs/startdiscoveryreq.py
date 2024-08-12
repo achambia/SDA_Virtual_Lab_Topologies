@@ -1,20 +1,17 @@
 class startdiscoveryreq:
     """
-    API request for creating/updating a site
+    API request for creating Discovery
     """
-    def __init__(self, ip:str, name:str) -> None:
+    def __init__(self, ip:str, name:str, clicred, snmprocred,snmpwrcred) -> None:
         """
         Constructor
         :param type: Type of site to create
         :return: none
         """
 
-        self.discoveryType:str = 'RANGE'
-        self.enablePasswordList:list = ['cisco']
+        self.discoveryType:str = 'Range'
         self.ipAddressList:str = ip
         self.name = name
-        self .netconfPort = '830'
-        self.snmpROCommunity='RO'
-        self.snmpRWCommunity='RW'
-        self.userNameList = ['netadmin']
-        self.passwordList = ['cisco']
+        self.netconfPort = '830'
+        self.protocolOrder = "ssh"
+        self.globalCredentialIdList:list  = [clicred,snmprocred,snmpwrcred]
