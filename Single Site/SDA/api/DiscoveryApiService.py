@@ -30,6 +30,8 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 from SDA.api.ApiService import ApiService
 from SDA.reqs.GlobalCredentialRequest import GlobalCredentialRequest
 from SDA.reqs.startdiscoveryreq import startdiscoveryreq
+from SDA.reqs.assigndevicerequest import assigndevicerequest
+
 
 class DiscoveryApiService(ApiService):
     """
