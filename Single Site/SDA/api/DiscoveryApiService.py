@@ -75,3 +75,6 @@ class DiscoveryApiService(ApiService):
     
     def discovereddevices(self,id:str) -> dict:
         return self.get(f'/dna/intent/api/v1/discovery/{id}/network-device')
+
+    def assign_to_site(self,id:str,assigndev:assigndevicerequest) -> dict:
+        return self.post(f'/dna/intent/api/v1/assign-device-to-site/{id}/device',assigndev)
