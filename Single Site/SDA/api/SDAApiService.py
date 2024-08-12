@@ -44,7 +44,7 @@ class SDAApiService(ApiService):
         """
         super().__init__(url, token)
 
-    def addFabricSites(self, addFabricSitesRequestList:list[FabricSitesRequest]) -> dict:
+    def addFabricSites(self, addFabricSitesRequestList:FabricSitesRequest) -> dict:
         """
         Add Fabric Site API
         :param addFabricSitesRequestList: List of 'FabricSitesRequest' objects containing information for adding fabric sites
