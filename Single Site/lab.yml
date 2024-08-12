@@ -1228,6 +1228,7 @@ nodes:
            no ip address
            negotiation auto
            cdp enable
+           no shutdown
           !
           interface GigabitEthernet1.2999
            description INFRA
@@ -1240,6 +1241,7 @@ nodes:
            no ip address
            negotiation auto
            cdp enable
+           no shutdown
           !
           interface GigabitEthernet2.2998
            description INFRA
@@ -1252,6 +1254,7 @@ nodes:
            vrf forwarding SHARED_SERVICES
            ip address 169.100.100.20 255.255.255.0
            negotiation auto
+           no shutdown
           !
           interface GigabitEthernet4
            no ip address
