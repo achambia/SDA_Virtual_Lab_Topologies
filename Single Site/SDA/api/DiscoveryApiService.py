@@ -69,3 +69,9 @@ class DiscoveryApiService(ApiService):
 
     def startdiscovery(self, creatediscovery:startdiscoveryreq) -> dict:
         return self.post('/dna/intent/api/v1/discovery',creatediscovery)
+
+    def getdiscovery(self,id:str) -> dict:
+        return self.get('/dna/intent/api/v1/discovery/'+id)
+    
+    def discovereddevices(self,id:str) -> dict:
+        return self.get(f'/dna/intent/api/v1/discovery/{id}/network-device')
