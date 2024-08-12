@@ -65,3 +65,6 @@ class DiscoveryApiService(ApiService):
         :return: API response
         """
         return self.delete('/dna/intent/api/v2/global-credential/' + id)
+
+    def startdiscovery(self, creatediscovery:startdiscoveryreq) -> dict:
+        return self.post('/dna/intent/api/v1/discovery',creatediscovery)
