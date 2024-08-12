@@ -50,7 +50,7 @@ class SDAApiService(ApiService):
         :param addFabricSitesRequestList: List of 'FabricSitesRequest' objects containing information for adding fabric sites
         :return: API response
         """
-        return self.post('/dna/intent/api/v1/business/sda/fabric-site', addFabricSitesRequestList)
+        return self.post('/dna/intent/api/v1/business/sda/fabric', addFabricSitesRequestList)
 
     def deleteFabricSiteByName(self, siteNameHierarchy:str=None) -> dict:
         """
