@@ -393,15 +393,7 @@ nodes:
           !
           interface GigabitEthernet1/0/1
            description FUSION
-           no switchport
-           dampening
-           ip address 192.168.10.30 255.255.255.252
-           no ip redirects
-           no ip proxy-arp
-           load-interval 30
-           carrier-delay msec 0
-           bfd interval 300 min_rx 300 multiplier 3
-           no bfd echo
+           switchport mode trunk
           !
           interface GigabitEthernet1/0/2
            description CPS-FE1
