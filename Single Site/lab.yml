@@ -676,6 +676,7 @@ nodes:
           interface Loopback0
            description RLOC Reachability
            ip address 192.168.1.8 255.255.255.255
+           ip router isis
           !
           interface GigabitEthernet0/0
            vrf forwarding Mgmt-vrf
