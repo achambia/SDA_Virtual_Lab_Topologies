@@ -2,7 +2,7 @@ class FabricSitesRequest:
     """
     API request for adding a fabric site
     """
-    def __init__(self, siteNameHierarchy:str) -> None:
+    def __init__(self, siteId:str) -> None:
         """
         Constructor
         :param siteNameHierarchy: Fully qualified name of the site
@@ -12,4 +12,6 @@ class FabricSitesRequest:
         """
         super().__init__()
 
-        self.siteNameHierarchy:str = siteNameHierarchy
+        self.siteId:str = siteId
+        self.authenticationProfileName = "No Authentication"
+        self.isPubSubEnabled = "True"
