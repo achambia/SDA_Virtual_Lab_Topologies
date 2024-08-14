@@ -100,3 +100,6 @@ class SDAApiService(ApiService):
                 "deviceManagementIpAddress": deviceManagementIpAddress
                 }
         return self.get('/dna/intent/api/v1/business/sda/border-device',params)
+
+    def provisiondevice(self,provisiondevicereqlist:provisiondevicereq):
+        return self.post('/dna/intent/api/v1/sda/provisionDevices', provisiondevicereqlist)
