@@ -695,6 +695,8 @@ nodes:
            no ip redirects
            no ip proxy-arp
            load-interval 30
+           ip router isis
+           clns mtu 1440
            carrier-delay msec 0
            bfd interval 300 min_rx 300 multiplier 3
            no bfd echo
@@ -706,6 +708,8 @@ nodes:
            ip address 192.168.10.38 255.255.255.252
            no ip redirects
            no ip proxy-arp
+           ip router isis
+           clns mtu 1440
            load-interval 30
            carrier-delay msec 0
            bfd interval 300 min_rx 300 multiplier 3
@@ -740,6 +744,14 @@ nodes:
           ip http secure-server
           ip ssh bulk-mode 131072
           !
+          !
+          router isis
+          net 49.0000.0000.0000.0008.00
+          is-type level-2-only
+          domain-password ciscodna
+          metric-style transition
+          log-adjacency-changes
+          bfd all-interfaces
           !
           !
           !
