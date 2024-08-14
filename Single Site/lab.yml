@@ -1308,6 +1308,7 @@ nodes:
           !
           ip prefix-list OTHER_to_SHARED seq 5 permit 192.168.1.0/24 le 32
           ip prefix-list OTHER_to_SHARED seq 10 permit 172.16.4.0/24
+          ip prefix-list OTHER_to_SHARED seq 5 permit 192.168.10.0/24 le 32
           !
           ip prefix-list SHARED_Prefix seq 5 permit 169.100.100.0/24
           ip prefix-list SHARED_Prefix seq 10 permit 169.200.200.0/24
