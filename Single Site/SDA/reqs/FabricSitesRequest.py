@@ -14,4 +14,4 @@ class FabricSitesRequest:
 
         self.siteId:str = siteId
         self.authenticationProfileName = "No Authentication"
-        self.isPubSubEnabled = "True"
+        self.isPubSubEnabled = True
