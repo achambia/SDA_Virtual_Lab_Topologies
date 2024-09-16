@@ -27,12 +27,12 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Network settings model """
 
-from SDA.enums.TimezoneEnum import TimezoneEnum
-from SDA.models.AAAModel import AAAModel
-from SDA.models.DnsServerModel import DnsServerModel
-from SDA.models.MessageOfTheDayModel import MessageOfTheDayModel
-from SDA.models.NetflowCollectorModel import NetflowCollectorModel
-from SDA.models.ServerModel import ServerModel
+from SDA.SDA.enums.TimezoneEnum import TimezoneEnum
+from SDA.SDA.models.AAAModel import AAAModel
+from SDA.SDA.models.DnsServerModel import DnsServerModel
+from SDA.SDA.models.MessageOfTheDayModel import MessageOfTheDayModel
+from SDA.SDA.models.NetflowCollectorModel import NetflowCollectorModel
+from SDA.SDA.models.ServerModel import ServerModel
 
 class NetworkSettingsModel:
     """
