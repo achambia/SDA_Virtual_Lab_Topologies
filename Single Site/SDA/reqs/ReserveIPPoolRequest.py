@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for reserving IP Pool """
 
-from SDA.enums.LanTypeEnum import LanTypeEnum
+from SDA.SDA.enums.LanTypeEnum import LanTypeEnum
 
 class ReserveIpPoolReq:
     '''
