@@ -1,0 +1,77 @@
+interface Loopback0
+ description RLOC Reachability
+ ip address 192.168.1.4 255.255.255.255
+ ip router isis
+!
+interface GigabitEthernet1/0/2
+ description CPS-FE1
+ no switchport
+ dampening
+ ip address 192.168.10.29 255.255.255.252
+ no ip redirects
+ no ip proxy-arp
+ ip router isis
+ load-interval 30
+ carrier-delay msec 0
+ cdp enable
+ bfd interval 300 min_rx 300 multiplier 3
+ no bfd echo
+ clns mtu 1440
+!
+interface GigabitEthernet1/0/3
+ description CPS-FE2
+ no switchport
+ dampening
+ ip address 192.168.10.33 255.255.255.252
+ no ip redirects
+ no ip proxy-arp
+ ip router isis
+ load-interval 30
+ cdp enable
+ bfd interval 300 min_rx 300 multiplier 3
+ no bfd echo
+ clns mtu 1440
+!
+!
+router isis
+ net 49.0000.0000.0000.0004.00
+ is-type level-2-only
+ domain-password ciscodna
+ metric-style transition
+ log-adjacency-changes
+ summary-address 192.168.10.0 255.255.255.0 level-2
+ redistribute connected
+ default-information originate
+ bfd all-interfaces
+!
+router bgp 65001
+ bgp router-id interface Loopback0
+ bgp log-neighbor-changes
+ bgp graceful-restart
+ neighbor 192.168.10.2 remote-as 65000
+ neighbor 192.168.10.2 update-source Vlan2999
+ !
+ address-family ipv4
+  bgp aggregate-timer 0
+  network 192.168.10.0 mask 255.255.255.252
+  redistribute isis route-map LOOPBACKS
+  neighbor 192.168.10.2 activate
+  neighbor 192.168.10.2 weight 65535
+ exit-address-family
+!
+ip forward-protocol nd
+ip tcp mss 1280
+ip tcp window-size 212000
+ip http server
+ip http authentication local
+ip http secure-server
+ip ssh bulk-mode 131072
+!
+!
+!
+!
+ip prefix-list LOOPBACKS seq 5 permit 192.168.1.0/24 le 32
+!
+route-map LOOPBACKS permit 10
+ match ip address prefix-list LOOPBACKS
+!
