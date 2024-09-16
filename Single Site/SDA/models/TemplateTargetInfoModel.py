@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Product Template Target Info data model """
 
-from SDA.enums.TemplateTargetInfoTypeEnum import TemplateTargetInfoTypeEnum
+from SDA.SDA.enums.TemplateTargetInfoTypeEnum import TemplateTargetInfoTypeEnum
 
 class TemplateTargetInfoModel:
     """
