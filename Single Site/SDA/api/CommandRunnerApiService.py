@@ -27,8 +27,8 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Command Runner REST API """
 
-from SDA.api.ApiService import ApiService
-from SDA.models.CommandRunnerModel import CommandRunnerModel
+from SDA.SDA.api.ApiService import ApiService
+from SDA.SDA.models.CommandRunnerModel import CommandRunnerModel
 
 class CommandRunnerApiService(ApiService):
     """
