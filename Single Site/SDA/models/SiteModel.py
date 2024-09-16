@@ -27,9 +27,9 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Site data model """
 
-from SDA.models.AreaModel import AreaModel
-from SDA.models.BuildingModel import BuildingModel
-from SDA.models.FloorModel import FloorModel
+from SDA.SDA.models.AreaModel import AreaModel
+from SDA.SDA.models.BuildingModel import BuildingModel
+from SDA.SDA.models.FloorModel import FloorModel
 
 class SiteModel:
     """
