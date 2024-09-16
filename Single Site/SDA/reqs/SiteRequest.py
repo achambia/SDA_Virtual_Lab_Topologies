@@ -27,8 +27,8 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for creating/updating a site """
 
-from SDA.enums.SiteTypeEnum import SiteTypeEnum
-from SDA.models.SiteModel import SiteModel
+from SDA.SDA.enums.SiteTypeEnum import SiteTypeEnum
+from SDA.SDA.models.SiteModel import SiteModel
 
 class SiteRequest:
     """
