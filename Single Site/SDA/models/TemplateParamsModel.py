@@ -27,10 +27,10 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center TemplateParams data model """
 
-from SDA.models.RangeModel import RangeModel
-from SDA.models.SelectionModel import SelectionModel
-from SDA.enums.DataTypeEnum import DataTypeEnum
-from SDA.enums.SelectionTypeEnum import SelectionTypeEnum
+from SDA.SDA.models.RangeModel import RangeModel
+from SDA.SDA.models.SelectionModel import SelectionModel
+from SDA.SDA.enums.DataTypeEnum import DataTypeEnum
+from SDA.SDA.enums.SelectionTypeEnum import SelectionTypeEnum
 class TemplateParamsModel:
     """
     TemplateParams data model
