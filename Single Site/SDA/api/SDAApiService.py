@@ -27,9 +27,9 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center SDA REST API """
 
-from SDA.api.ApiService import ApiService
-from SDA.params.GetFabricSitesParams import GetFabricSitesParams
-from SDA.reqs.FabricSitesRequest import FabricSitesRequest
+from SDA.SDA.api.ApiService import ApiService
+from SDA.SDA.params.GetFabricSitesParams import GetFabricSitesParams
+from SDA.SDA.reqs.FabricSitesRequest import FabricSitesRequest
 
 class SDAApiService(ApiService):
     """
