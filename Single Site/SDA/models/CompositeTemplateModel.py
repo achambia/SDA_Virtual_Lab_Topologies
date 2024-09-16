@@ -27,10 +27,10 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Composite Template data model """
 
-from SDA.models.TagsModel import TagsModel
-from SDA.models.ProductFamilyModel import ProductFamilyModel
-from SDA.models.RollbackTemplateModel import RollbackTemplateModel
-from SDA.models.TemplateParamsModel import TemplateParamsModel
+from SDA.SDA.models.TagsModel import TagsModel
+from SDA.SDA.models.ProductFamilyModel import ProductFamilyModel
+from SDA.SDA.models.RollbackTemplateModel import RollbackTemplateModel
+from SDA.SDA.models.TemplateParamsModel import TemplateParamsModel
 
 class CompositeTemplateModel:
     """
