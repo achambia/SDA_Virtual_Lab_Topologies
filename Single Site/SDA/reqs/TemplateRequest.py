@@ -27,14 +27,14 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for creating a Template """
 
-from SDA.models.TagsModel import TagsModel
-from SDA.models.CompositeTemplateModel import CompositeTemplateModel
-from SDA.models.ProductFamilyModel import ProductFamilyModel
-from SDA.models.RollbackTemplateModel import RollbackTemplateModel
-from SDA.models.TemplateParamsModel import TemplateParamsModel
-from SDA.models.ValidationErrorModel import ValidationErrorModel
-from SDA.enums.FailurePolicyEnum import FailurePolicyEnum
-from SDA.enums.LanguageEnum import LanguageTypeEnum
+from SDA.SDA.models.TagsModel import TagsModel
+from SDA.SDA.models.CompositeTemplateModel import CompositeTemplateModel
+from SDA.SDA.models.ProductFamilyModel import ProductFamilyModel
+from SDA.SDA.models.RollbackTemplateModel import RollbackTemplateModel
+from SDA.SDA.models.TemplateParamsModel import TemplateParamsModel
+from SDA.SDA.models.ValidationErrorModel import ValidationErrorModel
+from SDA.SDA.enums.FailurePolicyEnum import FailurePolicyEnum
+from SDA.SDA.enums.LanguageEnum import LanguageTypeEnum
 
 class TemplateRequest:
     """
