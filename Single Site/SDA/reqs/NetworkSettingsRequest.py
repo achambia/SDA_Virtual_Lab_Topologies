@@ -27,7 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center request for creating/updating a network """
 
-from SDA.models.NetworkSettingsModel import NetworkSettingsModel
+from SDA.SDA.models.NetworkSettingsModel import NetworkSettingsModel
 
 class NetworkSettingsRequest:
     """
