@@ -27,13 +27,13 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center Task for Template API """
 
-from SDA.api.ApiService import ApiService
-from SDA.reqs.ProjectRequest import ProjectRequest
-from SDA.reqs.TemplateRequest import TemplateRequest
-from SDA.reqs.VersionTemplateRequest import VersionTemplateRequest
-from SDA.reqs.DeployTemplateRequest import DeployTemplateRequest
-from SDA.params.GetlistProject import GetlistProject
-from SDA.params.GetlistTemplate import GetlistTemplate
+from SDA.SDA.api.ApiService import ApiService
+from SDA.SDA.reqs.ProjectRequest import ProjectRequest
+from SDA.SDA.reqs.TemplateRequest import TemplateRequest
+from SDA.SDA.reqs.VersionTemplateRequest import VersionTemplateRequest
+from SDA.SDA.reqs.DeployTemplateRequest import DeployTemplateRequest
+from SDA.SDA.params.GetlistProject import GetlistProject
+from SDA.SDA.params.GetlistTemplate import GetlistTemplate
 class TemplateApiService(ApiService):
     """
     Template API
