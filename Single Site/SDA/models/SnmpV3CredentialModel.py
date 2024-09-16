@@ -27,9 +27,9 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Catalyst Center SNMP v3 Credential data model """
 
-from SDA.enums.SnmpV3AuthTypeEnum import SnmpV3AuthTypeEnum
-from SDA.enums.SnmpV3PrivacyTypeEnum import SnmpV3PrivacyTypeEnum
-from SDA.enums.SnmpV3SnmpModeEnum import SnmpV3SnmpModeEnum
+from SDA.SDA.enums.SnmpV3AuthTypeEnum import SnmpV3AuthTypeEnum
+from SDA.SDA.enums.SnmpV3PrivacyTypeEnum import SnmpV3PrivacyTypeEnum
+from SDA.SDA.enums.SnmpV3SnmpModeEnum import SnmpV3SnmpModeEnum
 
 class SnmpV3CredentialModel:
     """
