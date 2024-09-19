@@ -1,2 +1,2 @@
-{'CAMPUS': [['SJC-Wired','DEMO-Wired','10','DATA',False,False,False,False,False,False,False],['SJC-Wired','DEMO-Wireless','20','DATA',False,False,False,False,False,False,False]],
-'GUEST': ['SJC-BMS','DEMO-GUEST','30','DATA',False,False,False,False,False,False,False]}
+{"CAMPUS": [["SJC-Wired","DEMO-Wired",10,"DATA",false,false,false,false,false,false,false],["SJC-Wireless","DEMO-Wireless",20,"DATA",false,false,false,false,false,false,false]],
+"GUEST": ["SJC-BMS","DEMO-GUEST",30,"DATA",false,false,false,false,false,false,false]}
