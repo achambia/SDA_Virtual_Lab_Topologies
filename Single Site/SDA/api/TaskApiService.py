@@ -48,4 +48,4 @@ class TaskApiService(ApiService):
         :param taskId: Task ID
         :return: Task details
         """
-        return self.get('/dna/intent/api/v1/task/' + taskId)
+        return self.get(f'/dna/intent/api/v1/tasks/{taskId}/detail' + taskId)
