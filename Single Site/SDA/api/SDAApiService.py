@@ -101,5 +101,23 @@ class SDAApiService(ApiService):
                 }
         return self.get('/dna/intent/api/v1/business/sda/border-device',params)
 
-    def provisiondevice(self,provisiondevicereqlist:provisiondevicereq):
-        return self.post('/dna/intent/api/v1/sda/provisionDevices', provisiondevicereqlist)
+    def add_VN(self,addvninfo:dict):
+        return self.post('/dna/intent/api/v1/sda/layer3VirtualNetworks', addvninfo)
+
+    def add_ip_pools(self,addippool:list):
+        return self.post('/dna/intent/api/v1/sda/anycastGateways', addippool)
+
+    def add_fabric_devices(self,addfabdev:list):
+        return self.post('/dna/intent/api/v1/sda/fabricDevices', addfabdev)
+
+    def create_transit(self,transit:list):
+        return self.post('/dna/intent/api/v1/sda/transitNetworks', transit)
+
+    def get_fab_devices(self,fabdev:dict) -> dict:
+        return self.get('/dna/intent/api/v1/sda/fabricDevices',fabdev)
+
+    def get_transit(self) -> dict:
+        return self.get('/dna/intent/api/v1/sda/transitNetworks')
+
+    def l3handoff(self,addl3:list):
+        return self.post('/dna/intent/api/v1/sda/fabricDevices/layer3Handoffs/ipTransits',addl3)
