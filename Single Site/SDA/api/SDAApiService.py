@@ -79,27 +79,29 @@ class SDAApiService(ApiService):
         """
         return self.get('/dna/intent/api/v1/sda/fabricSites', getFabricSitesParams)
 
-    def getSdaDeviceInfo(self,deviceManagementIpAddress:str) ->dict:
+    def getSdaDeviceInfo(self,fabid:str) ->dict:
         """
         Get Fabric Site Device Info API (returns all fabric sites if no params are provided)
         :param deviceManagementIpAddress: Mgmt IP of the device)
         :return: API response
         """
         params = {
-                "deviceManagementIpAddress": deviceManagementIpAddress
+                "fabricId": fabid,
+                "deviceRoles": ['BORDER_NODE','CONTROL_PLANE_NODE']
                 }
-        return self.get('/dna/intent/api/v1/business/sda/device',params)
+        return self.get('/dna/intent/api/v1/sda/fabricDevices',params)
 
-    def getSdaBorderInfo(self,deviceManagementIpAddress:str) ->dict:
+    def getSdaBorderInfo(self,fabid:str,nwid:str) ->dict:
         """
         Get Fabric Border Device Info API (returns all fabric sites if no params are provided)
         :param deviceManagementIpAddress: Mgmt IP of the device)
         :return: API response
         """
         params = {
-                "deviceManagementIpAddress": deviceManagementIpAddress
+                "fabricId": fabid,
+                "networkDeviceId": nwid
                 }
-        return self.get('/dna/intent/api/v1/business/sda/border-device',params)
+        return self.get('/dna/intent/api/v1/sda/fabricDevices/layer3Handoffs/ipTransits',params)
 
     def add_VN(self,addvninfo:dict):
         return self.post('/dna/intent/api/v1/sda/layer3VirtualNetworks', addvninfo)
