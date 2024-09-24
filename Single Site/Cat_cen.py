@@ -7,7 +7,6 @@ from SDA.SDA.reqs.SiteRequest import SiteRequest
 from SDA.SDA.enums.SiteTypeEnum import SiteTypeEnum
 from SDA.SDA.reqs.GlobalPoolRequest import GlobalPoolRequest
 from SDA.SDA.params.GetSiteParams import GetSiteParams
-from SDA.SDA.enums.IPPoolTypeEnum import IPPoolTypeEnum
 from SDA.SDA.api.NetworkSettingsApiService import NetworkSettingsApiService
 from SDA.SDA.models.IPPoolModel import IPPoolModel
 import urllib3
@@ -28,24 +27,19 @@ from SDA.SDA.api.AuthenticationApiService import AuthenticationApiService
 from SDA.SDA.reqs.ProjectRequest import ProjectRequest
 from SDA.SDA.api.TaskApiService import TaskApiService
 from SDA.SDA.reqs.TemplateRequest import TemplateRequest
-from SDA.SDA.enums.LanguageEnum import LanguageTypeEnum
 from SDA.SDA.models.ProductFamilyModel import ProductFamilyModel
 from SDA.SDA.reqs.VersionTemplateRequest import VersionTemplateRequest
 from SDA.SDA.reqs.DeployTemplateRequest import DeployTemplateRequest
 from SDA.SDA.models.TemplateTargetInfoModel import TemplateTargetInfoModel
 from SDA.SDA.enums.TemplateTargetInfoTypeEnum import TemplateTargetInfoTypeEnum
 import time
+from SDA.SDA.api.FileApiService import FileApiService
 from SDA.SDA.api.SDAApiService import SDAApiService
-from SDA.SDA.params.GetFabricSitesParams import GetFabricSitesParams
 from SDA.SDA.params.GetlistProject import GetlistProject
 from SDA.SDA.models.CommandRunnerModel import CommandRunnerModel
-from SDA.SDA.params.GetSiteDeviceAssociationparam import GetSiteDeviceAssociationparam
 from SDA.SDA.params.GetDeviceListParams import GetDeviceListParams
 from SDA.SDA.api.DevicesApiService import DevicesApiService
 from SDA.SDA.params.GetlistTemplate import GetlistTemplate
-from SDA.SDA.reqs.GlobalCredentialRequest import GlobalCredentialRequest
-from SDA.SDA.models.CliCredentialModel import CliCredentialModel
-from SDA.SDA.models.SnmpV2cCredentialModel import SnmpV2cCredentialModel
 from SDA.SDA.api.DiscoveryApiService import DiscoveryApiService
 from SDA.SDA.api.AuthenticationServerApiService import ise_dnac_integration
 from SDA.SDA.api.ProvisionApiService import provisionservice
@@ -340,6 +334,7 @@ def ise_integration(ip,iseip):
         print(status)
         time.sleep(10)
     print('!! Integration completed successfully !!\n')
+    time.sleep(5)
 
 def add_ise_2_design(ip,iseip):
     print('!! Adding the ISE server to the Design in Catalyst Center !! \n')
@@ -351,6 +346,7 @@ def add_ise_2_design(ip,iseip):
     nwinfo ={"settings": {'clientAndEndpoint_aaa':{'servers':'ISE','ipAddress':f'{iseip}','network':f'{iseip}','protocol':'RADIUS','sharedSecret':'C1sco12345'},'timezone':'UTC'}}
     networkupdate = NetworkSettingsApiService(f"https://{ip}", Auth).updateNetwork(sitid_id,nwinfo)
     print('!! Successfully Updated the ISE server !!\n')
+    time.sleep(5)
 
 def provision(ip):
     print('!! Provisioning the Devices !!')
@@ -359,14 +355,43 @@ def provision(ip):
     for x in (siteid['response']):
         if x['name'] == 'SJC-04':
             sitid_id = x['id']
-    taskid = []
+    provisionfinal = []
     deviceid = DevicesApiService(f"https://{ip}", Auth).getDeviceList()
     for x in (deviceid['response']):
-        provision_dev = [{'siteId': sitid_id, 'networkDeviceId': x['id']}]
-        print(provision_dev)
-        pr = provisionservice(f"https://{ip}", Auth).provision_device(provision_dev)
-        print(pr)
-        print(f'!! Successfully Provisioned the device with ID {x}')
+        provisionfinal.append({'siteId': sitid_id, 'networkDeviceId': x['id']})
+        print(f'!! Network device with ID {x['id']} submitted for provisioning !!\n')
+
+    pr = provisionservice(f"https://{ip}", Auth).provision_device(provisionfinal)
+    if re.search('Device Provisioning failed. Cannot provision already provisioned device with networkDeviceId = (.*)',pr['response']['detail']):
+        print('!! Re-Provisioning Devices !!\n')
+        provisionfinal.clear()
+        getdevice = provisionservice(f"https://{ip}", Auth).get_provision()
+        print(getdevice)
+        for y in getdevice['response']:
+            provisionfinal.append(y)
+        pr = provisionservice(f"https://{ip}", Auth).re_provision_device(provisionfinal)
+    print(pr)
+    taskval = []
+    task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+    timeout = time.time() + 600   # 10 minutes from now
+    timeout_start = time.time()
+    for ta in task['response']:
+        taskval.append(ta['status'])
+    while 'PENDING' in taskval:
+        if time.time()>timeout:
+            print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+            print(task)
+            break
+        taskval.clear()
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+        for ta in task['response']:
+            taskval.append(ta['status'])
+        print(task)
+        time.sleep(10)
+
+
+    print(f'!! Successfully Provisioned the device !!\n')
+
 
 def createfabric(ip):
     print('!! Creating Fabric Site !!\n')
@@ -378,8 +403,26 @@ def createfabric(ip):
     fabinfo = [{'siteId':sitid_id,'authenticationProfileName':'Closed Authentication','isPubSubEnabled':True}]
     fab_site = SDAApiService(f"https://{ip}", Auth).addFabricSites(fabinfo)
     print(fab_site)
+    if re.search('Bad Request',fab_site['response']['message']):
+        print(fab_site['response']['detail'])
+        pass
+    else:
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
+        timeout = time.time() + 600  # 10 minutes from now
+        timeout_start = time.time()
+        while task['status'] != 'SUCCESS':
+            if time.time() > timeout:
+                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                print(task)
+                break
+            else:
+                task = TemplateApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
+                print(task)
+                time.sleep(2)
+
     print('!! Successfully created the Fabric Site at Site SJC-04 !!\n')
-    time.sleep(10)
+
+    time.sleep(5)
 
 
 def create_VN(ip):
@@ -388,11 +431,34 @@ def create_VN(ip):
     fab = SDAApiService(f"https://{ip}", Auth).gerFabricSites()
     fabid = fab['response'][0]['id']
     VN = ['GUEST','CAMPUS']
+    vninfo = []
     for v in VN:
-        vninfo = [{'virtualNetworkName':v,'fabricIds':[fabid]}]
-        create_vn = SDAApiService(f"https://{ip}", Auth).add_VN(vninfo)
-        print(f'!! Successfully created VN {v}')
-        print(create_vn)
+        vninfo.append({'virtualNetworkName':v,'fabricIds':[fabid]})
+    create_vn = SDAApiService(f"https://{ip}", Auth).add_VN(vninfo)
+    if re.search('Bad Request',create_vn['response']['message']):
+        print(create_vn['response']['detail'])
+        pass
+    else:
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(create_vn['response']['taskId'])
+        timeout = time.time() + 600  # 10 minutes from now
+        timeout_start = time.time()
+        taskval = []
+        for ta in task['response']:
+            taskval.append(ta['status'])
+        while 'PENDING' in taskval:
+            if time.time() > timeout:
+                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                print(task)
+                break
+            taskval.clear()
+            task = TaskApiService(f"https://{ip}", Auth).taskdetail(create_vn['response']['taskId'])
+            for ta in task['response']:
+                taskval.append(ta['status'])
+            print(task)
+            time.sleep(10)
+
+    print(f'!! Successfully created VN !!\n')
+
     time.sleep(10)
 
 def create_ip_pool(ip):
@@ -400,6 +466,7 @@ def create_ip_pool(ip):
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     fab = SDAApiService(f"https://{ip}", Auth).gerFabricSites()
     fabid = fab['response'][0]['id']
+    ipoolinfo = []
     with open(f'C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA/sdapool.json') as pool:
         dev = (json.loads(pool.read()))
     for x in (dev):
@@ -407,20 +474,42 @@ def create_ip_pool(ip):
         if len(dev[x])>1:
             for pool in dev[x]:
                 print(f'!! Updating the Pool {pool[1]} in VN {x} !!\n')
-                ippoolinfo = [{"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": pool[0], "vlanName": pool[1],
+                ipoolinfo.append({"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": pool[0], "vlanName": pool[1],
                               "vlanId": pool[2], "trafficType": pool[3], "isCriticalPool": pool[4],
-                              "isLayer2FloodingEnabled": pool[5], "isWirelessPool": pool[6],"isIpDirectedBroadcast":pool[7],"isIntraSubnetRoutingEnabled":pool[8],"isMultipleIpToMacAddresses":pool[9]}]
-                anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ippoolinfo)
-                print(anycast)
-                print(f'!! Successfully updated the pool {pool[1]} !!')
+                              "isLayer2FloodingEnabled": pool[5], "isWirelessPool": pool[6],"isIpDirectedBroadcast":pool[7],"isIntraSubnetRoutingEnabled":pool[8],"isMultipleIpToMacAddresses":pool[9]})
+
         print(f'!! Updating the Pool {dev[x][0][1]} in VN {x} !!\n')
-        ippoolinfo = [{"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": dev[x][0][0], "vlanName": dev[x][0][1],
+        ipoolinfo.append({"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": dev[x][0][0], "vlanName": dev[x][0][1],
                        "vlanId": dev[x][0][2], "trafficType": dev[x][0][3], "isCriticalPool": dev[x][0][4],
                        "isLayer2FloodingEnabled": dev[x][0][5], "isWirelessPool": dev[x][0][6], "isIpDirectedBroadcast": dev[x][0][7],
-                       "isIntraSubnetRoutingEnabled": dev[x][0][8], "isMultipleIpToMacAddresses": dev[x][0][9]}]
-        anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ippoolinfo)
-        print(anycast)
-        print(f'!! Successfully updated the pool {dev[x][0][1]} !!')
+                       "isIntraSubnetRoutingEnabled": dev[x][0][8], "isMultipleIpToMacAddresses": dev[x][0][9]})
+    anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ipoolinfo)
+    print(anycast)
+    if re.search('Bad Request',anycast['response']['message']):
+        print(anycast['response']['detail'])
+        pass
+    else:
+        taskval = []
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
+        timeout = time.time() + 600  # 10 minutes from now
+        timeout_start = time.time()
+        for ta in task['response']:
+            taskval.append(ta['status'])
+        while 'PENDING' in taskval:
+            if time.time() > timeout:
+                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                print(task)
+                break
+            taskval.clear()
+            task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
+            for ta in task['response']:
+                taskval.append(ta['status'])
+            print(task)
+            time.sleep(10)
+
+
+    print(f'!! Successfully updated the pools!!')
+
 
 def add_border_cp_edge(ip):
     print('!! Adding Devices the fabric Role !!\n')
@@ -441,8 +530,30 @@ def add_border_cp_edge(ip):
             devaddinfo.append({"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["EDGE_NODE"]})
     devpush = SDAApiService(f"https://{ip}", Auth).add_fabric_devices(devaddinfo)
     print(devpush)
-    print('!! Pushed the fabric Config to devices, sleeping for 2 mins !!\n')
-    time.sleep(120)
+    if re.search('Bad Request',devpush['response']['message']):
+        print(devpush['response']['detail'])
+        pass
+    else:
+        taskval = []
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
+        timeout = time.time() + 600  # 10 minutes from now
+        timeout_start = time.time()
+        for ta in task['response']:
+            taskval.append(ta['status'])
+        while 'PENDING' in taskval:
+            if time.time() > timeout:
+                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                print(task)
+                break
+            taskval.clear()
+            task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
+            for ta in task['response']:
+                taskval.append(ta['status'])
+            print(task)
+            time.sleep(10)
+        print('!! Pushed the fabric Config to devices, sleeping for 10 secs !!\n')
+        time.sleep(10)
+
 
 def create_transit(ip):
     print('!! Creating Transit !!\n')
@@ -451,6 +562,24 @@ def create_transit(ip):
     trans_create = SDAApiService(f"https://{ip}", Auth).create_transit(trans)
     print(trans_create)
     print('!! Successfully Created transit !!\n')
+    if re.search('Bad Request',trans_create['response']['message']):
+        print(trans_create['response']['detail'])
+        pass
+    else:
+        task1 = TaskApiService(f"https://{ip}", Auth).taskdetail(trans_create['response']['taskId'])
+        timeout = time.time() + 600  # 10 minutes from now
+        timeout_start = time.time()
+        while task1['status'] != 'SUCCESS':
+            if time.time() > timeout:
+                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                print(task1)
+                break
+            else:
+                task1 = TaskApiService(f"https://{ip}", Auth).taskdetail(trans_create['response']['taskId'])
+                print(task1)
+                time.sleep(2)
+        print('!! Template created and provisioned successfully !!\n')
+
     time.sleep(10)
 
 def border_auto(ip):
@@ -485,30 +614,38 @@ def border_auto(ip):
                     print(l3info)
     l3handoff = SDAApiService(f"https://{ip}", Auth).l3handoff(l3info)
     print(l3handoff)
-
-    if 'taskId' not in l3handoff['response']:
-        print(f'!! {l3handoff['response']['detail']} !!\n')
+    if re.search('Bad Request',l3handoff['response']['message']):
+        print(l3handoff['response']['detail'])
+        pass
     else:
-        taskval = TaskApiService(f"https://169.200.200.130", Auth).getTaskById(
-            l3handoff['response']['taskId'])
-        while taskval['response']['progress'] != 'TASK_MODIFY_PUT':
-            Auth = AuthenticationApiService('sysadmin', 'C1sco12345',
-                                            f"https://169.200.200.130").authenticate()
-            taskval = TaskApiService(f"https://169.200.200.130", Auth).getTaskById(
-                l3handoff['response']['taskId'])
-            print(taskval)
+        taskval = []
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
+        timeout = time.time() + 600  # 10 minutes from now
+        timeout_start = time.time()
+        for ta in task['response']:
+            taskval.append(ta['status'])
+        while 'PENDING' in taskval:
+            if time.time() > timeout:
+                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                print(task)
+                break
+            taskval.clear()
+            task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
+            for ta in task['response']:
+                taskval.append(ta['status'])
+            print(task)
             time.sleep(10)
 
 
-def runCommands(url: str, token: str, devices: list, commands: list) -> None:
 
+def runCommands(url: str, token: str, devices: list, commands: list) -> None:
     #
     # Run CLI commands
     #
 
-    commandRunnerApiService = CommandRunnerApiService(f"https://{url}",token)
-    taskApiService = TaskApiService(f"https://{url}",token)
-    fileApiService = FileApiService(f"https://{url}",token)
+    commandRunnerApiService = CommandRunnerApiService(f"https://{url}", token)
+    taskApiService = TaskApiService(f"https://{url}", token)
+    fileApiService = FileApiService(f"https://{url}", token)
 
     apiResponse = commandRunnerApiService.RunReadOnlyCommand(CommandRunnerModel(commands, devices))
     taskId = apiResponse['response']['taskId']
@@ -518,6 +655,7 @@ def runCommands(url: str, token: str, devices: list, commands: list) -> None:
     #
     completed = False
     while not completed:
+        time.sleep(2)
         task = taskApiService.getTaskById(taskId)['response']
         # JSON is returned only when task is ready, hence try/except is used
         try:
@@ -537,9 +675,9 @@ def runCommands(url: str, token: str, devices: list, commands: list) -> None:
         if item['commandResponses']['FAILURE'] != {}:
             for command in commands:
                 text = item['commandResponses']['FAILURE'].get(command)
-        if item['commandResponses']['BLACKLISTED'] != {}:
+        if item['commandResponses']['BLOCKLISTED'] != {}:
             for command in commands:
-                text = item['commandResponses']['BLACKLISTED'].get(command)
+                text = item['commandResponses']['BLOCKLISTED'].get(command)
     return text
 
 def Project(url,token):
@@ -548,6 +686,20 @@ def Project(url,token):
     task_id = TaskApiService(f"https://{url}",token).getTaskById(project_req['response']['taskId'])
     project_id =task_id['response']['data']
     print('Project Created Successfully.\n')
+    task1 = TaskApiService(f"https://{url}", token).taskdetail(project_req['response']['taskId'])
+    timeout = time.time() + 600   # 10 minutes from now
+    timeout_start = time.time()
+    while task1['status'] != 'SUCCESS':
+        if time.time() > timeout:
+            print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+            print(task1)
+            break
+        else:
+            task1 = TaskApiService(f"https://{url}", token).taskdetail(project_req['response']['taskId'])
+            print(task1)
+            time.sleep(2)
+    print('!! Template created and provisioned successfully !!\n')
+    time.sleep(10)
     return project_id
 
 def createtemplate(rtr, prod_series,temp_name, project_name,content,projectid,url,token,fusion_mgmt):
@@ -569,26 +721,49 @@ def createtemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}', headers=headers,
                                       verify=False,
                                       )
+    print(task.json())
     if (task.json()['response']['progress']) != 'Successfully created template with name FUSION.demo.local. Template content has validation errors.':
         time.sleep(7)
+        task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}',
+                            headers=headers,
+                            verify=False,
+                            )
+    time.sleep(7)
+    task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}', headers=headers,
+                                      verify=False,
+                                      )
 
     version_req = VersionTemplateRequest()
     version_req.comments = 'this is 1st commit'
     temp_id = json.loads(task.json()['response']['data'])
     version_req.templateId = temp_id['templateId']
+    time.sleep(10)
     version_push = TemplateApiService(f"https://{url}",token).versionTemplate(version_req)
     temp_target_info = TemplateTargetInfoModel(TemplateTargetInfoTypeEnum.MANAGED_DEVICE_IP,temp_id['templateId'])
     temp_target_info.id = fusion_mgmt
     deploy_temp_req = DeployTemplateRequest([temp_target_info], temp_id['templateId'])
     deploy_temp = TemplateApiService(f"https://{url}",token).deploytemplate(deploy_temp_req)
     print(deploy_temp)
+    deploy = re.search('.*Template Deployemnt Id: (.*)',deploy_temp['deploymentId'])
+    task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
+    timeout = time.time() + 600   # 10 minutes from now
+    timeout_start = time.time()
+    while task1['status'] != 'SUCCESS':
+        if time.time() > timeout:
+            print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+            print(task1)
+            break
+        else:
+            task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
+            print(task1)
+            time.sleep(2)
+    print('!! Template created and provisioned successfully !!\n')
 
 
 def temp_content(url,token):
     fusion_temp = ''
-    fabricsite = GetFabricSitesParams()
-    fabricsite_info = SDAApiService(f"https://{url}",token).gerFabricSites(fabricsite)
-    input_info = f"Enter the Number of the site where you want Fusion Automation\n"
+    fab = SDAApiService(f"https://{url}", token).gerFabricSites()
+    fabid = fab['response'][0]['id']
     number = 1
     site_dict = {}
     border_list = []
@@ -596,70 +771,71 @@ def temp_content(url,token):
     dev_type = ''
     fusion_mgmt = ''
     fusion_dict = {}
-    for x in (fabricsite_info['response']):
-        input_info = input_info + f"{number} :: {x['siteNameHierarchy']}" + "\n"
-        site_dict.update({str(number): x['siteNameHierarchy']})
-        number = number + 1
-    user_info = input(f"{input_info}" + "\n ::::::  ")
-    site = GetSiteParams()
-    site.groupNameHierarchy = site_dict[user_info]
-    site_info = SitesApiService(f"https://{url}",token).getSite(site)
-    site_dev_ass = GetSiteDeviceAssociationparam()
+    localas = {}
     print("Collecting Devices in the Sites !! \n")
-    get_site_dev_Ass = SitesApiService(f"https://{url}",token).getSiteDeviceassociated(
-        site_info['response'][0]['id'], site_dev_ass)
     border = "Border Devices in the site "
     num = 1
-    for si in get_site_dev_Ass['response']:
-        dev_role = SDAApiService(f"https://{url}",token).getSdaDeviceInfo(si['dnsResolvedManagementAddress'])
-        if dev_role['roles'][0] == 'Border Node':
-            border = border + f'\n {num} :: {dev_role["name"]} with ip  {dev_role["deviceManagementIpAddress"]} '
-            num = num + 1
-            border_list.append(dev_role['deviceManagementIpAddress'])
-    print(f'\n{border} ')
-    for border in border_list:
-        print("Gathering Border Devices Info !!\n")
-        border_info = SDAApiService(f"https://{url}",token).getSdaBorderInfo(border)
-        for ext_con in border_info['deviceSettings']['extConnectivitySettings']:
-            print("Collecting the Fusion Hostname and Uplink !!\n")
-            cdp_intf = runCommands(url,token, [f'{border_info["networkDeviceId"]}'],[f'show cdp neighbor {ext_con["interfaceUuid"]} detail'])
-            Fusion_hostname = re.search('Device ID: (.*)', str(cdp_intf))
-            Fusion_Intf = re.search('Port ID \(outgoing port\): (.*)', str(cdp_intf))
-            Fusion_Param = GetDeviceListParams()
-            Fusion_Param.hostname = [f'{Fusion_hostname.group(1)}']
-            print(f"Fusion {Fusion_hostname.group(1)} has uplink {Fusion_Intf.group(1)} towards BDR {border}\n")
-            Fusion = DevicesApiService(f"https://{url}",token).getDeviceList(Fusion_Param)
-            dev_family =Fusion['response'][0]['family']
-            dev_type = Fusion['response'][0]['type']
-            fusion_mgmt = Fusion['response'][0]['dnsResolvedManagementAddress']
-            if Fusion['response'][0]['family'] == 'Routers':
-                print('Fusion Device is a Router !!\n')
-                for l3handoff in ext_con['l3Handoff']:
-                    fusion_intf = ''
-                    fusion_bgp_nei = ''
-                    vrf = runCommands(url,token, [f'{border_info["networkDeviceId"]}'],[f'show run interface vlan {l3handoff["vlanId"]}'])
-                    vrf_info = re.search('vrf forwarding (.*)', str(vrf))
-                    print(f'Running Border Automation on Fusion for VRF {vrf_info.group(1)}\n')
-                    get_vrf = runCommands(url,token, [f'{border_info["networkDeviceId"]}'],[f'show run vrf {vrf_info.group(1)}'])
-                    rd_info = re.search('rd (.*)',get_vrf)
-                    fusion_cfg = re.search(f'(vrf def.* {rd_info.group(1)})',get_vrf,re.DOTALL)
-                    fusion_cfg_new = fusion_cfg.group(1) + "\n exit-address-family"
-                    local_ip = re.split('/', l3handoff['localIpAddress'])
-                    remote_ip = re.split('/', l3handoff['remoteIpAddress'])
-                    fusion_interface = f"""interface {Fusion_Intf.group(1)}.{l3handoff['vlanId']}\n encapsulation dot1Q {l3handoff['vlanId']}\n vrf forwarding {vrf_info.group(1)}\n ip address {remote_ip[0]} 255.255.255.252\n no ip redirects\n ip route-cache same-interface"""
-                    fusion_intf = fusion_intf + fusion_interface
-                    fusion_bgp_neigh = f""" neighbor {local_ip[0]} remote-as {border_info['deviceSettings']['internalDomainProtocolNumber']}\n neighbor {local_ip[0]} activate\n neighbor {local_ip[0]} send-community both\n neighbor {local_ip[0]} update-source {Fusion_Intf.group(1)}.{l3handoff['vlanId']}\n neighbor {local_ip[0]} weight 65535"""
-                    fusion_bgp_nei = fusion_bgp_nei + fusion_bgp_neigh
-                fusion_vrf_check = runCommands(url,token, [f"{Fusion['response'][0]['id']}"],[f'show run vrf {vrf_info.group(1)}'])
+    bordern = SDAApiService(f"https://{url}", token).getSdaDeviceInfo(fabid)
+    print(bordern)
+    for bor in bordern['response']:
+        print(bor['networkDeviceId'])
+        border= border + f'\n {num}. Device with NwId {bor["networkDeviceId"]}'
+        num = num+1
+        border_list.append(bor["networkDeviceId"])
+        localas.update({bor["networkDeviceId"]:bor['borderDeviceSettings']['layer3Settings']['localAutonomousSystemNumber']})
+
+    print(f'{border} ')
+    print(border_list)
+    for ext_con in border_list:
+        print("Collecting the Fusion Hostname and Uplink !!\n")
+        cdp_intf = runCommands(url, token, [f'{ext_con}'], [f'show cdp neighbor GigabitEthernet1/0/1 detail'])
+        print(cdp_intf)
+        Fusion_hostname = re.search('Device ID: (.*)', str(cdp_intf))
+        Fusion_Intf = re.search('Port ID \(outgoing port\): (.*)', str(cdp_intf))
+        Fusion_Param = GetDeviceListParams()
+        Fusion_Param.hostname = [f'{Fusion_hostname.group(1)}']
+        print(f"Fusion {Fusion_hostname.group(1)} has uplink {Fusion_Intf.group(1)} towards BDR {border}\n")
+        Fusion = DevicesApiService(f"https://{url}", token).getDeviceList(Fusion_Param)
+        dev_family = Fusion['response'][0]['family']
+        dev_type = Fusion['response'][0]['type']
+        fusion_mgmt = Fusion['response'][0]['dnsResolvedManagementAddress']
+        hostname = runCommands(url, token, [f'{ext_con}'], [f'show run | sec hostname'])
+        bdr_host = re.search('hostname (.*)', str(hostname))
+        print(bdr_host.group(1))
+        if Fusion['response'][0]['family'] == 'Routers':
+            print('Fusion Device is a Router !!\n')
+            bdrinfo = SDAApiService(f"https://{url}", token).getSdaBorderInfo(fabid, ext_con)
+            for l3handoff in bdrinfo['response']:
+                print(l3handoff)
+                fusion_intf = ''
+                fusion_bgp_nei = ''
+                vrf = runCommands(url, token, [f'{ext_con}'], [f'show run interface vlan {l3handoff["vlanId"]}'])
+                vrf_info = re.search('vrf forwarding (.*)', str(vrf))
+                print(f'Running Border Automation on Fusion for VRF {vrf_info.group(1)}\n')
+                get_vrf = runCommands(url, token, [f'{ext_con}'], [f'show run vrf {vrf_info.group(1)}'])
+                rd_info = re.search('rd (.*)', get_vrf)
+                fusion_cfg = re.search(f'(vrf def.* {rd_info.group(1)})', get_vrf, re.DOTALL)
+                fusion_cfg_new = fusion_cfg.group(0) + "\n exit-address-family\n"
+                local_ip = re.split('/', l3handoff['localIpAddress'])
+                remote_ip = re.split('/', l3handoff['remoteIpAddress'])
+                fusion_interface = f"""interface {Fusion_Intf.group(1)}.{l3handoff['vlanId']}\n encapsulation dot1Q {l3handoff['vlanId']}\n vrf forwarding {vrf_info.group(1)}\n ip address {remote_ip[0]} 255.255.255.252\n no ip redirects\n ip route-cache same-interface"""
+                fusion_intf = fusion_intf + fusion_interface
+                fusion_bgp_neigh = f""" maximum-paths 2\n neighbor {local_ip[0]} remote-as {localas[ext_con]}\n neighbor {local_ip[0]} activate\n neighbor {local_ip[0]} send-community both\n neighbor {local_ip[0]} update-source {Fusion_Intf.group(1)}.{l3handoff['vlanId']}\n neighbor {local_ip[0]} weight 65535"""
+                fusion_bgp_nei = fusion_bgp_nei + fusion_bgp_neigh
+                fusion_vrf_check = runCommands(url, token, [f"{Fusion['response'][0]['id']}"],
+                                               [f'show run vrf {vrf_info.group(1)}'])
                 print('Verifying whether VRF Definition is present in the Fusion !!\n')
-                if re.search(f'vrf definition {vrf_info.group(1)}',fusion_vrf_check):
+                if re.search(f'vrf definition {vrf_info.group(1)}', fusion_vrf_check):
                     print('VRF Definition present, therefore skipping the VRF definition config!! \n')
-                    fusion_temp = fusion_temp + '\n' + fusion_intf + f'\nrouter bgp {ext_con["externalDomainProtocolNumber"]}\n address-family ipv4 vrf {vrf_info.group(1)}\n' + fusion_bgp_nei + "\nexit-address-family"
+                    fusion_temp = fusion_temp + '\n' + fusion_intf + f'\nrouter bgp 65000\n address-family ipv4 vrf {vrf_info.group(1)}\n' + fusion_bgp_nei + "\nexit-address-family"
                 else:
                     print('VRF Definition not present, adding VRF definition config!! \n')
-                    fusion_temp = fusion_temp + '\n' +  fusion_cfg_new.group(1) + fusion_intf + f'\nrouter bgp {ext_con["externalDomainProtocolNumber"]}\n address-family ipv4 vrf {vrf_info.group(1)}\n' + fusion_bgp_nei + "\nexit-address-family"
+                    fusion_temp = fusion_temp + '\n' + fusion_cfg_new + fusion_intf + f'\nrouter bgp 65000\n address-family ipv4 vrf {vrf_info.group(1)}\n' + fusion_bgp_nei + "\nexit-address-family"
                 print(f'Config generated for Fusion \n{fusion_temp}')
-            fusion_dict.update({Fusion_hostname.group(1):fusion_temp})
+                time.sleep(5)
+
+
+        fusion_dict.update({Fusion_hostname.group(1):fusion_temp})
     return fusion_dict,dev_family,dev_type,fusion_mgmt
 
 def updatetemplate(rtr, prod_series,temp_name, project_name,content,projectid,url,token,fusion_mgmt,tempid):
@@ -684,16 +860,36 @@ def updatetemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
                                       )
     if (task.json()['response']['progress']) != 'Successfully created template with name FUSION.demo.local. Template content has validation errors.':
         time.sleep(7)
-
+    time.sleep(7)
+    task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}', headers=headers,
+                                      verify=False,
+                                      )
+    print(task)
     version_req = VersionTemplateRequest()
     version_req.comments = 'this is 1st commit'
-    version_req.templateId = tempid
+    temp_id = tempid
+    version_req.templateId = temp_id
+    time.sleep(10)
     version_push = TemplateApiService(f"https://{url}",token).versionTemplate(version_req)
     temp_target_info = TemplateTargetInfoModel(TemplateTargetInfoTypeEnum.MANAGED_DEVICE_IP,tempid)
     temp_target_info.id = fusion_mgmt
     deploy_temp_req = DeployTemplateRequest([temp_target_info], tempid)
     deploy_temp = TemplateApiService(f"https://{url}",token).deploytemplate(deploy_temp_req)
     print(deploy_temp)
+    deploy = re.search('.*Template Deployemnt Id: (.*)',deploy_temp['deploymentId'])
+    print(deploy.group(1))
+    task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
+    timeout = time.time() + 600   # 10 minutes from now
+    while task1['status'] != 'SUCCESS':
+        if time.time() > timeout:
+            print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+            print(task1)
+            break
+        else:
+            task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
+            print(task1)
+            time.sleep(2)
+    print('!! Template created and provisioned successfully !!\n')
 
 
 def fusion_auto(ip):
@@ -728,13 +924,18 @@ def fusion_auto(ip):
     print('TASK Completed')
 
 
-
-#ise_integration('169.200.200.130','169.200.200.100')
-#add_ise_2_design('169.200.200.130','169.200.200.100')
-#provision('169.200.200.130')
-#createfabric('169.200.200.130')
-#create_VN('169.200.200.130')
-#create_ip_pool('169.200.200.130')
-#add_border_cp_edge('169.200.200.130')
-#create_transit('169.200.200.130')
-border_auto('169.200.200.130')
+def overlay_automation(ip,ise):
+    create_underlay(ip)
+    ise_integration(ip,ise)
+    add_ise_2_design(ip,ise)
+    provision(ip)
+    createfabric(ip)
+    create_VN(ip)
+    create_ip_pool(ip)
+    add_border_cp_edge(ip)
+    create_transit(ip)
+    border_auto(ip)
+    try:
+        fusion_auto(ip)
+    except:
+        fusion_auto(ip)
