@@ -106,9 +106,5 @@ class TemplateApiService(ApiService):
         """
         return self.get('/dna/intent/api/v1/template-programmer/template', getListtemplate)
 
-
-
-
-
-
-
+    def getDeployment(self,deploymentId) -> dict:
+        return self.get(f'/dna/intent/api/v1/template-programmer/template/deploy/status/{deploymentId}')
