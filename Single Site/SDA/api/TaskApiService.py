@@ -48,4 +48,10 @@ class TaskApiService(ApiService):
         :param taskId: Task ID
         :return: Task details
         """
-        return self.get(f'/dna/intent/api/v1/tasks/{taskId}/detail' + taskId)
+        return self.get(f'/dna/intent/api/v1/task/{taskId}')
+
+    def taskdetail(self,fabid:str) -> dict:
+        params = {
+                "parentId": fabid
+                }
+        return self.get(f'/dna/intent/api/v1/tasks',params)
