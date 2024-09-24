@@ -40,3 +40,11 @@ class provisionservice(ApiService):
     def provision_device(self,prov_dev:dict):
         return self.post('/dna/intent/api/v1/sda/provisionDevices', prov_dev)
 
+    def re_provision_device(self,reprov_dev:dict):
+        return self.put('/dna/intent/api/v1/sda/provisionDevices',reprov_dev)
+
+    def get_provision(self) -> dict:
+        return self.get('/dna/intent/api/v1/sda/provisionDevices')
+
+
+
