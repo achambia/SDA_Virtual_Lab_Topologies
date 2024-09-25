@@ -484,9 +484,10 @@ def create_ip_pool(ip):
         if len(dev[x])>1:
             for pool in dev[x]:
                 print(f'!! Updating the Pool {pool[1]} in VN {x} !!\n')
-                ipoolinfo = {"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": pool[0], "vlanName": pool[1],
+                ipoolinfo = [{"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": pool[0], "vlanName": pool[1],
                               "vlanId": pool[2], "trafficType": pool[3], "isCriticalPool": pool[4],
-                              "isLayer2FloodingEnabled": pool[5], "isWirelessPool": pool[6],"isIpDirectedBroadcast":pool[7],"isIntraSubnetRoutingEnabled":pool[8],"isMultipleIpToMacAddresses":pool[9]}
+                              "isLayer2FloodingEnabled": pool[5], "isWirelessPool": pool[6],"isIpDirectedBroadcast":pool[7],"isIntraSubnetRoutingEnabled":pool[8],"isMultipleIpToMacAddresses":pool[9]}]
+                print(ipoolinfo)
                 anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ipoolinfo)
                 print(anycast)
                 if 'message' in anycast['response']:
@@ -510,10 +511,10 @@ def create_ip_pool(ip):
 
 
         print(f'!! Updating the Pool {dev[x][0][1]} in VN {x} !!\n')
-        ipoolinfo = {"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": dev[x][0][0], "vlanName": dev[x][0][1],
+        ipoolinfo = [{"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": dev[x][0][0], "vlanName": dev[x][0][1],
                        "vlanId": dev[x][0][2], "trafficType": dev[x][0][3], "isCriticalPool": dev[x][0][4],
                        "isLayer2FloodingEnabled": dev[x][0][5], "isWirelessPool": dev[x][0][6], "isIpDirectedBroadcast": dev[x][0][7],
-                       "isIntraSubnetRoutingEnabled": dev[x][0][8], "isMultipleIpToMacAddresses": dev[x][0][9]}
+                       "isIntraSubnetRoutingEnabled": dev[x][0][8], "isMultipleIpToMacAddresses": dev[x][0][9]}]
         anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ipoolinfo)
         print(anycast)
         if 'message' in anycast['response']:
@@ -537,7 +538,6 @@ def create_ip_pool(ip):
 
     print(f'!! Successfully updated the pools!!')
 
-
 def add_border_cp_edge(ip):
     print('!! Adding Devices the fabric Role !!\n')
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
@@ -551,7 +551,7 @@ def add_border_cp_edge(ip):
 
         if x['managementIpAddress'] in bdr_cp:
             print(f'!!Adding the role BDR/CP Role on device {x['managementIpAddress']} !!\n')
-            devaddinfo = {"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["CONTROL_PLANE_NODE","BORDER_NODE"],"borderDeviceSettings":{"borderTypes":["LAYER_3"],"layer3Settings":{"localAutonomousSystemNumber":"65001","isDefaultExit":True,'importExternalRoutes':False}}}
+            devaddinfo = [{"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["CONTROL_PLANE_NODE","BORDER_NODE"],"borderDeviceSettings":{"borderTypes":["LAYER_3"],"layer3Settings":{"localAutonomousSystemNumber":"65001","isDefaultExit":True,'importExternalRoutes':False}}}]
             devpush = SDAApiService(f"https://{ip}", Auth).add_fabric_devices(devaddinfo)
             print(devpush)
             if 'message' in devpush['response']:
@@ -573,7 +573,7 @@ def add_border_cp_edge(ip):
                         time.sleep(2)
         elif x['managementIpAddress'] in edges:
             print(f'!!Adding the role Edge Role on device {x['managementIpAddress']} !!\n')
-            devaddinfo = {"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["EDGE_NODE"]}
+            devaddinfo = [{"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["EDGE_NODE"]}]
             devpush = SDAApiService(f"https://{ip}", Auth).add_fabric_devices(devaddinfo)
             print(devpush)
             if 'message' in devpush['response']:
