@@ -3,17 +3,17 @@ import os
 import re
 import subprocess
 import sys
-from api.deploy_ovf import deploy_ise,deploy_cml,deploy_wlc,deploy_labrouter,deploy_cc
-from api.reachability import ping_test
-from api.router_uplink import labrtr
+from SDA.SDA.api.deploy_ovf import deploy_ise,deploy_cml,deploy_wlc,deploy_labrouter,deploy_cc
+from SDA.SDA.api.reachability import ping_test
+from SDA.SDA.api.router_uplink import labrtr
 import time
-from api.CML import cml_tasks
+from SDA.SDA.api.CML import cml_tasks
 from git import Repo
-from api.WIN_info import getvms
-from api.portgroup import portgroup
+from SDA.SDA.api.WIN_info import getvms
+from SDA.SDA.api.portgroup import portgroup
 import json
-from api.device_info import device_net
-from api.deploy_vcenter_ovf import deploy_vcenter_wlc,deploy_vcenter_labrouter,deploy_vcenter_cml,deploy_vcenter_ise,deploy_vcenter_cc
+from SDA.SDA.api.device_info import device_net
+from SDA.SDA.api.deploy_vcenter_ovf import deploy_vcenter_wlc,deploy_vcenter_labrouter,deploy_vcenter_cml,deploy_vcenter_ise,deploy_vcenter_cc
 import shutil
 import warnings
 warnings.filterwarnings(action='ignore', module='.*paramiko.*')
