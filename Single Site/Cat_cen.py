@@ -495,7 +495,6 @@ def create_ip_pool(ip):
                         print(anycast['response']['detail'])
                         pass
                 else:
-
                     task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
                     timeout = time.time() + 600  # 10 minutes from now
                     timeout_start = time.time()
@@ -505,7 +504,7 @@ def create_ip_pool(ip):
                             print(task)
                             break
                         else:
-                            task = TemplateApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
+                            task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
                             print(task)
                             time.sleep(2)
 
@@ -531,7 +530,7 @@ def create_ip_pool(ip):
                     print(task)
                     break
                 else:
-                    task = TemplateApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
+                    task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
                     print(task)
                     time.sleep(2)
 
@@ -568,7 +567,7 @@ def add_border_cp_edge(ip):
                         print(task)
                         break
                     else:
-                        task = TemplateApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
+                        task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
                         print(task)
                         time.sleep(2)
         elif x['managementIpAddress'] in edges:
@@ -590,7 +589,7 @@ def add_border_cp_edge(ip):
                         print(task)
                         break
                     else:
-                        task = TemplateApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
+                        task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
                         print(task)
                         time.sleep(2)
 
@@ -606,6 +605,7 @@ def create_transit(ip):
         if re.search('Bad Request', trans_create['response']['message']):
             print(trans_create['response']['detail'])
             pass
+    time.sleep(15)
 
 def border_auto(ip):
     print('!! Creating l3 Handoff !!\n')
