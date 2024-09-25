@@ -471,7 +471,7 @@ def reachability_wlc(wlc):
 
 def lab_up_verify(sda_build,topo):
     edge_reach = []
-    from SDA.Cat_cen import device_config
+    from Cat_cen import device_config
     with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/device_mgmt.json') as edge:
         fab_edge = (json.loads(edge.read()))
         for ed in fab_edge:
