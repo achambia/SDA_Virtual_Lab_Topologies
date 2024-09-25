@@ -312,7 +312,7 @@ def vm_build_wlc_vcenter(win_esxi_data, wlc_ds, wlc_vm_name, wlc_user, wlc_passw
     time.sleep(120)
 
 def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
-    from Cat_cen import device_config, create_underlay, overlay_automation
+    from SDA.Cat_cen import device_config, create_underlay, overlay_automation
     print('!! Verifying the License Status !!\n')
     cml_lic = cml_tasks(cml, 'admin', 'CISCO123').get_licensing()
     if cml_lic['registration']['status'] == 'COMPLETED' and cml_lic['authorization']['status'] == 'IN_COMPLIANCE':
@@ -386,7 +386,7 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
         overlay_automation(dnacip, iseip)
 
 def no_lab_build_dnac_only(sda_build,topo,dnacip,ise,under_or_over):
-    from Cat_cen import device_config, create_underlay, overlay_automation
+    from SDA.Cat_cen import device_config, create_underlay, overlay_automation
     if under_or_over == '1':
         create_underlay(dnacip)
     elif under_or_over == '2':
@@ -471,7 +471,7 @@ def reachability_wlc(wlc):
 
 def lab_up_verify(sda_build,topo):
     edge_reach = []
-    from Cat_cen import device_config
+    from SDA.Cat_cen import device_config
     with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/device_mgmt.json') as edge:
         fab_edge = (json.loads(edge.read()))
         for ed in fab_edge:
