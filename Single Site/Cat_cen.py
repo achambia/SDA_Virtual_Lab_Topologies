@@ -363,14 +363,19 @@ def provision(ip):
         print(f'!! Network device with ID {x['id']} submitted for provisioning !!\n')
 
     pr = provisionservice(f"https://{ip}", Auth).provision_device(provisionfinal)
-    if re.search('Device Provisioning failed. Cannot provision already provisioned device with networkDeviceId = (.*)',pr['response']['detail']):
-        print('!! Re-Provisioning Devices !!\n')
-        provisionfinal.clear()
-        getdevice = provisionservice(f"https://{ip}", Auth).get_provision()
-        print(getdevice)
-        for y in getdevice['response']:
-            provisionfinal.append(y)
-        pr = provisionservice(f"https://{ip}", Auth).re_provision_device(provisionfinal)
+    print(pr)
+    if 'message' in pr['response']:
+        if re.search(
+                'Device Provisioning failed. Cannot provision already provisioned device with networkDeviceId = (.*)',
+                pr['response']['detail']):
+            print('!! Re-Provisioning Devices !!\n')
+            provisionfinal.clear()
+            getdevice = provisionservice(f"https://{ip}", Auth).get_provision()
+            print(getdevice)
+            for y in getdevice['response']:
+                provisionfinal.append(y)
+            pr = provisionservice(f"https://{ip}", Auth).re_provision_device(provisionfinal)
+
     print(pr)
     taskval = []
     task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
@@ -404,9 +409,11 @@ def createfabric(ip):
     fabinfo = [{'siteId':sitid_id,'authenticationProfileName':'Closed Authentication','isPubSubEnabled':True}]
     fab_site = SDAApiService(f"https://{ip}", Auth).addFabricSites(fabinfo)
     print(fab_site)
-    if re.search('Bad Request',fab_site['response']['message']):
-        print(fab_site['response']['detail'])
-        pass
+    if 'message' in fab_site['response']:
+        if re.search('Bad Request', fab_site['response']['message']):
+            print(fab_site['response']['detail'])
+            pass
+
     else:
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
         timeout = time.time() + 600  # 10 minutes from now
@@ -436,9 +443,11 @@ def create_VN(ip):
     for v in VN:
         vninfo.append({'virtualNetworkName':v,'fabricIds':[fabid]})
     create_vn = SDAApiService(f"https://{ip}", Auth).add_VN(vninfo)
-    if re.search('Bad Request',create_vn['response']['message']):
-        print(create_vn['response']['detail'])
-        pass
+    if 'message' in  create_vn['response']:
+        if re.search('Bad Request', create_vn['response']['message']):
+            print(create_vn['response']['detail'])
+            pass
+
     else:
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(create_vn['response']['taskId'])
         timeout = time.time() + 600  # 10 minutes from now
@@ -486,9 +495,11 @@ def create_ip_pool(ip):
                        "isIntraSubnetRoutingEnabled": dev[x][0][8], "isMultipleIpToMacAddresses": dev[x][0][9]})
     anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ipoolinfo)
     print(anycast)
-    if re.search('Bad Request',anycast['response']['message']):
-        print(anycast['response']['detail'])
-        pass
+    if 'message' in anycast['response']:
+        if re.search('Bad Request', anycast['response']['message']):
+            print(anycast['response']['detail'])
+            pass
+
     else:
         taskval = []
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
@@ -531,9 +542,11 @@ def add_border_cp_edge(ip):
             devaddinfo.append({"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["EDGE_NODE"]})
     devpush = SDAApiService(f"https://{ip}", Auth).add_fabric_devices(devaddinfo)
     print(devpush)
-    if re.search('Bad Request',devpush['response']['message']):
-        print(devpush['response']['detail'])
-        pass
+    if 'message' in devpush['response']:
+        if re.search('Bad Request', devpush['response']['message']):
+            print(devpush['response']['detail'])
+            pass
+
     else:
         taskval = []
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
@@ -563,9 +576,11 @@ def create_transit(ip):
     trans_create = SDAApiService(f"https://{ip}", Auth).create_transit(trans)
     print(trans_create)
     print('!! Successfully Created transit !!\n')
-    if re.search('Bad Request',trans_create['response']['message']):
-        print(trans_create['response']['detail'])
-        pass
+    if 'message' in trans_create['response']:
+        if re.search('Bad Request', trans_create['response']['message']):
+            print(trans_create['response']['detail'])
+            pass
+
     else:
         task1 = TaskApiService(f"https://{ip}", Auth).taskdetail(trans_create['response']['taskId'])
         timeout = time.time() + 600  # 10 minutes from now
@@ -615,9 +630,11 @@ def border_auto(ip):
                     print(l3info)
     l3handoff = SDAApiService(f"https://{ip}", Auth).l3handoff(l3info)
     print(l3handoff)
-    if re.search('Bad Request',l3handoff['response']['message']):
-        print(l3handoff['response']['detail'])
-        pass
+    if 'message' in l3handoff['response']:
+        if re.search('Bad Request', l3handoff['response']['message']):
+            print(l3handoff['response']['detail'])
+            pass
+
     else:
         taskval = []
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
