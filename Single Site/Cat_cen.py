@@ -64,6 +64,7 @@ def device_config(rtr,config):
 
     output = net_connect.send_config_set(config,read_timeout=300)
     print(output)
+    return output
 
 def reserve_ip_pool(name,type,ipv6add,ipv4addpool,ipv4prefix,ipv4prefixlen,ipv4subnet,ipv4gw,dhcp,dns,site,url,token):
 
