@@ -276,6 +276,7 @@ def discovery(ip,name):
                      'userNameList':['netadmin']}
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     discover = DiscoveryApiService(f"https://{ip}", Auth).startdiscovery(discover_info)
+    print(discover)
     return discover['response']['taskId']
 
 def discovery_fusion(ip,name):
