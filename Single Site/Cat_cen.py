@@ -496,9 +496,10 @@ def create_ip_pool(ip):
                         pass
                 else:
                     task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
+                    print(task)
                     timeout = time.time() + 600  # 10 minutes from now
                     timeout_start = time.time()
-                    while task['status'] != 'SUCCESS':
+                    while task['response'][0]['status'] != 'SUCCESS':
                         if time.time() > timeout:
                             print('!!Execution took More than 10 Mins ..  Error Below!! \n')
                             print(task)
@@ -521,10 +522,12 @@ def create_ip_pool(ip):
                 print(anycast['response']['detail'])
                 pass
         else:
+
             task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
+            print(task)
             timeout = time.time() + 600  # 10 minutes from now
             timeout_start = time.time()
-            while task['status'] != 'SUCCESS':
+            while task['response'][0]['status'] != 'SUCCESS':
                 if time.time() > timeout:
                     print('!!Execution took More than 10 Mins ..  Error Below!! \n')
                     print(task)
@@ -561,7 +564,7 @@ def add_border_cp_edge(ip):
                 task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
                 timeout = time.time() + 600  # 10 minutes from now
                 timeout_start = time.time()
-                while task['status'] != 'SUCCESS':
+                while task['response'][0]['status'] != 'SUCCESS':
                     if time.time() > timeout:
                         print('!!Execution took More than 10 Mins ..  Error Below!! \n')
                         print(task)
@@ -583,7 +586,7 @@ def add_border_cp_edge(ip):
                 task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
                 timeout = time.time() + 600  # 10 minutes from now
                 timeout_start = time.time()
-                while task['status'] != 'SUCCESS':
+                while task['response'][0]['status'] != 'SUCCESS':
                     if time.time() > timeout:
                         print('!!Execution took More than 10 Mins ..  Error Below!! \n')
                         print(task)
