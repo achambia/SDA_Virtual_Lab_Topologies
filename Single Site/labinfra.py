@@ -390,8 +390,8 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
                     devreach.append(devreachvar)
                     if devreachvar == 'failure':
                         print(f'!! Ping failed for device {devicetest} !! \n')
-                print('!! Sleeping for 30 secs !!\n')
-                time.sleep(30)
+                print('!! Sleeping for 4 mins !!\n')
+                time.sleep(240)
             print('!! Reachability succeeded for all nodes , Pushing ISIS and BGP config to nodes !!\n')
             for devic in dev:
                 config = cml_tasks(cml, 'admin', 'CISCO123').get_config(cml_topo_build['id'], devic)
