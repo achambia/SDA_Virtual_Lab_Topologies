@@ -266,7 +266,7 @@ def discovery(ip,name):
     discover_info = {'name': name,
                      'discoveryType': 'RANGE',
                      'ipAddressList': "192.168.1.4-192.168.1.9",
-                     'ipFilterList': "192.168.1.7",
+                     'ipFilterList': ["192.168.1.7"],
                      'protocolOrder':'ssh',
                      'netconfPort':'830',
                      'snmpROCommunity':'RO',
@@ -276,7 +276,6 @@ def discovery(ip,name):
                      'userNameList':['netadmin']}
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     discover = DiscoveryApiService(f"https://{ip}", Auth).startdiscovery(discover_info)
-    print(discover)
     return discover['response']['taskId']
 
 def discovery_fusion(ip,name):
