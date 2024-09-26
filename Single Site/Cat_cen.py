@@ -266,7 +266,7 @@ def discovery(ip,name):
     discover_info = {'name': name,
                      'discoveryType': 'RANGE',
                      'ipAddressList': "192.168.1.4-192.168.1.9",
-                     'ipFilterList': "192.168.1.7"
+                     'ipFilterList': "192.168.1.7",
                      'protocolOrder':'ssh',
                      'netconfPort':'830',
                      'snmpROCommunity':'RO',
