@@ -232,7 +232,6 @@ def labinfra(gitval,sda_build):
                 reachability_dnac(dnacip)
                 lab_build(sda_build, gitval[0], cml, dnacip, ise, under_or_over, token_input, prod)
             else:
-                sda_build = input('\n!! Please enter the Site Type to be deployed !! \n  ' + gitval[1] + '  ::: ')
                 under_or_over = input(
                     '\n!! Step 3. Please select the deployment type \n 1. Underlay Only\n 2. End to End fabric Deployment \n  ::: ')
                 reachability_cml(cml)
