@@ -341,7 +341,7 @@ def create_underlay(ip):
         devlist.append(de['managementIpAddress'])
     print(f'!! Devices Assigned to site {devlist} !!')
     assign_2_site(ip, devlist)
-    a = discovery_fusion(ip, 'Fabric')
+    a = discovery_fusion(ip, 'FUSION')
     discover_check = task(a, ip)
     if discover_check['response']['progress'] == 'Failed to create discovery' and discover_check['response'][
         'failureReason'] == 'NCDS12001: Discovery already exists with the same name':
