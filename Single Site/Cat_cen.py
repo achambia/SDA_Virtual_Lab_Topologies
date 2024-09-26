@@ -265,9 +265,23 @@ def global_creds(ip):
 def discovery(ip,name):
     discover_info = {'name': name,
                      'discoveryType': 'RANGE',
-                     'ipAddressList': "192.168.1.4-192.168.1.9",
+                     'ipAddressList': "192.168.1.4-192.168.1.5,192.168.1.8-192.168.1.9",
                      'protocolOrder':'ssh',
                      'netconfPort':'830',
+                     'snmpROCommunity':'RO',
+                     'snmpRWCommunity':'RW',
+                     'enablePasswordList':['cisco'],
+                     'passwordList':['cisco'],
+                     'userNameList':['netadmin']}
+    Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
+    discover = DiscoveryApiService(f"https://{ip}", Auth).startdiscovery(discover_info)
+    return discover['response']['taskId']
+
+def discovery_fusion(ip,name):
+    discover_info = {'name': name,
+                     'discoveryType': 'RANGE',
+                     'ipAddressList': "192.168.1.7",
+                     'protocolOrder':'ssh',
                      'snmpROCommunity':'RO',
                      'snmpRWCommunity':'RW',
                      'enablePasswordList':['cisco'],
@@ -306,6 +320,27 @@ def create_underlay(ip):
     global_creds(ip)
     rand = random.randint(1, 999)
     a = discovery(ip, 'Fabric')
+    discover_check = task(a, ip)
+    if discover_check['response']['progress'] == 'Failed to create discovery' and discover_check['response'][
+        'failureReason'] == 'NCDS12001: Discovery already exists with the same name':
+        print('!! Discovery with same name exists !! \n')
+        a = discovery(ip, 'Fabric_' + str(rand))
+    time.sleep(20)
+    discover_check = task(a, ip)
+    print(discover_check['response'])
+    while 'status' not in discover_check['response']['data']:
+        discover_check = task(a, ip)
+        time.sleep(10)
+    print('!! Discovery Successfull !!\n')
+    print('!! Discovered Devices !!\n')
+    device_in = discovered_devices(ip, discover_check['response']['progress'])
+    devlist = []
+    for de in device_in['response']:
+        print(de['managementIpAddress'])
+        devlist.append(de['managementIpAddress'])
+    print(f'!! Devices Assigned to site {devlist} !!')
+    assign_2_site(ip, devlist)
+    a = discovery_fusion(ip, 'Fabric')
     discover_check = task(a, ip)
     if discover_check['response']['progress'] == 'Failed to create discovery' and discover_check['response'][
         'failureReason'] == 'NCDS12001: Discovery already exists with the same name':
