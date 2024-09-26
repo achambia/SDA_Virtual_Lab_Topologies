@@ -280,7 +280,7 @@ def discovery(ip,name):
 
 def discovery_fusion(ip,name):
     discover_info = {'name': name,
-                     'discoveryType': 'RANGE',
+                     'discoveryType': 'SINGLE',
                      'ipAddressList': "192.168.1.7",
                      'protocolOrder':'ssh',
                      'snmpROCommunity':'RO',
