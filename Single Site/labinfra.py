@@ -502,9 +502,9 @@ def lab_up_verify(sda_build,topo):
                     print(f'!! Reachability failed to DNAC from Edge {ed} !!')
                     edge_reach.append('failure')
                     print('failure')
-        print('!!Sleeping for 1 min!!')
-        time.sleep(60)
-        timeout = time.time() + 3600  # 1 Hour from now
+        print('!!Sleeping for 4 min!!')
+        time.sleep(240)
+        timeout = time.time() + 7200  # 2 Hour from now
         timeout_start = time.time()
         while 'failure' in edge_reach:
             if time.time() > timeout:
@@ -520,5 +520,7 @@ def lab_up_verify(sda_build,topo):
                     else:
                         print(f'!! Reachability failed to DNAC from Edge {ed} !!')
                         edge_reach.append('failure')
-                        print('failure')
+                        print('!! failure  .. Sleeping for 4 mins !!\n')
+                        time.sleep(240)
+                    
             print('!!Sleeping for 5 mins !!\n')
