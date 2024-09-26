@@ -436,7 +436,7 @@ def createfabric(ip):
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
         timeout = time.time() + 600  # 10 minutes from now
         timeout_start = time.time()
-        while task['status'] != 'SUCCESS':
+        while task['response'][0]['status'] != 'SUCCESS':
             if time.time() > timeout:
                 print('!!Execution took More than 10 Mins ..  Error Below!! \n')
                 print(task)
