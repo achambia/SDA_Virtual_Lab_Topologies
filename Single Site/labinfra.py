@@ -347,14 +347,33 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
                 cml_tasks(cml, 'admin', 'CISCO123').power_off_labs()
                 cml_topo_build = cml_tasks(cml, 'admin', 'CISCO123').topology_build(
                     f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/lab.yml')
-        print('!! Sleeping for 15 mins !!\n')
-        time.sleep(900)
+        print('!! Sleeping for 10 mins !!\n')
+        time.sleep(600)
+        print('!! Verifying the Reachability of all the fabric Edges !! \n')
+        with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/device_mgmt.json') as device:
+            dev = (json.loads(device.read()))
+            devreach = []
+            for devicetest in dev:
+                devreachvar = ping_test(dev[devicetest])
+                devreach.append(devreachvar)
+                if devreachvar == 'failure':
+                    print(f'!! Ping failed for device {devicetest} !! \n')
+            while 'failure' in devreach:
+                devreach.clear()
+                for devicetest in dev:
+                    devreachvar = ping_test(dev[devicetest])
+                    devreach.append(devreachvar)
+                    if devreachvar == 'failure':
+                        print(f'!! Ping failed for device {devicetest} !! \n')
+                print('!! Sleeping for 30 secs !!\n')
+                time.sleep(30)
+        print('!! All Devices are up and running !!\n')
         print('!! Reloading the fabric Devices to apply DNA Adv Licenses !!\n')
         cml_tasks(cml, 'admin', 'CISCO123').power_off_specifc_labs(cml_topo_build['id'])
         time.sleep(30)
         cml_tasks(cml, 'admin', 'CISCO123').power_on_specifc_labs(cml_topo_build['id'])
-        print('!! Sleeping for 15 mins !!\n')
-        time.sleep(900)
+        print('!! Sleeping for 10 mins !!\n')
+        time.sleep(600)
         print('!! Verifying the Reachability of all the fabric Edges !! \n')
         with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/device_mgmt.json') as device:
             dev = (json.loads(device.read()))
