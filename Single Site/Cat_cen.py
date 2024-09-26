@@ -418,7 +418,7 @@ def createfabric(ip):
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
         timeout = time.time() + 600  # 10 minutes from now
         timeout_start = time.time()
-        while task['response'][0]['status'] != 'SUCCESS':
+        while task['status'] != 'SUCCESS':
             if time.time() > timeout:
                 print('!!Execution took More than 10 Mins ..  Error Below!! \n')
                 print(task)
@@ -649,7 +649,7 @@ def border_auto(ip):
 
     else:
         taskval = []
-        task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
+        task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(l3handoff['response']['taskId'])
         timeout = time.time() + 600  # 10 minutes from now
         timeout_start = time.time()
         for ta in task['response']:
@@ -660,7 +660,7 @@ def border_auto(ip):
                 print(task)
                 break
             taskval.clear()
-            task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
+            task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(l3handoff['response']['taskId'])
             for ta in task['response']:
                 taskval.append(ta['status'])
             print(task)
