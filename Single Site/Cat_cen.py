@@ -442,7 +442,7 @@ def createfabric(ip):
                 print(task)
                 break
             else:
-                task = TemplateApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
+                task = TaskApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
                 print(task)
                 time.sleep(2)
 
