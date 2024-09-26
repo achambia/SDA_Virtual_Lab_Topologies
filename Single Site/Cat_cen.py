@@ -55,16 +55,34 @@ def copy_file(file):
         shutil.copytree(f'C:/Program Files/Git/cmd/{file}','C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA')
 
 def device_config(rtr,config):
-    net_connect = ConnectHandler(
-        device_type="cisco_xe",
-        host=rtr,
-        username="netadmin",
-        password="cisco",
-    )
+    
+    try:
+        net_connect = ConnectHandler(
+            device_type="cisco_xe",
+            host=rtr,
+            username="netadmin",
+            password="cisco",
+        )
 
-    output = net_connect.send_config_set(config,read_timeout=300)
-    print(output)
-    return output
+        output = net_connect.send_config_set(config, read_timeout=300)
+        print(output)
+        return output
+    except Exception as e:
+        print(e)
+        time.sleep(120)
+        net_connect = ConnectHandler(
+            device_type="cisco_xe",
+            host=rtr,
+            username="netadmin",
+            password="cisco",
+        )
+
+        output = net_connect.send_config_set(config, read_timeout=300)
+        print(output)
+        return output
+        
+
+
 
 def reserve_ip_pool(name,type,ipv6add,ipv4addpool,ipv4prefix,ipv4prefixlen,ipv4subnet,ipv4gw,dhcp,dns,site,url,token):
 
