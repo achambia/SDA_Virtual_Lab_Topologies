@@ -52,6 +52,12 @@ class TaskApiService(ApiService):
 
     def taskdetail(self,fabid:str) -> dict:
         params = {
+                "rootId": fabid
+                }
+        return self.get(f'/dna/intent/api/v1/tasks',params)
+
+    def taskdetailparent(self,fabid:str) -> dict:
+        params = {
                 "parentId": fabid
                 }
         return self.get(f'/dna/intent/api/v1/tasks',params)
