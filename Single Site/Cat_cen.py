@@ -985,7 +985,7 @@ def fusion_auto(ip):
     print(template)
     for host in template:
         print('!! Pushing Config to FUSION !!\n')
-        config = template['host']
+        config = template[host]
         device_config('169.100.100.20',config)
     print('TASK Completed')
 
