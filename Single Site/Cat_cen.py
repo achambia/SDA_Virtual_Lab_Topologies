@@ -432,7 +432,8 @@ def provision(ip):
 
     print(pr)
     taskval = []
-    task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+    task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(pr['response']['taskId'])
+    print(task)
     timeout = time.time() + 600   # 10 minutes from now
     timeout_start = time.time()
     for ta in task['response']:
@@ -443,7 +444,7 @@ def provision(ip):
             print(task)
             break
         taskval.clear()
-        task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+        task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(pr['response']['taskId'])
         for ta in task['response']:
             taskval.append(ta['status'])
         print(task)
@@ -551,7 +552,7 @@ def create_ip_pool(ip):
                 else:
                     task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
                     print(task)
-                    timeout = time.time() + 600  # 10 minutes from now
+                    timeout = time.time() + 1800  # 30 minutes from now
                     timeout_start = time.time()
                     while task['response'][0]['status'] != 'SUCCESS':
                         if time.time() > timeout:
@@ -579,7 +580,7 @@ def create_ip_pool(ip):
 
             task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
             print(task)
-            timeout = time.time() + 600  # 10 minutes from now
+            timeout = time.time() + 1800  # 30 minutes from now
             timeout_start = time.time()
             while task['response'][0]['status'] != 'SUCCESS':
                 if time.time() > timeout:
@@ -616,7 +617,7 @@ def add_border_cp_edge(ip):
                     pass
             else:
                 task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
-                timeout = time.time() + 600  # 10 minutes from now
+                timeout = time.time() + 1800  # 10 minutes from now
                 timeout_start = time.time()
                 while task['response'][0]['status'] != 'SUCCESS':
                     if time.time() > timeout:
@@ -638,7 +639,7 @@ def add_border_cp_edge(ip):
                     pass
             else:
                 task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
-                timeout = time.time() + 600  # 10 minutes from now
+                timeout = time.time() + 1800  # 30 minutes from now
                 timeout_start = time.time()
                 while task['response'][0]['status'] != 'SUCCESS':
                     if time.time() > timeout:
@@ -704,6 +705,7 @@ def border_auto(ip):
     else:
         taskval = []
         task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(l3handoff['response']['taskId'])
+        print(task)
         timeout = time.time() + 600  # 10 minutes from now
         timeout_start = time.time()
         for ta in task['response']:
