@@ -983,7 +983,7 @@ def fusion_auto(ip):
     print('Gathering Fabric Site Information !!\n')
     template = temp_content(ip, Auth)
     for host in template:
-        print('!! Pushing Config to FUSION !!\n)
+        print('!! Pushing Config to FUSION !!\n')
         config = template['host']
         device_config('169.100.100.20',config)
     print('TASK Completed')
