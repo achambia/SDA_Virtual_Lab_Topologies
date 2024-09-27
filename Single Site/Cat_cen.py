@@ -704,7 +704,7 @@ def border_auto(ip):
 
     else:
         taskval = []
-        task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(l3handoff['response']['taskId'])
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
         print(task)
         timeout = time.time() + 600  # 10 minutes from now
         timeout_start = time.time()
@@ -716,7 +716,7 @@ def border_auto(ip):
                 print(task)
                 break
             taskval.clear()
-            task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(l3handoff['response']['taskId'])
+            task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
             for ta in task['response']:
                 taskval.append(ta['status'])
             print(task)
