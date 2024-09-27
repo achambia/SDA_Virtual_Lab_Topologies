@@ -982,6 +982,7 @@ def fusion_auto(ip):
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     print('Gathering Fabric Site Information !!\n')
     template = temp_content(ip, Auth)
+    print(template)
     for host in template:
         print('!! Pushing Config to FUSION !!\n')
         config = template['host']
