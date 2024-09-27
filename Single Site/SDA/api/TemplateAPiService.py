@@ -108,3 +108,8 @@ class TemplateApiService(ApiService):
 
     def getDeployment(self,deploymentId) -> dict:
         return self.get(f'/dna/intent/api/v1/template-programmer/template/deploy/status/{deploymentId}')
+
+
+    def get_all_version(self,deploymentId) -> dict:
+        return self.get(f'/dna/intent/api/v1/template-programmer/template/version/{deploymentId}')
+      
