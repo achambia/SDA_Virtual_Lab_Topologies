@@ -922,7 +922,7 @@ def temp_content(url,token):
 
 
         fusion_dict.update({Fusion_hostname.group(1):fusion_temp})
-    return fusion_dict
+    return fusion_dict,dev_family,dev_type,fusion_mgmt
 
 def updatetemplate(rtr, prod_series,temp_name, project_name,content,projectid,url,token,fusion_mgmt,tempid):
     headers = {
@@ -982,11 +982,31 @@ def fusion_auto(ip):
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     print('Gathering Fabric Site Information !!\n')
     template = temp_content(ip, Auth)
-    print(template)
-    for host in template:
-        print('!! Pushing Config to FUSION !!\n')
-        config = template[host]
-        device_config('169.100.100.20',config)
+    print('Verifying whether Project is present !!\n ')
+    projectlist = GetlistProject()
+    projectlist.name = 'Fusion_Automation'
+    project_info = TemplateApiService(f"https://{ip}", Auth).getlistproject(projectlist)
+    if not project_info:
+        print('Project not present , Creating a new Project with Name Fusion_Automation !!\n')
+        project = Project(ip, Auth)
+    else:
+        print('Project  present , gathering Project ID !!\n')
+        project = project_info[0]['id']
+
+    print('Verifying whether Template is present !!\n')
+    temp_param = GetlistTemplate()
+
+    for te in template[0]:
+        temp_param.projectId = project
+        temp_present = TemplateApiService(f'https://{ip}', Auth).getTemplate(temp_param)
+        if not temp_present:
+            print('Template Not Present, Creating and Deploying Template !!\n')
+            createtemplate(template[1], template[2], te, 'FUSION_AUTOMATION', template[0][te], project, ip, Auth,
+                           template[3])
+        else:
+            print('Template Present, Updating and Deploying Template !!\n')
+            updatetemplate(template[1], template[2], te, 'FUSION_AUTOMATION', template[0][te], project, ip, Auth,
+                           template[3], temp_present[0]['templateId'])
     print('TASK Completed')
 
 
