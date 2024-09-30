@@ -1430,8 +1430,8 @@ nodes:
           route-map SHARED_map permit 10
            match ip address prefix-list SHARED_Prefix
           !
-          snmp-server community Dnac123!! RW
-          snmp-server community Dnac123! RO
+          snmp-server community RW RW
+          snmp-server community RO RO
           !
           !
           control-plane
