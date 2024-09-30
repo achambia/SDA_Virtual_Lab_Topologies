@@ -415,18 +415,7 @@ def provision(ip):
         provisionfinal = [{'siteId': sitid_id, 'networkDeviceId': x['id']}]
         print(f'!! Network device with ID {x['id']} submitted for provisioning !!\n')
         pr = provisionservice(f"https://{ip}", Auth).provision_device(provisionfinal)
-        task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
-        timeout = time.time() + 600  # 10 minutes from now
-        timeout_start = time.time()
-        while task['response'][0]['status'] != 'SUCCESS' or task['response'][0]['status'] != 'FAILURE':
-            if time.time() > timeout:
-                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                print(task)
-                break
-            else:
-                task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
-                print(task)
-                time.sleep(10)
+        print(pr)
 
     if 'message' in pr['response']:
         if re.search(
@@ -440,20 +429,22 @@ def provision(ip):
             for y in getdevice['response']:
                 provisionfinal = [y]
                 pr = provisionservice(f"https://{ip}", Auth).re_provision_device(provisionfinal)
-                task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
-                timeout = time.time() + 600  # 10 minutes from now
-                timeout_start = time.time()
-                while task['response'][0]['status'] != 'SUCCESS' or task['response'][0]['status'] != 'FAILURE':
-                    if time.time() > timeout:
-                        print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                        print(task)
-                        break
-                    else:
-                        task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
-                        print(task)
-                        time.sleep(10)
+                print(pr)
+
         else:  
            print(pr['response']['detail'])
+    task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+    timeout = time.time() + 600  # 10 minutes from now
+    timeout_start = time.time()
+    while task['response'][0]['status'] != 'SUCCESS' or task['response'][0]['status'] != 'FAILURE':
+        if time.time() > timeout:
+            print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+            print(task)
+            break
+        else:
+            task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+            print(task)
+            time.sleep(10)
 
 
     print(f'!! Successfully Provisioned the device !!\n')
