@@ -80,7 +80,33 @@ def device_config(rtr,config):
         output = net_connect.send_config_set(config, read_timeout=300)
         print(output)
         return output
-        
+
+
+def device_config_fusion(rtr, config):
+    try:
+        net_connect = ConnectHandler(
+            device_type="cisco_ios",
+            host=rtr,
+            username="netadmin",
+            password="cisco",
+        )
+
+        output = net_connect.send_config_set(config, read_timeout=300)
+        print(output)
+        return output
+    except Exception as e:
+        print(e)
+        time.sleep(120)
+        net_connect = ConnectHandler(
+            device_type="cisco_ios",
+            host=rtr,
+            username="netadmin",
+            password="cisco",
+        )
+
+        output = net_connect.send_config_set(config, read_timeout=300)
+        print(output)
+        return output
 
 
 
@@ -1003,7 +1029,16 @@ def fusion_auto(ip):
             print('Template Present, Updating and Deploying Template !!\n')
             updatetemplate(template[1], template[2], te, 'FUSION_AUTOMATION', template[0][te], project, ip, Auth,
                            template[3], temp_present[0]['templateId'])
+    time.sleep(10)
+
+    
+    
+def vrf_leak(ip):
+    leak = ['vrf definition CAMPUS','address-family ipv4','route-target import 1:500','exit-address-family','vrf definition GUEST','address-family ipv4','route-target import 1:500','exit-address-family','vrf definition SHARED_SERVICES','address-family ipv4','route-target import 1:4099','route-target import 1:4100','exit-address-family','ip prefix-list OTHER_to_SHARED seq 50 permit 172.16.1.0/24','ip prefix-list OTHER_to_SHARED seq 60 permit 172.16.2.0/24','ip prefix-list OTHER_to_SHARED seq 70 permit 172.16.3.0/24']
+    device_config_fusion('169.100.100.20',leak)
+    
     print('TASK Completed')
+    
 
 
 def overlay_automation(ip,ise):
@@ -1019,5 +1054,7 @@ def overlay_automation(ip,ise):
     border_auto(ip)
     try:
         fusion_auto(ip)
+        vrf_leak(ip)
     except:
         fusion_auto(ip)
+        vrf_leak(ip)
