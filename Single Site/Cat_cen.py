@@ -410,45 +410,50 @@ def provision(ip):
     for x in (siteid['response']):
         if x['name'] == 'SJC-04':
             sitid_id = x['id']
-    provisionfinal = []
     deviceid = DevicesApiService(f"https://{ip}", Auth).getDeviceList()
     for x in (deviceid['response']):
-        provisionfinal.append({'siteId': sitid_id, 'networkDeviceId': x['id']})
+        provisionfinal = [{'siteId': sitid_id, 'networkDeviceId': x['id']}]
         print(f'!! Network device with ID {x['id']} submitted for provisioning !!\n')
+        pr = provisionservice(f"https://{ip}", Auth).provision_device(provisionfinal)
+        task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+        timeout = time.time() + 600  # 10 minutes from now
+        timeout_start = time.time()
+        while task['response'][0]['status'] != 'SUCCESS':
+            if time.time() > timeout:
+                print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                print(task)
+                break
+            else:
+                task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+                print(task)
+                time.sleep(10)
 
-    pr = provisionservice(f"https://{ip}", Auth).provision_device(provisionfinal)
-    print(pr)
     if 'message' in pr['response']:
         if re.search(
                 'Device Provisioning failed. Cannot provision already provisioned device with networkDeviceId = (.*)',
                 pr['response']['detail']):
+            
             print('!! Re-Provisioning Devices !!\n')
             provisionfinal.clear()
             getdevice = provisionservice(f"https://{ip}", Auth).get_provision()
             print(getdevice)
             for y in getdevice['response']:
-                provisionfinal.append(y)
-            pr = provisionservice(f"https://{ip}", Auth).re_provision_device(provisionfinal)
-
-    print(pr)
-    taskval = []
-    task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(pr['response']['taskId'])
-    print(task)
-    timeout = time.time() + 600   # 10 minutes from now
-    timeout_start = time.time()
-    for ta in task['response']:
-        taskval.append(ta['status'])
-    while 'PENDING' in taskval:
-        if time.time()>timeout:
-            print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-            print(task)
-            break
-        taskval.clear()
-        task = TaskApiService(f"https://{ip}", Auth).taskdetailparent(pr['response']['taskId'])
-        for ta in task['response']:
-            taskval.append(ta['status'])
-        print(task)
-        time.sleep(10)
+                provisionfinal = [y]
+                pr = provisionservice(f"https://{ip}", Auth).re_provision_device(provisionfinal)
+                task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+                timeout = time.time() + 600  # 10 minutes from now
+                timeout_start = time.time()
+                while task['response'][0]['status'] != 'SUCCESS':
+                    if time.time() > timeout:
+                        print('!!Execution took More than 10 Mins ..  Error Below!! \n')
+                        print(task)
+                        break
+                    else:
+                        task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
+                        print(task)
+                        time.sleep(10)
+        else:  
+           print(pr['response']['detail'])
 
 
     print(f'!! Successfully Provisioned the device !!\n')
