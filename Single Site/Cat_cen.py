@@ -1050,6 +1050,7 @@ def overlay_automation(ip,ise):
     createfabric(ip)
     create_VN(ip)
     create_ip_pool(ip)
+    provision(ip)
     add_border_cp_edge(ip)
     create_transit(ip)
     border_auto(ip)
