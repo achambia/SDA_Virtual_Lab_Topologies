@@ -346,7 +346,7 @@ def create_underlay(ip):
     if discover_check['response']['progress'] == 'Failed to create discovery' and discover_check['response'][
         'failureReason'] == 'NCDS12001: Discovery already exists with the same name':
         print('!! Discovery with same name exists !! \n')
-        a = discovery(ip, 'FUSION_' + str(rand))
+        a = discovery_fusion(ip, 'FUSION_' + str(rand))
     time.sleep(20)
     discover_check = task(a, ip)
     print(discover_check['response'])
