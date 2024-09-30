@@ -1034,6 +1034,7 @@ def fusion_auto(ip):
     
     
 def vrf_leak(ip):
+    print('\n !! Performing Leaking between Shared Services VRF and User VRF's !!\n')
     leak = ['vrf definition CAMPUS','address-family ipv4','route-target import 1:500','exit-address-family','vrf definition GUEST','address-family ipv4','route-target import 1:500','exit-address-family','vrf definition SHARED_SERVICES','address-family ipv4','route-target import 1:4099','route-target import 1:4100','exit-address-family','ip prefix-list OTHER_to_SHARED seq 50 permit 172.16.1.0/24','ip prefix-list OTHER_to_SHARED seq 60 permit 172.16.2.0/24','ip prefix-list OTHER_to_SHARED seq 70 permit 172.16.3.0/24']
     device_config_fusion('169.100.100.20',leak)
     
