@@ -369,7 +369,7 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
                 time.sleep(240)
         print('!! All Devices are up and running !!\n')
         for devicetest in dev:
-            device_config((dev[devicetest], ['license boot level network-advantage addon dna-advantage','do write'])
+            device_config(dev[devicetest], ['license boot level network-advantage addon dna-advantage','do write'])
         print('!! Reloading the fabric Devices to apply DNA Adv Licenses !!\n')
         cml_tasks(cml, 'admin', 'CISCO123').power_off_specifc_labs(cml_topo_build['id'])
         time.sleep(30)
