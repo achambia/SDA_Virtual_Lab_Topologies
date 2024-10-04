@@ -69,7 +69,7 @@ def device_config(rtr,config):
         return output
     except Exception as e:
         print(e)
-        time.sleep(120)
+        time.sleep(240)
         net_connect = ConnectHandler(
             device_type="cisco_xe",
             host=rtr,
