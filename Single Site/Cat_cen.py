@@ -1046,7 +1046,7 @@ def overlay_automation(ip,ise):
     create_underlay(ip)
     ise_integration(ip,ise)
     add_ise_2_design(ip,ise)
-    time.sleep(5)
+    provision(ip)
     createfabric(ip)
     create_VN(ip)
     create_ip_pool(ip)
