@@ -95,6 +95,7 @@ def labinfra(gitval,sda_build):
             dnac_deploy_input = input('!!! Do you wish to deploy Catalyst Center VM (Y/N) ? [Y]::: ') or 'y'
             if dnac_deploy_input.lower() == 'y':
                 if vcenter_esxi =='1':
+                    print('\n!! DNAC needs 32vCPU and 256 GB RAM , therefore it might need a isolated UCS !!\n')
                     dnac_ds = input(f"!!! Enter the Datastore for the Host where DNAC needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
                     dnac_host = input(f"!!! Enter the IP/FQDN for the Host where DNAC needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
                     dnac_password = input(f"!!! Enter the password for the Host where DNAC needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
@@ -102,6 +103,7 @@ def labinfra(gitval,sda_build):
                     dnac_vm_name = input('!!! Enter the name for the DNAC VM [DNAC] ::: ') or 'DNAC'
                     vm_to_be_deployed.append('DNAC')
                 elif vcenter_esxi =='2':
+                    print('\n!! DNAC needs 32vCPU and 256 GB RAM , therefore it might need a isolated UCS !!\n')
                     dnac_ds = input(f"!!! Enter the Datastore for the Host where DNAC needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
                     dnac_vcenter = input(f"!!! Enter the IP/FQDN for the vCenter [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
                     dnac_password = input(f"!!! Enter the password for the vCenter where DNAC needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
