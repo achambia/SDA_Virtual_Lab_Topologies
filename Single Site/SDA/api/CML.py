@@ -44,6 +44,22 @@ class cml_tasks:
             else:
                 print('!! Power On failure , reason below !!\n')
                 print(start_request.status_code , start_request.json())
+                print('!! Will try to power on the lab after 2 mins !!\n')
+                time.sleep(120)
+                timeout = time.time()+600 # 10 mins from now
+                timeout_start = time.time()
+                start_request = requests.put(f'{self.url}/labs/{lab_topo.json()["id"]}/start',headers=self.header,verify=False)
+                while start_request.status_code != 204:
+                    if timeout_start > timeout:
+                        print('!!Powering On Lab failed/took longer than expected ... Please power on the lab Manually!!\n')
+                        break
+                    else:
+                        start_request = requests.put(f'{self.url}/labs/{lab_topo.json()["id"]}/start',headers=self.header,verify=False)
+                        print('!! Power On failure , reason below !!\n')
+                        print(start_request.status_code , start_request.json())
+                        print('!! Will try to power on the lab after 2 mins !!\n')
+                        time.sleep(120)
+                    
         else:
             print('!! Topology Deployment Failed !!\n')
             print(lab_topo.status_code, lab_topo.json())
