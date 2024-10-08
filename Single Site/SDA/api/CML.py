@@ -54,11 +54,12 @@ class cml_tasks:
                         print('!!Powering On Lab failed/took longer than expected ... Please power on the lab Manually!!\n')
                         break
                     else:
+                        time.sleep(120)
                         start_request = requests.put(f'{self.url}/labs/{lab_topo.json()["id"]}/start',headers=self.header,verify=False)
                         print('!! Power On failure , reason below !!\n')
                         print(start_request.status_code , start_request.json())
                         print('!! Will try to power on the lab after 2 mins !!\n')
-                        time.sleep(120)
+                print('!! Successfully Powered On the the lab !!\n')
                     
         else:
             print('!! Topology Deployment Failed !!\n')
