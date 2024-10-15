@@ -1,7 +1,7 @@
 import re
 
 from pyVmomi import vim
-from api import service_instance,pchelper
+from SDA.SDA.api import service_instance,pchelper
 
 
 def portgroup(host,user,password,port,dvs,pgkey):
