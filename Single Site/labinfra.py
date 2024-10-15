@@ -325,9 +325,13 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
         print('!! CML License not updated .. Updating CML Licenses !! \n')
         cml_tasks(cml, 'admin', 'CISCO123').set_token(token)
     # topo_num = input(f'Enter the number to identify the Topology to be deployed {topologies}\n    :::: ')
-
-    os.chdir(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}')
-    with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/resources.json') as file:
+    if os.name == 'posix':
+        filepath_exec = f'/home/cisco/SDA_Virtual_Lab_Topologies/{topo[str(sda_build)]}'
+    elif os.name == 'nt:
+        filepath_exec = f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}'
+    
+    os.chdir(filepath_exec)
+    with open(f'{filepath_exec}/resources.json') as file:
         resource = (json.loads(file.read()))
         cml_ins = cml_tasks(cml, 'admin', 'CISCO123').cml_resources()
         avail_cpu = ((cml_ins['all']['cpu']['count']) * (cml_ins['all']['cpu']['percent']) / 100)
@@ -338,7 +342,7 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
         print(f'!! {resource['cpu']} vCPU and {resource['memory']} memory required to run the topology  !!\n')
         if ((cml_ins['all']['cpu']['count']) - avail_cpu) >= resource['cpu']:
             cml_topo_build = cml_tasks(cml, 'admin', 'CISCO123').topology_build(
-                f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/lab.yml')
+                f'{filepath_exec}/lab.yml')
         else:
             print('!! Error !! Lack of resources detected to run the topology !! \n')
             power_off = input(
@@ -347,11 +351,11 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
                 print('!! Powering Off Labs !!\n')
                 cml_tasks(cml, 'admin', 'CISCO123').power_off_labs()
                 cml_topo_build = cml_tasks(cml, 'admin', 'CISCO123').topology_build(
-                    f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/lab.yml')
+                    f'{filepath_exec}/lab.yml')
         print('!! Sleeping for 10 mins !!\n')
         time.sleep(600)
         print('!! Verifying the Reachability of all the fabric Edges !! \n')
-        with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/device_mgmt.json') as device:
+        with open(f'{filepath_exec}/device_mgmt.json') as device:
             dev = (json.loads(device.read()))
             devreach = []
             for devicetest in dev:
@@ -378,7 +382,7 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
         print('!! Sleeping for 10 mins !!\n')
         time.sleep(600)
         print('!! Verifying the Reachability of all the fabric Edges !! \n')
-        with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/device_mgmt.json') as device:
+        with open(f'{filepath_exec}/device_mgmt.json') as device:
             dev = (json.loads(device.read()))
             devreach = []
             for devicetest in dev:
@@ -493,7 +497,7 @@ def reachability_wlc(wlc):
 def lab_up_verify(sda_build,topo):
     edge_reach = []
     from SDA.Cat_cen import device_config
-    with open(f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}/device_mgmt.json') as edge:
+    with open(f'{filepath_exec}/device_mgmt.json') as edge:
         fab_edge = (json.loads(edge.read()))
         for ed in fab_edge:
             if re.search('.*-FE.*',ed):
