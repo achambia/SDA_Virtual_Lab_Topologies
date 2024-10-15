@@ -15,7 +15,7 @@
 # limitations under the License.
 import re
 import sys
-from api import  service_instance, pchelper
+from SDA.SDA.api import  service_instance, pchelper
 from pyVmomi import vim
 
 # Demonstrates:
