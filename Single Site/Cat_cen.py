@@ -265,8 +265,12 @@ def create_global_pool(path,Auth,ip):
 
 def build_design(ip):
     curretdir = os.getcwd()
-    sitepath = 'C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA/SDA/BatchFiles/DNAC_NW.csv'
-    Globalpath = 'C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA/SDA/BatchFiles/Global_pool.csv'
+    if os.name == 'posix':
+        fileexecpath = '/home/cisco/PycharmProjects/pythonProject/.venv/SDA'
+    elif os.name == 'nt':
+        fileexecpath = 'C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA'
+    sitepath = f'{fileexecpath}/SDA/BatchFiles/DNAC_NW.csv'
+    Globalpath = f'{fileexecpath}/SDA/BatchFiles/Global_pool.csv'
     print("!!! Gathering the Security Token from Catalyst Manager !!! \n")
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     print("!!! Entering the Global Pool and NW information to Catalyst Manager !!! \n")
@@ -554,7 +558,11 @@ def create_ip_pool(ip):
     fab = SDAApiService(f"https://{ip}", Auth).gerFabricSites()
     fabid = fab['response'][0]['id']
     ipoolinfo = []
-    with open(f'C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA/sdapool.json') as pool:
+    if os.name == 'posix':
+        fileexecpath = '/home/cisco/PycharmProjects/pythonProject/.venv/SDA'
+    elif os.name == 'nt':
+        fileexecpath = 'C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA'
+    with open(f'{fileexecpath}/sdapool.json') as pool:
         dev = (json.loads(pool.read()))
     for x in (dev):
         print(f'!! updating the pool for VN {x} !!\n')
