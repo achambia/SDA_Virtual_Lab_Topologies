@@ -8,7 +8,6 @@ from SDA.SDA.api.reachability import ping_test
 from SDA.SDA.api.router_uplink import labrtr
 import time
 from SDA.SDA.api.CML import cml_tasks
-from git import Repo
 from SDA.SDA.api.WIN_info import getvms
 from SDA.SDA.api.portgroup import portgroup
 import json
