@@ -496,6 +496,10 @@ def reachability_wlc(wlc):
 
 def lab_up_verify(sda_build,topo):
     edge_reach = []
+    if os.name == 'posix':
+        filepath_exec = f'/home/cisco/SDA_Virtual_Lab_Topologies/{topo[str(sda_build)]}'
+    elif os.name == 'nt':
+        filepath_exec = f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}'
     from SDA.Cat_cen import device_config
     with open(f'{filepath_exec}/device_mgmt.json') as edge:
         fab_edge = (json.loads(edge.read()))
