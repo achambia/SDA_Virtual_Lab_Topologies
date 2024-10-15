@@ -327,7 +327,7 @@ def lab_build(sda_build,topo,cml,dnacip,iseip,under_or_over,token,prod_ins):
     # topo_num = input(f'Enter the number to identify the Topology to be deployed {topologies}\n    :::: ')
     if os.name == 'posix':
         filepath_exec = f'/home/cisco/SDA_Virtual_Lab_Topologies/{topo[str(sda_build)]}'
-    elif os.name == 'nt:
+    elif os.name == 'nt':
         filepath_exec = f'C:/Program Files/Git/cmd/{topo[str(sda_build)]}'
     
     os.chdir(filepath_exec)
