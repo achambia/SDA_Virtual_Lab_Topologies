@@ -59,11 +59,19 @@ def labinfra(gitval,sda_build):
             cml_deploy_input = input('!!! Do you wish to deploy CML VM (Y/N) ? [Y]::: ') or 'y'
             if cml_deploy_input.lower() == 'y':
                 if vcenter_esxi == '1':
-                    cml_ds = input(f"!!! Enter the Datastore for the Host where CML needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
-                    cml_host = input(f"!!! Enter the IP/FQDN for the Host where CML needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
-                    cml_password = input(f"!!! Enter the password for the Host where CML needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
-                    cml_user = input(f"!!! Enter the user for the Host where CML needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
-                    cml_vm_name = input('!!! Enter the name for the CML VM [CML] ::: ') or 'CML'
+                    sameinfo_as_win = input('Is the CML going to be deployed on same UCS as Windows/Ubuntu Server (Y/N)? ') or 'y'
+                    if sameinfo_as_win.lower() == 'y':
+                        cml_ds =  win_esxi_data['datastore']
+                        cml_host = win_server_esxi_ip
+                        cml_password = win_server_esxi_password
+                        cml_user = win_server_esxi_user
+                        cml_vm_name = input('!!! Enter the name for the CML VM [CML] ::: ') or 'CML'
+                    else:
+                        cml_ds = input(f"!!! Enter the Datastore for the Host where CML needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
+                        cml_host = input(f"!!! Enter the IP/FQDN for the Host where CML needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
+                        cml_password = input(f"!!! Enter the password for the Host where CML needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
+                        cml_user = input(f"!!! Enter the user for the Host where CML needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
+                        cml_vm_name = input('!!! Enter the name for the CML VM [CML] ::: ') or 'CML'
                     vm_to_be_deployed.append('CML')
                 elif vcenter_esxi == '2':
                     cml_ds = input(f"!!! Enter the Datastore for the Host where CML needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
@@ -77,11 +85,19 @@ def labinfra(gitval,sda_build):
             ise_deploy_input = input('!!! Do you wish to deploy ISE VM (Y/N) ? [Y]::: ') or 'y'
             if ise_deploy_input.lower() == 'y':
                 if vcenter_esxi =='1':
-                    ise_ds = input(f"!!! Enter the Datastore for the Host where ISE needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
-                    ise_host = input(f"!!! Enter the IP/FQDN for the Host where ISE needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
-                    ise_password = input(f"!!! Enter the password for the Host where ISE needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
-                    ise_user = input(f"!!! Enter the user for the Host where ISE needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
-                    ise_vm_name = input('!!! Enter the name for the ISE VM [ISE] ::: ') or 'ISE'
+                    sameinfo_as_win = input('Is the ISE going to be deployed on same UCS as Windows/Ubuntu Server (Y/N)? ') or 'y'
+                    if sameinfo_as_win.lower() == 'y':
+                        ise_ds = win_esxi_data['datastore']
+                        ise_host = win_server_esxi_ip
+                        ise_password = win_server_esxi_password
+                        ise_user = win_server_esxi_user
+                        ise_vm_name = input('!!! Enter the name for the ISE VM [ISE] ::: ') or 'ISE'   
+                    else:
+                        ise_ds = input(f"!!! Enter the Datastore for the Host where ISE needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
+                        ise_host = input(f"!!! Enter the IP/FQDN for the Host where ISE needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
+                        ise_password = input(f"!!! Enter the password for the Host where ISE needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
+                        ise_user = input(f"!!! Enter the user for the Host where ISE needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
+                        ise_vm_name = input('!!! Enter the name for the ISE VM [ISE] ::: ') or 'ISE'
                     vm_to_be_deployed.append('ISE')
                 elif vcenter_esxi =='2':
                     ise_ds = input(f"!!! Enter the Datastore for the Host where ISE needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
@@ -116,11 +132,19 @@ def labinfra(gitval,sda_build):
             wlc_deploy_input = input('!!! Do you wish to deploy WLC VM (Y/N) ? [Y]::: ') or 'y'
             if wlc_deploy_input.lower() == 'y':
                 if vcenter_esxi =='1':
-                    wlc_ds = input(f"!!! Enter the Datastore for the Host where WLC needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
-                    wlc_host = input(f"!!! Enter the IP/FQDN for the Host where WLC needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
-                    wlc_password = input(f"!!! Enter the password for the Host where WLC needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
-                    wlc_user = input(f"!!! Enter the user for the Host where WLC needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
-                    wlc_vm_name = input('!!! Enter the name for the WLC VM [WLC] :::') or 'WLC'
+                    sameinfo_as_win = input('Is the WLC going to be deployed on same UCS as Windows/Ubuntu Server (Y/N)? ') or 'y'
+                    if sameinfo_as_win.lower() == 'y':
+                        wlc_ds = win_esxi_data['datastore']
+                        wlc_host = win_server_esxi_ip
+                        wlc_password =  win_server_esxi_password
+                        wlc_user = win_server_esxi_user
+                        wlc_vm_name = input('!!! Enter the name for the WLC VM [WLC] :::') or 'WLC'
+                    else:
+                        wlc_ds = input(f"!!! Enter the Datastore for the Host where WLC needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
+                        wlc_host = input(f"!!! Enter the IP/FQDN for the Host where WLC needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
+                        wlc_password = input(f"!!! Enter the password for the Host where WLC needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
+                        wlc_user = input(f"!!! Enter the user for the Host where WLC needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
+                        wlc_vm_name = input('!!! Enter the name for the WLC VM [WLC] :::') or 'WLC'
                     vm_to_be_deployed.append('WLC')
                 elif vcenter_esxi =='2':
                     wlc_ds = input(f"!!! Enter the Datastore for the Host where WLC needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
@@ -135,11 +159,19 @@ def labinfra(gitval,sda_build):
             labrouter_deploy_input = input('!!! Do you wish to deploy Lab Router VM (Y/N) ? [Y]::: ') or 'y'
             if labrouter_deploy_input.lower() == 'y':
                 if vcenter_esxi =='1':
-                    rtr_ds = input(f"!!! Enter the Datastore for the Host where LABRTR needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
-                    rtr_host = input(f"!!! Enter the IP/FQDN for the Host where LABRTR needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
-                    rtr_password = input(f"!!! Enter the password for the Host where LABRTR needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
-                    rtr_user = input(f"!!! Enter the user for the Host where LABRTR needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
-                    rtr_vm_name = input('!!! Enter the name for the LABRTR VM [LABRTR] ::: ') or 'LABRTR'
+                    sameinfo_as_win = input('Is the Lab Internet Gateway Router going to be deployed on same UCS as Windows/Ubuntu Server (Y/N)? ') or 'y'
+                    if sameinfo_as_win.lower() == 'y':
+                        rtr_ds = win_esxi_data['datastore']
+                        rtr_host = win_server_esxi_ip
+                        rtr_password = win_server_esxi_password
+                        rtr_user = win_server_esxi_user
+                        rtr_vm_name = input('!!! Enter the name for the LABRTR VM [LABRTR] ::: ') or 'LABRTR'
+                    else:
+                        rtr_ds = input(f"!!! Enter the Datastore for the Host where LABRTR needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
+                        rtr_host = input(f"!!! Enter the IP/FQDN for the Host where LABRTR needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
+                        rtr_password = input(f"!!! Enter the password for the Host where LABRTR needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
+                        rtr_user = input(f"!!! Enter the user for the Host where LABRTR needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
+                        rtr_vm_name = input('!!! Enter the name for the LABRTR VM [LABRTR] ::: ') or 'LABRTR'
                     rtr_ip = input('!!! Enter the Uplink IP of the router to connect to internet !!! ::: ')
                     rtr_subnet = input ('!!! Enter the Netmask of the router to connect to internet !!! ::: ')
                     rtr_next_hop = input ('!!! Enter the Nxt Hop IP for default route of the router !!! ::: ')
