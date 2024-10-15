@@ -20,7 +20,7 @@ Python program for listing the VMs on an ESX / vCenter host
 
 import re
 from pyVmomi import vmodl, vim
-import service_instance
+from SDA.SDA.api import service_instance
 getvm ={}
 
 
