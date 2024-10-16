@@ -115,7 +115,7 @@ def labinfra(gitval,sda_build):
                 if vcenter_esxi =='1':
                     print('\n!! DNAC needs 32vCPU and 256 GB RAM , therefore it might need a isolated UCS !!\n')
                     
-                    dnac_host = input(f"!!! Enter the IP/FQDN for the Host where DNAC needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
+                    dnac_host = input(f"!!! Enter the IP/FQDN for the Host where DNAC needs to be deployed [{win_server_esxi_ip}]::: ")
                     dnac_password = input(f"!!! Enter the password for the Host where DNAC needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
                     dnac_user = input(f"!!! Enter the user for the Host where DNAC needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
                     ds_name = datastore(dnac_host,dnac_user,dnac_password)
@@ -126,7 +126,8 @@ def labinfra(gitval,sda_build):
                         count  = count + 1
                     esxi = esxi_host(dnac_host,dnac_user,dnac_password)
                     if esxi[0]>= 32 and esxi[1] >= 257:
-                        dnac_ds = input('!! Select the Datastore to deploy the DNAC '+ f'{data_s}')
+                        dnac_ds_input = input('!! Select the Datastore to deploy the DNAC \n'+ f'{data_s}'+ '\n   :::: ')
+                        dnac_ds = ds_name[int(dnac_ds_input) -1]
                         dnac_vm_name = input('!!! Enter the name for the DNAC VM [DNAC] ::: ') or 'DNAC'
                         vm_to_be_deployed.append('DNAC')
                     else:
