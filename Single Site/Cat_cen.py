@@ -463,18 +463,9 @@ def provision(ip):
 
         else:  
            print(pr['response']['detail'])
-    task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
-    timeout = time.time() + 600  # 10 minutes from now
-    timeout_start = time.time()
-    while task['response'][0]['status'] != 'SUCCESS' or task['response'][0]['status'] != 'FAILURE':
-        if time.time() > timeout:
-            print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-            print(task)
-            break
-        else:
-            task = TaskApiService(f"https://{ip}", Auth).taskdetail(pr['response']['taskId'])
-            print(task)
-            time.sleep(10)
+    print('!! sleeping for 10 Mins !!')
+    time.sleep(600)
+    
 
 
     print(f'!! Successfully Provisioned the device !!\n')
