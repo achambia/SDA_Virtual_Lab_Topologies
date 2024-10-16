@@ -8,6 +8,9 @@ from SDA.SDA.api.reachability import ping_test
 from SDA.SDA.api.router_uplink import labrtr
 import time
 from SDA.SDA.api.CML import cml_tasks
+from SDA.SDA.api.datastore import datastore
+from SDA.SDA.api.esxi_host import esxi_host
+from SDA.SDA.api.CML import cml_tasks
 from SDA.SDA.api.WIN_info import getvms
 from SDA.SDA.api.portgroup import portgroup
 import json
@@ -111,12 +114,25 @@ def labinfra(gitval,sda_build):
             if dnac_deploy_input.lower() == 'y':
                 if vcenter_esxi =='1':
                     print('\n!! DNAC needs 32vCPU and 256 GB RAM , therefore it might need a isolated UCS !!\n')
-                    dnac_ds = input(f"!!! Enter the Datastore for the Host where DNAC needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
+                    
                     dnac_host = input(f"!!! Enter the IP/FQDN for the Host where DNAC needs to be deployed [{win_server_esxi_ip}]::: ") or win_server_esxi_ip
                     dnac_password = input(f"!!! Enter the password for the Host where DNAC needs to be deployed [{win_server_esxi_password}]::: ") or win_server_esxi_password
                     dnac_user = input(f"!!! Enter the user for the Host where DNAC needs to be deployed [{win_server_esxi_user}]::: ") or win_server_esxi_user
-                    dnac_vm_name = input('!!! Enter the name for the DNAC VM [DNAC] ::: ') or 'DNAC'
-                    vm_to_be_deployed.append('DNAC')
+                    ds_name = datastore(dnac_host,dnac_user,dnac_password)
+                    data_s = ''
+                    count  =1
+                    for d in ds_name:
+                        data_s = data_s + f'{count}. {d} \n'
+                        count  = count + 1
+                    esxi = esxi_host(dnac_host,dnac_user,dnac_password)
+                    if esxi[0]>= 32 and esxi[1] >= 257:
+                        dnac_ds = input('!! Select the Datastore to deploy the DNAC '+ f'{data_s}')
+                        dnac_vm_name = input('!!! Enter the name for the DNAC VM [DNAC] ::: ') or 'DNAC'
+                        vm_to_be_deployed.append('DNAC')
+                    else:
+                        print('!! Not enough Resources to deploy DNAC !!')
+                    
+                    
                 elif vcenter_esxi =='2':
                     print('\n!! DNAC needs 32vCPU and 256 GB RAM , therefore it might need a isolated UCS !!\n')
                     dnac_ds = input(f"!!! Enter the Datastore for the Host where DNAC needs to be deployed [{win_esxi_data['datastore']}]::: ") or win_esxi_data['datastore']
