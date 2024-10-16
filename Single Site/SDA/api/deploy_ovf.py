@@ -17,9 +17,13 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
     try:
         
         if os.name == 'posix':
+            current_dir = os.getcwd()
+            os.chdir ('/usr/bin/ovftool')
             subprocess.run(
             f'ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" /home/cisco/Desktop/Lab_Build/cml/CML.ovf vi://{user}:{password}@{host}/',
             shell=True)
+            os.chdir(current_dir)
+            
         elif os.name == 'nt':
             current_dir = os.getcwd()
             os.chdir(r'C:\Program Files\VMware\VMware OVF Tool') 
@@ -44,9 +48,12 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
     '''
     try:
         if os.name == 'posix':
+            current_dir = os.getcwd()
+            os.chdir ('/usr/bin/ovftool')
             subprocess.run(
             f'ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/ISE/ISE.ovf vi://{user}:{password}@{host}/',
             shell=True)
+            os.chdir(current_dir)
         elif os.name == 'nt':
             current_dir = os.getcwd()
             os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
@@ -74,9 +81,12 @@ def deploy_wlc(datastore,vm_name,network1,user,password,host):
 
     try:
         if os.name == 'posix':
+            current_dir = os.getcwd()
+            os.chdir ('/usr/bin/ovftool')
             subprocess.run(
             f'ovftool --powerOn -ds={datastore} -n={vm_name} --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/wlc/WLC.ovf vi://{user}:{password}@{host}/',
             shell=True)
+            os.chdir(current_dir)
         elif os.name == 'nt':
             current_dir = os.getcwd()
             os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
@@ -106,9 +116,12 @@ def deploy_labrouter(datastore,vm_name,network1,network2,network3,user,password,
 
     try:
         if os.name == 'posix':
+            current_dir = os.getcwd()
+            os.chdir ('/usr/bin/ovftool')
             subprocess.run(
             f'ovftool --powerOn -ds={datastore} -n={vm_name} --noSSLVerify --disableVerification --net:"Datacenter={network2}" --net:"VM Network={network1}" --net:"CML={network3}" /home/cisco/Desktop/Lab_Build/labrouter/LABRTR.ovf vi://{user}:{password}@{host}/',
             shell=True)
+            os.chdir(current_dir)
         elif os.name == 'nt':
             current_dir = os.getcwd()
             os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
@@ -134,9 +147,12 @@ def deploy_cc(datastore,vm_name,network1,user,password,host):
     '''
     try:
         if os.name == 'posix':
+            current_dir = os.getcwd()
+            os.chdir ('/usr/bin/ovftool')
             subprocess.run(
             f'ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/DNAC.ovf vi://{user}:{password}@{host}/',
             shell=True)
+            os.chdir(current_dir)
         elif os.name == 'nt':
             current_dir = os.getcwd()
             os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
