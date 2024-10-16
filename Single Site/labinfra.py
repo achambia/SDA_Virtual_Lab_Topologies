@@ -126,6 +126,7 @@ def labinfra(gitval,sda_build):
                         count  = count + 1
                     esxi = esxi_host(dnac_host,dnac_user,dnac_password)
                     if esxi[0]>= 32 and esxi[1] >= 257:
+                        print('!! Required resources detected on ESXI for DNAC installation !!' )
                         dnac_ds_input = input('!! Select the Datastore to deploy the DNAC \n'+ f'{data_s}'+ '\n   :::: ')
                         dnac_ds = ds_name[int(dnac_ds_input) -1]
                         dnac_vm_name = input('!!! Enter the name for the DNAC VM [DNAC] ::: ') or 'DNAC'
