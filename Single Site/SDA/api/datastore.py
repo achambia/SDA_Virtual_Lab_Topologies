@@ -26,6 +26,4 @@ def datastore(host,user,password):
             if host_mount_info.volume.type == "VMFS":
                 datastores.append(host_mount_info.volume.name)
 
-
-    print(datastores)
     return datastores
