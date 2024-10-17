@@ -708,7 +708,6 @@ def border_auto(ip):
                     print(l3info)
 
             if mgmtip['response']['managementIpAddress'] == '192.168.1.5':
-                l3info.clear()
                 vn = {'CAMPUS': 3003, 'GUEST': 3004}
                 for v in vn:
                     l3info.append(
@@ -901,7 +900,7 @@ def temp_content(url,token):
         Fusion_Intf = re.search('Port ID \(outgoing port\): (.*)', str(cdp_intf))
         Fusion_Param = GetDeviceListParams()
         Fusion_Param.hostname = [f'{Fusion_hostname.group(1)}']
-        print(f"Fusion {Fusion_hostname.group(1)} has uplink {Fusion_Intf.group(1)} towards BDR {border}\n")
+        print(f"Fusion {Fusion_hostname.group(1)} has uplink {Fusion_Intf.group(1)} towards BDR {ext_con}\n")
         Fusion = DevicesApiService(f"https://{url}", token).getDeviceList(Fusion_Param)
         dev_family = Fusion['response'][0]['family']
         dev_type = Fusion['response'][0]['type']
