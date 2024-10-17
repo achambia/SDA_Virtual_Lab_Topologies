@@ -1514,6 +1514,30 @@ nodes:
         label: port
         slot: 0
         type: physical
+  - boot_disk_size: null
+    configuration: []
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n9
+    image_definition: null
+    label: EMP2
+    node_definition: Windows 10
+    parameters: {}
+    ram: null
+    tags: []
+    x: 760
+    y: 320
+    interfaces:
+      - id: i0
+        label: eth0
+        slot: 0
+        type: physical
+      - id: i1
+        label: eth1
+        slot: 1
+        type: physical
 links:
   - id: l0
     n1: n3
@@ -1591,21 +1615,28 @@ links:
     i1: i2
     i2: i1
     conditioning: {}
-    label: CPS_BDR1-GigabitEthernet1/0/1<->cat8000v-0-GigabitEthernet1
+    label: CPS_BDR1-GigabitEthernet1/0/1<->Fusion-GigabitEthernet1
   - id: l11
     n1: n1
     n2: n7
     i1: i2
     i2: i2
     conditioning: {}
-    label: CPS_BDR2-GigabitEthernet1/0/1<->cat8000v-0-GigabitEthernet2
+    label: CPS_BDR2-GigabitEthernet1/0/1<->Fusion-GigabitEthernet2
   - id: l12
     n1: n8
     n2: n7
     i1: i0
     i2: i3
     conditioning: {}
-    label: ext-conn-1-port<->cat8000v-0-GigabitEthernet3
+    label: DC_INET-port<->Fusion-GigabitEthernet3
+  - id: l13
+    n1: n9
+    n2: n4
+    i1: i0
+    i2: i4
+    conditioning: {}
+    label: Windows0-eth0<->CPS-FE2-GigabitEthernet1/0/3
 lab:
   description: ''
   notes: ''
