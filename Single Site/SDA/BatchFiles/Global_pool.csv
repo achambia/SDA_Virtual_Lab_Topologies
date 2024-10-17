@@ -1,3 +1,3 @@
 ipPoolName,type,ipPoolCidr,IpAddressSpace,DHCP Server,Domain Name,DNS Server,NTP,MOTM
-BORDERv4,Generic,192.168.200.0/24,IPv4,198.18.130.11,demo.local,169.200.200.1,169.200.200.1,this is via API
+BORDERv4,Generic,192.168.200.0/24,IPv4,169.200.200.1,demo.local,169.200.200.1,169.200.200.1,this is via API
 GLOBALv4,Generic,172.16.0.0/16,IPv4,,,,,
