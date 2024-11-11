@@ -18,8 +18,19 @@ from SDA.SDA.api.device_info import device_net
 from SDA.SDA.api.deploy_vcenter_ovf import deploy_vcenter_wlc,deploy_vcenter_labrouter,deploy_vcenter_cml,deploy_vcenter_ise,deploy_vcenter_cc
 import shutil
 import warnings
+import logging
 warnings.filterwarnings(action='ignore', module='.*paramiko.*')
 
+logging.basicConfig(
+    level=logging.DEBUG,  # Set the log level
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Format of log messages
+    handlers=[
+        logging.FileHandler('/home/cisco/app.log'),  # Log messages will be written to 'app.log'
+        logging.StreamHandler()  # Log messages will also be printed to the console
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 def labinfra(gitval,sda_build):
     try:
