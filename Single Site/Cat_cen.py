@@ -45,6 +45,19 @@ from SDA.SDA.api.AuthenticationServerApiService import ise_dnac_integration
 from SDA.SDA.api.ProvisionApiService import provisionservice
 import random
 import requests
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,  # Set the log level
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Format of log messages
+    handlers=[
+        logging.FileHandler('/home/cisco/app.log'),  # Log messages will be written to 'app.log'
+        logging.StreamHandler()  # Log messages will also be printed to the console
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
 def copy_file(file):
     try:
         shutil.rmtree('C:/Users/admin/PycharmProjects/pythonProject/.venv/SDA')
@@ -65,10 +78,12 @@ def device_config(rtr,config):
         )
 
         output = net_connect.send_config_set(config, read_timeout=300)
-        print(output)
+        logger.info(output)
+        print(f'!! device with IP {rtr} configured !!')
         return output
     except Exception as e:
-        print(e)
+        print(f'!! Device with IP {rtr} could not be configured !!')
+        logger.error(e)
         time.sleep(240)
         net_connect = ConnectHandler(
             device_type="cisco_xe",
@@ -78,7 +93,8 @@ def device_config(rtr,config):
         )
 
         output = net_connect.send_config_set(config, read_timeout=300)
-        print(output)
+        logger.info(output)
+        print(f'!! device with IP {rtr} configured !!')
         return output
 
 
@@ -92,10 +108,12 @@ def device_config_fusion(rtr, config):
         )
 
         output = net_connect.send_config_set(config, read_timeout=300)
-        print(output)
+        logger.info(output)
+        print(f'!! device with IP {rtr} configured !!')
         return output
     except Exception as e:
-        print(e)
+        logger.error(e)
+        print(f'!! device with IP {rtr} failed to be configured !!')
         time.sleep(120)
         net_connect = ConnectHandler(
             device_type="cisco_ios",
@@ -105,7 +123,8 @@ def device_config_fusion(rtr, config):
         )
 
         output = net_connect.send_config_set(config, read_timeout=300)
-        print(output)
+        logger.info(output)
+        print(f'!! device with IP {rtr} configured !!')
         return output
 
 
@@ -119,7 +138,7 @@ def reserve_ip_pool(name,type,ipv6add,ipv4addpool,ipv4prefix,ipv4prefixlen,ipv4s
     reserve_ip_info.ipv4DhcpServers = dhcp
     reserve_ip_info.ipv4DnsServers = dns
     reserveresp = NetworkSettingsApiService(f"https://{url}",token).reserveIPPool(site['siteId'], reserve_ip_info)
-    print(reserveresp)
+    logger.info(reserveresp)
     return None
 
 def create_area(name,ip,Auth):
@@ -127,6 +146,7 @@ def create_area(name,ip,Auth):
     siteinfo.site.area.name = name
     siteinfo.site.area.parentName = 'Global'
     areares = SitesApiService(f"https://{ip}", Auth).createSite(siteinfo)
+    logger.info(areares)
     return areares
 
 
@@ -137,6 +157,7 @@ def create_building(name,parentName,latitude,longitude,ip,Auth):
     siteinfo.site.building.latitude = latitude
     siteinfo.site.building.longitude = longitude
     buildres = SitesApiService(f"https://{ip}", Auth).createSite(siteinfo)
+    logger.info(buildres)
     return buildres
 
 def create_floor(name,parentName,rfModel,width,length,height,floorNumber,ip,Auth):
@@ -149,6 +170,7 @@ def create_floor(name,parentName,rfModel,width,length,height,floorNumber,ip,Auth
     siteinfo.site.floor.height = height
     siteinfo.site.floor.floorNumber = floorNumber
     floorres = SitesApiService(f"https://{ip}", Auth).createSite(siteinfo)
+    logger.info(floorres)
     return floorres
 
 
@@ -238,6 +260,7 @@ def create_global_pool(path,Auth,ip):
             ipmodelparam = IPPoolModel(x[0],x[1],x[2],x[3])
             Globalparam.settings.ippool = [ipmodelparam]
             globalres = NetworkSettingsApiService(f"https://{ip}", Auth).createGlobalPool(Globalparam)
+            logger.info(globalres)
             if globalres['status'] == 'true':
                 print(f'Global Pool {x[0]} was successfully created \n')
             else:
@@ -290,7 +313,8 @@ def global_creds(ip):
 
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     create_creds = DiscoveryApiService(f"https://{ip}", Auth).createGlobalCredentials(cli_creds)
-    print(create_creds['response']['taskId'])
+    logger.info(create_creds)
+    print('!! Global Crednetials created !!\n')
 
 def discovery(ip,name):
     discover_info = {'name': name,
@@ -306,6 +330,7 @@ def discovery(ip,name):
                      'userNameList':['netadmin']}
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     discover = DiscoveryApiService(f"https://{ip}", Auth).startdiscovery(discover_info)
+    logger.info(discover)
     return discover['response']['taskId']
 
 def discovery_fusion(ip,name):
@@ -320,17 +345,19 @@ def discovery_fusion(ip,name):
                      'userNameList':['netadmin']}
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     discover = DiscoveryApiService(f"https://{ip}", Auth).startdiscovery(discover_info)
+    logger.info(discover)
     return discover['response']['taskId']
 
 def task(taskid,ip):
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     taskval = TaskApiService(f"https://{ip}", Auth).getTaskById(taskid)
-    print(taskval)
+    logger.info(taskval)
     return taskval
 
 def discovered_devices(ip,discoveryid):
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     discover_dev = DiscoveryApiService(f"https://{ip}", Auth).discovereddevices(discoveryid)
+    logger.info(discover_dev)
     print('!! Discovered Devices !!')
     return discover_dev
 
@@ -343,7 +370,8 @@ def assign_2_site(ip,device):
     for x in device:
         device_list = {"device": [{"ip":x}]}
         dev_ip = DiscoveryApiService(f"https://{ip}", Auth).assign_to_site(sitid_id, device_list)
-        print(dev_ip)
+        logger.info(dev_ip)
+        print('!! Assigning devices to Site !!\n')
 
 
 def create_underlay(ip):
@@ -352,13 +380,14 @@ def create_underlay(ip):
     rand = random.randint(1, 999)
     a = discovery(ip, 'Fabric')
     discover_check = task(a, ip)
+    logger.info(discover_check)
     if discover_check['response']['progress'] == 'Failed to create discovery' and discover_check['response'][
         'failureReason'] == 'NCDS12001: Discovery already exists with the same name':
         print('!! Discovery with same name exists !! \n')
         a = discovery(ip, 'Fabric_' + str(rand))
     time.sleep(20)
     discover_check = task(a, ip)
-    print(discover_check['response'])
+    logger.info(discover_check)
     while 'status' not in discover_check['response']['data']:
         discover_check = task(a, ip)
         time.sleep(10)
@@ -373,13 +402,14 @@ def create_underlay(ip):
     assign_2_site(ip, devlist)
     a = discovery_fusion(ip, 'FUSION')
     discover_check = task(a, ip)
+    logger.info(discover_check)
     if discover_check['response']['progress'] == 'Failed to create discovery' and discover_check['response'][
         'failureReason'] == 'NCDS12001: Discovery already exists with the same name':
         print('!! Discovery with same name exists !! \n')
         a = discovery_fusion(ip, 'FUSION_' + str(rand))
     time.sleep(20)
     discover_check = task(a, ip)
-    print(discover_check['response'])
+    logger.info(discover_check)
     while 'status' not in discover_check['response']['data']:
         discover_check = task(a, ip)
         time.sleep(10)
@@ -401,21 +431,24 @@ def ise_integration(ip,iseip):
                 'isIseEnabled':True,'port':'43','protocol':'RADIUS','retries':'3','sharedSecret':'C1sco12345','timeoutSeconds':'10','role':'primary'}
     print('!! Pushed ISE Info in DNAC !!\n')
     ise = ise_dnac_integration(f"https://{ip}", Auth).ise_add(ise_info)
+    logger.info(ise)
     time.sleep(20)
     ise_status = ise_dnac_integration(f"https://{ip}", Auth).ise_status()
-    print(ise_status)
+    logger.info(ise_status)
     id = ise_status['aaaServerSettingId']
     accept_cert = ise_status['steps'][0]['certAcceptedByUser']
     status = ise_status['overallStatus']
     if accept_cert == False:
         cert = {'isCertAcceptedByUser':True}
         ise_accept_cert = ise_dnac_integration(f"https://{ip}", Auth).ise_accept_cert(id,cert)
+        logger.info(ise_accept_cert)
     ise_status = ise_dnac_integration(f"https://{ip}", Auth).ise_status()
+    logger.info(ise_status)
     status = ise_status['overallStatus']
-    print(status)
     while status != 'COMPLETE':
         ise_status = ise_dnac_integration(f"https://{ip}", Auth).ise_status()
         status = ise_status['overallStatus']
+        logger.info(ise_status)
         print(status)
         time.sleep(10)
     print('!! Integration completed successfully !!\n')
@@ -425,11 +458,13 @@ def add_ise_2_design(ip,iseip):
     print('!! Adding the ISE server to the Design in Catalyst Center !! \n')
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     siteid = SitesApiService(f"https://{ip}", Auth).getSite()
+    logger.info(siteid)
     for x in (siteid['response']):
         if x['name'] == 'Global':
             sitid_id = x['id']
     nwinfo ={"settings": {'clientAndEndpoint_aaa':{'servers':'ISE','ipAddress':f'{iseip}','network':f'{iseip}','protocol':'RADIUS','sharedSecret':'C1sco12345'},'timezone':'UTC'}}
     networkupdate = NetworkSettingsApiService(f"https://{ip}", Auth).updateNetwork(sitid_id,nwinfo)
+    logger.info(networkupdate)
     print('!! Successfully Updated the ISE server !!\n')
     time.sleep(5)
 
@@ -441,11 +476,12 @@ def provision(ip):
         if x['name'] == 'SJC-04':
             sitid_id = x['id']
     deviceid = DevicesApiService(f"https://{ip}", Auth).getDeviceList()
+    logger.info(deviceid)
     for x in (deviceid['response']):
         provisionfinal = [{'siteId': sitid_id, 'networkDeviceId': x['id']}]
         print(f'!! Network device with ID {x['id']} submitted for provisioning !!\n')
         pr = provisionservice(f"https://{ip}", Auth).provision_device(provisionfinal)
-        print(pr)
+        logger.info(pr)
 
     if 'message' in pr['response']:
         if re.search(
@@ -455,11 +491,12 @@ def provision(ip):
             print('!! Re-Provisioning Devices !!\n')
             provisionfinal.clear()
             getdevice = provisionservice(f"https://{ip}", Auth).get_provision()
-            print(getdevice)
+            logger.info(getdevice)
             for y in getdevice['response']:
                 provisionfinal = [y]
                 pr = provisionservice(f"https://{ip}", Auth).re_provision_device(provisionfinal)
-                print(pr)
+                logger.info(pr)
+
 
         else:  
            print(pr['response']['detail'])
@@ -480,7 +517,7 @@ def createfabric(ip):
             sitid_id = x['id']
     fabinfo = [{'siteId':sitid_id,'authenticationProfileName':'Closed Authentication','isPubSubEnabled':True}]
     fab_site = SDAApiService(f"https://{ip}", Auth).addFabricSites(fabinfo)
-    print(fab_site)
+    logger.info(fab_site)
     if 'message' in fab_site['response']:
         if re.search('Bad Request', fab_site['response']['message']):
             print(fab_site['response']['detail'])
@@ -493,11 +530,11 @@ def createfabric(ip):
         while task['response'][0]['status'] != 'SUCCESS':
             if time.time() > timeout:
                 print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                print(task)
+                logger.info(task)
                 break
             else:
                 task = TaskApiService(f"https://{ip}", Auth).taskdetail(fab_site['response']['taskId'])
-                print(task)
+                logger.info(task)
                 time.sleep(2)
 
     print('!! Successfully created the Fabric Site at Site SJC-04 !!\n')
@@ -509,12 +546,14 @@ def create_VN(ip):
     print('!! Creating Virtual Networks !!\n')
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     fab = SDAApiService(f"https://{ip}", Auth).gerFabricSites()
+    logger.info(fab)
     fabid = fab['response'][0]['id']
     VN = ['GUEST','CAMPUS']
     vninfo = []
     for v in VN:
         vninfo.append({'virtualNetworkName':v,'fabricIds':[fabid]})
     create_vn = SDAApiService(f"https://{ip}", Auth).add_VN(vninfo)
+    logger.info(create_vn)
     if 'message' in  create_vn['response']:
         if re.search('Bad Request', create_vn['response']['message']):
             print(create_vn['response']['detail'])
@@ -530,13 +569,13 @@ def create_VN(ip):
         while 'PENDING' in taskval:
             if time.time() > timeout:
                 print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                print(task)
+                logger.info(task)
                 break
             taskval.clear()
             task = TaskApiService(f"https://{ip}", Auth).taskdetail(create_vn['response']['taskId'])
             for ta in task['response']:
                 taskval.append(ta['status'])
-            print(task)
+            logger.info(task)
             time.sleep(10)
 
     print(f'!! Successfully created VN !!\n')
@@ -563,27 +602,29 @@ def create_ip_pool(ip):
                 ipoolinfo = [{"fabricId": fabid, "virtualNetworkName": x, "ipPoolName": pool[0], "vlanName": pool[1],
                               "vlanId": pool[2], "trafficType": pool[3], "isCriticalPool": pool[4],
                               "isLayer2FloodingEnabled": pool[5], "isWirelessPool": pool[6],"isIpDirectedBroadcast":pool[7],"isIntraSubnetRoutingEnabled":pool[8],"isMultipleIpToMacAddresses":pool[9]}]
-                print(ipoolinfo)
+                logger.info(ipoolinfo)
                 anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ipoolinfo)
-                print(anycast)
+                logger.info(anycast)
                 if 'message' in anycast['response']:
                     if re.search('Bad Request', anycast['response']['message']):
                         print(anycast['response']['detail'])
                         pass
                 else:
                     task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
-                    print(task)
+                    logger.info(task)
                     timeout = time.time() + 1800  # 30 minutes from now
                     timeout_start = time.time()
                     while task['response'][0]['status'] != 'SUCCESS':
                         if time.time() > timeout:
                             print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                            print(task)
+                            logger.info(task)
                             break
                         else:
                             task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
-                            print(task)
-                            time.sleep(2)
+                            logger.info(task)
+                            print('!! Task in progress .. Sleeping for 5 mins !! \n')
+                            time.sleep(5)
+
 
 
         print(f'!! Updating the Pool {dev[x][0][1]} in VN {x} !!\n')
@@ -592,7 +633,7 @@ def create_ip_pool(ip):
                        "isLayer2FloodingEnabled": dev[x][0][5], "isWirelessPool": dev[x][0][6], "isIpDirectedBroadcast": dev[x][0][7],
                        "isIntraSubnetRoutingEnabled": dev[x][0][8], "isMultipleIpToMacAddresses": dev[x][0][9]}]
         anycast = SDAApiService(f"https://{ip}", Auth).add_ip_pools(ipoolinfo)
-        print(anycast)
+        logger.info(anycast)
         if 'message' in anycast['response']:
             if re.search('Bad Request', anycast['response']['message']):
                 print(anycast['response']['detail'])
@@ -600,18 +641,19 @@ def create_ip_pool(ip):
         else:
 
             task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
-            print(task)
+            logger.info(task)
             timeout = time.time() + 1800  # 30 minutes from now
             timeout_start = time.time()
             while task['response'][0]['status'] != 'SUCCESS':
                 if time.time() > timeout:
                     print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                    print(task)
+                    logger.info(task)
                     break
                 else:
                     task = TaskApiService(f"https://{ip}", Auth).taskdetail(anycast['response']['taskId'])
-                    print(task)
-                    time.sleep(2)
+                    logger.info(task)
+                    print('!! Task in progress .. Sleeping for 5 mins !! \n')
+                    time.sleep(5)
 
 
     print(f'!! Successfully updated the pools!!')
@@ -631,7 +673,7 @@ def add_border_cp_edge(ip):
             print(f'!!Adding the role BDR/CP Role on device {x['managementIpAddress']} !!\n')
             devaddinfo = [{"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["CONTROL_PLANE_NODE","BORDER_NODE"],"borderDeviceSettings":{"borderTypes":["LAYER_3"],"layer3Settings":{"localAutonomousSystemNumber":"65001","isDefaultExit":True,'importExternalRoutes':False}}}]
             devpush = SDAApiService(f"https://{ip}", Auth).add_fabric_devices(devaddinfo)
-            print(devpush)
+            logger.info(devpush)
             if 'message' in devpush['response']:
                 if re.search('Bad Request', devpush['response']['message']):
                     print(devpush['response']['detail'])
@@ -643,17 +685,18 @@ def add_border_cp_edge(ip):
                 while task['response'][0]['status'] != 'SUCCESS':
                     if time.time() > timeout:
                         print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                        print(task)
+                        logger.info(task)
                         break
                     else:
                         task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
-                        print(task)
-                        time.sleep(2)
+                        logger.info(task)
+                        print('!! Task in progress .. Sleeping for 5 mins !! \n')
+                        time.sleep(5)
         elif x['managementIpAddress'] in edges:
             print(f'!!Adding the role Edge Role on device {x['managementIpAddress']} !!\n')
             devaddinfo = [{"networkDeviceId":x['id'],"fabricId":fabid,"deviceRoles":["EDGE_NODE"]}]
             devpush = SDAApiService(f"https://{ip}", Auth).add_fabric_devices(devaddinfo)
-            print(devpush)
+            logger.info(devpush)
             if 'message' in devpush['response']:
                 if re.search('Bad Request', devpush['response']['message']):
                     print(devpush['response']['detail'])
@@ -665,12 +708,13 @@ def add_border_cp_edge(ip):
                 while task['response'][0]['status'] != 'SUCCESS':
                     if time.time() > timeout:
                         print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                        print(task)
+                        logger.info(task)
                         break
                     else:
                         task = TaskApiService(f"https://{ip}", Auth).taskdetail(devpush['response']['taskId'])
-                        print(task)
-                        time.sleep(2)
+                        logger.info(task)
+                        print('!! Task in progress .. Sleeping for 5 mins !! \n')
+                        time.sleep(5)
 
 
 def create_transit(ip):
@@ -678,7 +722,7 @@ def create_transit(ip):
     Auth = AuthenticationApiService('sysadmin', 'C1sco12345', f"https://{ip}").authenticate()
     trans = [{"name":"IP Transit","type":"IP_BASED_TRANSIT","ipTransitSettings":{"routingProtocolName":"BGP","autonomousSystemNumber":"65000"}}]
     trans_create = SDAApiService(f"https://{ip}", Auth).create_transit(trans)
-    print(trans_create)
+    logger.info(trans_create)
     print('!! Successfully Created transit !!\n')
     if 'message' in trans_create['response']:
         if re.search('Bad Request', trans_create['response']['message']):
@@ -694,7 +738,7 @@ def border_auto(ip):
     fabinfo = {'fabricId':fabid}
     fabric = SDAApiService(f"https://{ip}", Auth).get_fab_devices(fabinfo)
     trans  = SDAApiService(f"https://{ip}", Auth).get_transit()
-    print(trans)
+    logger.info(trans)
     l3info = []
     for res in fabric['response']:
         if 'BORDER_NODE' in res['deviceRoles']:
@@ -705,7 +749,7 @@ def border_auto(ip):
                     l3info.append(
                         {'networkDeviceId': res['networkDeviceId'], "fabricId": res['fabricId'],
                          "transitNetworkId": trans['response'][0]['id'], "interfaceName":'GigabitEthernet1/0/1','externalConnectivityIpPoolName':'SJC-BDR-HOF','virtualNetworkName':v,'vlanId':vn[v]})
-                    print(l3info)
+                    logger.info(l3info)
 
             if mgmtip['response']['managementIpAddress'] == '192.168.1.5':
                 vn = {'CAMPUS': 3003, 'GUEST': 3004}
@@ -714,9 +758,9 @@ def border_auto(ip):
                         {'networkDeviceId': res['networkDeviceId'], "fabricId": res['fabricId'],
                          "transitNetworkId": trans['response'][0]['id'], "interfaceName": 'GigabitEthernet1/0/1',
                          'externalConnectivityIpPoolName': 'SJC-BDR-HOF', 'virtualNetworkName': v, 'vlanId': vn[v]})
-                    print(l3info)
+                    logger.info(l3info)
     l3handoff = SDAApiService(f"https://{ip}", Auth).l3handoff(l3info)
-    print(l3handoff)
+    logger.info(l3handoff)
     if 'message' in l3handoff['response']:
         if re.search('Bad Request', l3handoff['response']['message']):
             print(l3handoff['response']['detail'])
@@ -725,7 +769,7 @@ def border_auto(ip):
     else:
         taskval = []
         task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
-        print(task)
+        logger.info(task)
         timeout = time.time() + 600  # 10 minutes from now
         timeout_start = time.time()
         for ta in task['response']:
@@ -733,14 +777,15 @@ def border_auto(ip):
         while 'PENDING' in taskval:
             if time.time() > timeout:
                 print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-                print(task)
+                logger.info(task)
                 break
             taskval.clear()
             task = TaskApiService(f"https://{ip}", Auth).taskdetail(l3handoff['response']['taskId'])
             for ta in task['response']:
                 taskval.append(ta['status'])
-            print(task)
-            time.sleep(10)
+            logger.info(task)
+            print('!! Task in progress .. Sleeping for 5 mins !! \n')
+            time.sleep(5)
 
 
 
@@ -819,15 +864,14 @@ def createtemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     temp_lang = 'JINJA'
     temp_req = TemplateRequest([device_info.__dict__],temp_lang,temp_name,project_name,'IOS-XE')
     temp_req.templateContent = content
-    print(temp_req.__dict__)
     create_temp = requests.post(f'https://{url}/dna/intent/api/v1/template-programmer/project/{projectid}/template', headers=headers,
                                       verify=False,
                                       json=temp_req.__dict__)
-    print(create_temp.json())
+    logger.info(create_temp.json())
     task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}', headers=headers,
                                       verify=False,
                                       )
-    print(task.json())
+    logger.info(task.json())
     if (task.json()['response']['progress']) != 'Successfully created template with name FUSION.demo.local. Template content has validation errors.':
         time.sleep(7)
         task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}',
@@ -849,7 +893,7 @@ def createtemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     temp_target_info.id = fusion_mgmt
     deploy_temp_req = DeployTemplateRequest([temp_target_info], temp_id['templateId'])
     deploy_temp = TemplateApiService(f"https://{url}",token).deploytemplate(deploy_temp_req)
-    print(deploy_temp)
+    logger.info(deploy_temp)
     deploy = re.search('.*Template Deployemnt Id: (.*)',deploy_temp['deploymentId'])
     task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
     timeout = time.time() + 600   # 10 minutes from now
@@ -857,12 +901,13 @@ def createtemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     while task1['status'] != 'SUCCESS':
         if time.time() > timeout:
             print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-            print(task1)
+            logger.info(task1)
             break
         else:
             task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
-            print(task1)
-            time.sleep(2)
+            logger.info(task1)
+            print('!! Task in progress .. Sleeping for 5 mins !! \n')
+            time.sleep(5)
     print('!! Template created and provisioned successfully !!\n')
 
 
@@ -882,7 +927,7 @@ def temp_content(url,token):
     border = "Border Devices in the site "
     num = 1
     bordern = SDAApiService(f"https://{url}", token).getSdaDeviceInfo(fabid)
-    print(bordern)
+    logger.info(bordern)
     for bor in bordern['response']:
         print(bor['networkDeviceId'])
         border= border + f'\n {num}. Device with NwId {bor["networkDeviceId"]}'
@@ -895,7 +940,7 @@ def temp_content(url,token):
     for ext_con in border_list:
         print("Collecting the Fusion Hostname and Uplink !!\n")
         cdp_intf = runCommands(url, token, [f'{ext_con}'], [f'show cdp neighbor GigabitEthernet1/0/1 detail'])
-        print(cdp_intf)
+        logger.info(cdp_intf)
         Fusion_hostname = re.search('Device ID: (.*)', str(cdp_intf))
         Fusion_Intf = re.search('Port ID \(outgoing port\): (.*)', str(cdp_intf))
         Fusion_Param = GetDeviceListParams()
@@ -907,12 +952,12 @@ def temp_content(url,token):
         fusion_mgmt = Fusion['response'][0]['dnsResolvedManagementAddress']
         hostname = runCommands(url, token, [f'{ext_con}'], [f'show run | sec hostname'])
         bdr_host = re.search('hostname (.*)', str(hostname))
-        print(bdr_host.group(1))
+        logger.info(bdr_host.group(1))
         if Fusion['response'][0]['family'] == 'Routers':
             print('Fusion Device is a Router !!\n')
             bdrinfo = SDAApiService(f"https://{url}", token).getSdaBorderInfo(fabid, ext_con)
             for l3handoff in bdrinfo['response']:
-                print(l3handoff)
+                logger.info(l3handoff)
                 fusion_intf = ''
                 fusion_bgp_nei = ''
                 vrf = runCommands(url, token, [f'{ext_con}'], [f'show run interface vlan {l3handoff["vlanId"]}'])
@@ -937,7 +982,7 @@ def temp_content(url,token):
                 else:
                     print('VRF Definition not present, adding VRF definition config!! \n')
                     fusion_temp = fusion_temp + '\n' + fusion_cfg_new + fusion_intf + f'\nrouter bgp 65000\n address-family ipv4 vrf {vrf_info.group(1)}\n' + fusion_bgp_nei + "\nexit-address-family"
-                print(f'Config generated for Fusion \n{fusion_temp}')
+                logger.info(f'Config generated for Fusion \n{fusion_temp}')
                 time.sleep(5)
 
 
@@ -956,11 +1001,10 @@ def updatetemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     temp_req = TemplateRequest([device_info.__dict__],temp_lang,temp_name,project_name,'IOS-XE')
     temp_req.templateContent = content
     temp_req.id=tempid
-    print(temp_req.__dict__)
     create_temp = requests.put(f'https://{url}/dna/intent/api/v1/template-programmer/template', headers=headers,
                                       verify=False,
                                       json=temp_req.__dict__)
-    print(create_temp.json())
+    logger.info(create_temp.json())
     task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}', headers=headers,
                                       verify=False,
                                       )
@@ -970,7 +1014,7 @@ def updatetemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     task = requests.get(f'https://{url}/dna/intent/api/v1/task/{create_temp.json()["response"]["taskId"]}', headers=headers,
                                       verify=False,
                                       )
-    print(task)
+    logger.info(task)
     version_req = VersionTemplateRequest()
     version_req.comments = 'this is 1st commit'
     temp_id = tempid
@@ -981,7 +1025,7 @@ def updatetemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     temp_target_info.id = fusion_mgmt
     deploy_temp_req = DeployTemplateRequest([temp_target_info], tempid)
     deploy_temp = TemplateApiService(f"https://{url}",token).deploytemplate(deploy_temp_req)
-    print(deploy_temp)
+    logger.info(deploy_temp)
     deploy = re.search('.*Template Deployemnt Id: (.*)',deploy_temp['deploymentId'])
     print(deploy.group(1))
     task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
@@ -989,12 +1033,13 @@ def updatetemplate(rtr, prod_series,temp_name, project_name,content,projectid,ur
     while task1['status'] != 'SUCCESS':
         if time.time() > timeout:
             print('!!Execution took More than 10 Mins ..  Error Below!! \n')
-            print(task1)
+            logger.info(task1)
             break
         else:
             task1 = TemplateApiService(f"https://{url}", token).getDeployment(deploy.group(1))
-            print(task1)
-            time.sleep(2)
+            logger.info(task1)
+            print('!! Task in progress .. Sleeping for 5 mins !! \n')
+            time.sleep(5)
     print('!! Template created and provisioned successfully !!\n')
 
 
