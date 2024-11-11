@@ -27,6 +27,7 @@ __license__ = "Cisco Sample Code License, Version 1.1"
 
 """ Application Server API """
 from SDA.SDA.api.ApiService import ApiService
+import logging
 
 class ise_dnac_integration(ApiService):
 
@@ -38,6 +39,14 @@ class ise_dnac_integration(ApiService):
         :return: none
         """
         super().__init__(url, token)
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler('/home/cisco/app.log'),  # Log messages will be written to 'app.log'
+            ]
+        )
+        self.logger = logging.getLogger((self.__class__.__name__))
 
     def ise_add(self,addise:dict):
         '''
