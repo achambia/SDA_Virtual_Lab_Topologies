@@ -46,6 +46,13 @@ class ApiService:
         #
         # Save logger with current file name
         #
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler('/home/cisco/app.log'),  # Log messages will be written to 'app.log'
+            ]
+        )
         self.logger = logging.getLogger(self.__class__.__name__)
         #
         # Make sure base class cannot be instantiated
