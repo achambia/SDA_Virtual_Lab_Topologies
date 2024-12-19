@@ -63,7 +63,7 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 return_code = run_subprocess_and_log(
-                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" /home/cisco/Desktop/Lab_Build/cml/CML.ovf vi://{user}:{password}@{host}/')
+                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" /home/cisco/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
 
 
@@ -71,18 +71,19 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
                 current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 return_code = run_subprocess_and_log(
-                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" C:/Users/admin/Desktop/Lab_Build/cml/CML.ovf vi://{user}:{password}@{host}/')
+                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" C:/Users/admin/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
         else:
             print(
                 '!! Copying the folder from Download folder to Installation folder !!\n')
-            shutil.copytree(f'/home/cisco/Downloads/cml272',
+            run_subprocess_and_log(f'unzip /home/cisco/Downloads/cml272-selected.zip -d /home/cisco/Downloads/')
+            shutil.copytree(f'/home/cisco/Downloads/cml272-selected',
                             '/home/cisco/Desktop/Lab_Build/cml/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 return_code = run_subprocess_and_log(
-                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" /home/cisco/Desktop/Lab_Build/cml/CML.ovf vi://{user}:{password}@{host}/')
+                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" /home/cisco/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
 
 
@@ -90,7 +91,7 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
                 current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 return_code = run_subprocess_and_log(
-                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" C:/Users/admin/Desktop/Lab_Build/cml/CML.ovf vi://{user}:{password}@{host}/')
+                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" C:/Users/admin/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
 
 
@@ -123,7 +124,7 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
-                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/ISE/ISE.ovf vi://{user}:{password}@{host}/')
+                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/ISE/ise321-selected/ISE.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
 
 
@@ -131,18 +132,19 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
                 current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
-                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/ise/ise.ovf vi://{user}:{password}@{host}/')
+                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/ISE/ise321-selected/ise.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
         else:
             print(
                 '!! Copying the folder from Download folder to Installation folder !!\n')
-            shutil.copytree(f'/home/cisco/Downloads/ise321',
+             run_subprocess_and_log(f'unzip /home/cisco/Downloads/ise321-selected.zip -d /home/cisco/Downloads/')
+            shutil.copytree(f'/home/cisco/Downloads/ise321-selected',
                             '/home/cisco/Desktop/Lab_Build/ISE/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
-                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/ISE/ISE.ovf vi://{user}:{password}@{host}/')
+                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/ISE/ise321-selected/ISE.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
 
 
@@ -150,7 +152,7 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
                 current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
-                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/ise/ise.ovf vi://{user}:{password}@{host}/')
+                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/ISE/ise321-selected/ise.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
 
 
