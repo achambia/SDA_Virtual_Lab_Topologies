@@ -253,30 +253,31 @@ def deploy_cc(datastore,vm_name,network1,user,password,host):
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
-                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/DNAC.ovf vi://{user}:{password}@{host}/')
+                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
             elif os.name == 'nt':
                 current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
-                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/DNAC/DNAC1.ovf vi://{user}:{password}@{host}/')
+                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC1.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
         else:
             print(
                 '!! Copying the folder from Download folder to Installation folder !!\n')
-            shutil.copytree(f'/home/cisco/Downloads/dnac276',
+            run_subprocess_and_log(f'unzip /home/cisco/Downloads/dnac276-selected.zip -d /home/cisco/Downloads/')
+            shutil.copytree(f'/home/cisco/Downloads/dnac276-selected',
                             '/home/cisco/Desktop/Lab_Build/DNAC/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
-                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/DNAC.ovf vi://{user}:{password}@{host}/')
+                    f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
             elif os.name == 'nt':
                 current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
-                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/DNAC/DNAC1.ovf vi://{user}:{password}@{host}/')
+                    f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC1.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
 
 
