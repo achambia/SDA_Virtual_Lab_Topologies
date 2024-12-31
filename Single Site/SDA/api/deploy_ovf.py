@@ -3,6 +3,7 @@ import subprocess
 import os
 import sys
 import logging
+import shutil
 
 from paramiko.agent import value
 
@@ -82,6 +83,7 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
             if os.name == 'posix':
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
+                print(' !! Copy Complete , CML Installation started !! \n ')
                 return_code = run_subprocess_and_log(
                     f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" /home/cisco/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
@@ -142,6 +144,7 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
                             '/home/cisco/Desktop/Lab_Build/ISE/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
+                print(' !! Copy Complete , ISE Installation started !! \n ')
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
                     f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/ISE/ise321-selected/ISE.ovf vi://{user}:{password}@{host}/')
@@ -269,6 +272,7 @@ def deploy_cc(datastore,vm_name,network1,user,password,host):
                             '/home/cisco/Desktop/Lab_Build/DNAC/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
+                print(' !! Copy Complete , DNAC Installation started !! \n ')
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
                     f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC.ovf vi://{user}:{password}@{host}/')
