@@ -78,9 +78,10 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
             print(
                 '!! Copying the folder from Download folder to Installation folder !!\n')
             run_subprocess_and_log(f'unzip /home/cisco/Downloads/cml272-selected.zip -d /home/cisco/Downloads/cml272-selected')
+            print('!! unzip completed !!\n')
             shutil.rmtree('/home/cisco/Desktop/Lab_Build/cml')
             shutil.copytree(f'/home/cisco/Downloads/cml272-selected',
-                            '/home/cisco/Desktop/Lab_Build/cml/')
+                            '/home/cisco/Desktop/Lab_Build/cml/cml272/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
@@ -144,7 +145,7 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
             run_subprocess_and_log(f'unzip /home/cisco/Downloads/ise321-selected.zip -d /home/cisco/Downloads/ise321-selected')
             shutil.rmtree('/home/cisco/Desktop/Lab_Build/ISE')
             shutil.copytree(f'/home/cisco/Downloads/ise321-selected',
-                            '/home/cisco/Desktop/Lab_Build/ISE/')
+                            '/home/cisco/Desktop/Lab_Build/ISE/ise321/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
                 print(' !! Copy Complete , ISE Installation started !! \n ')
@@ -273,7 +274,7 @@ def deploy_cc(datastore,vm_name,network1,user,password,host):
             run_subprocess_and_log(f'unzip /home/cisco/Downloads/dnac276-selected.zip -d /home/cisco/Downloads/dnac276-selected')
             shutil.rmtree('/home/cisco/Desktop/Lab_Build/DNAC')
             shutil.copytree(f'/home/cisco/Downloads/dnac276-selected',
-                            '/home/cisco/Desktop/Lab_Build/DNAC/')
+                            '/home/cisco/Desktop/Lab_Build/DNAC/dnac276/')
             if os.name == 'posix':
                 current_dir = os.getcwd()
                 print(' !! Copy Complete , DNAC Installation started !! \n ')
