@@ -99,6 +99,7 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
 
 
     except Exception as e:
+        print(e)
         if re.search('.*No such file or directory:.*', str(e)):
             print(
                 '!! No CML media present , Please download the prebuilt CML Installation media shared by Cisco to Download folder !!\n!! Please re-run the application after downloading the media !!\n')
