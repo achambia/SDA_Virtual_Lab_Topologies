@@ -55,13 +55,13 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
     '''
 
     try:
+        current_dir = os.getcwd()
         os.chdir('/home/cisco/Desktop/Lab_Build/cml/cml272')
         devlist = (os.listdir())
         if 'CML-0.vmdk' in devlist and 'CML.ovf' in devlist and 'CML1.nvram' in devlist:
             print('!! Correct Files Present !!\n')
             print('\n!! Initiated the deployment of CML VM !!\n')
             if os.name == 'posix':
-                current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 return_code = run_subprocess_and_log(
                     f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" /home/cisco/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
@@ -69,7 +69,6 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
 
 
             elif os.name == 'nt':
-                current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 return_code = run_subprocess_and_log(
                     f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" C:/Users/admin/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
@@ -83,7 +82,7 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
             shutil.copytree(f'/home/cisco/Downloads/cml272-selected',
                             '/home/cisco/Desktop/Lab_Build/cml/cml272/')
             if os.name == 'posix':
-                current_dir = os.getcwd()
+                os.chdir('')
                 os.chdir('/usr/bin/ovftool')
                 print(' !! Copy Complete , CML Installation started !! \n ')
                 return_code = run_subprocess_and_log(
@@ -92,7 +91,6 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
 
 
             elif os.name == 'nt':
-                current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 return_code = run_subprocess_and_log(
                     f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"CML={network1}" C:/Users/admin/Desktop/Lab_Build/cml/cml272-selected/CML.ovf vi://{user}:{password}@{host}/')
@@ -121,12 +119,12 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
     :return: Returns None.
     '''
     try:
+        current_dir = os.getcwd()
         os.chdir('/home/cisco/Desktop/Lab_Build/ISE/ise321')
         devlist = (os.listdir())
         if 'ISE-0.vmdk' in devlist and 'ISE.ovf' in devlist:
             print('!! Correct Files Present !!\n')
             if os.name == 'posix':
-                current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
                     f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/ISE/ise321-selected/ISE.ovf vi://{user}:{password}@{host}/')
@@ -134,7 +132,6 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
 
 
             elif os.name == 'nt':
-                current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
                     f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/ISE/ise321-selected/ise.ovf vi://{user}:{password}@{host}/')
@@ -147,7 +144,6 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
             shutil.copytree(f'/home/cisco/Downloads/ise321-selected',
                             '/home/cisco/Desktop/Lab_Build/ISE/ise321/')
             if os.name == 'posix':
-                current_dir = os.getcwd()
                 print(' !! Copy Complete , ISE Installation started !! \n ')
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
@@ -156,7 +152,6 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
 
 
             elif os.name == 'nt':
-                current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
                     f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/ISE/ise321-selected/ise.ovf vi://{user}:{password}@{host}/')
@@ -252,18 +247,17 @@ def deploy_cc(datastore,vm_name,network1,user,password,host):
     :return: Returns None.
     '''
     try:
+        current_dir = os.getcwd()
         os.chdir('/home/cisco/Desktop/Lab_Build/DNAC/dnac276')
         devlist = (os.listdir())
         if 'DNAC-0.vmdk' in devlist and 'DNAC.ovf' in devlist and 'DNAC-1.vmdk' in devlist and 'DNAC-2.vmdk' in devlist and 'DNAC.nvram' in devlist:
             print('!! Correct Files Present !!\n')
             if os.name == 'posix':
-                current_dir = os.getcwd()
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
                     f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
             elif os.name == 'nt':
-                current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
                     f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC1.ovf vi://{user}:{password}@{host}/')
@@ -276,14 +270,12 @@ def deploy_cc(datastore,vm_name,network1,user,password,host):
             shutil.copytree(f'/home/cisco/Downloads/dnac276-selected',
                             '/home/cisco/Desktop/Lab_Build/DNAC/dnac276/')
             if os.name == 'posix':
-                current_dir = os.getcwd()
                 print(' !! Copy Complete , DNAC Installation started !! \n ')
                 os.chdir('/usr/bin/ovftool')
                 run_subprocess_and_log(
                     f'/usr/bin/ovftool/ovftool --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" /home/cisco/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC.ovf vi://{user}:{password}@{host}/')
                 os.chdir(current_dir)
             elif os.name == 'nt':
-                current_dir = os.getcwd()
                 os.chdir(r'C:\Program Files\VMware\VMware OVF Tool')
                 run_subprocess_and_log(
                     f'ovftool.exe --powerOn -ds={datastore} -n={vm_name} -dm=thin --noSSLVerify --disableVerification --net:"Datacenter={network1}" C:/Users/admin/Desktop/Lab_Build/DNAC/dnac276-selected/DNAC1.ovf vi://{user}:{password}@{host}/')
