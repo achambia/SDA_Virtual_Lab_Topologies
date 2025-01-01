@@ -78,6 +78,7 @@ def deploy_cml(datastore,vm_name,user,password,network1,network2,host):
             print(
                 '!! Copying the folder from Download folder to Installation folder !!\n')
             run_subprocess_and_log(f'unzip /home/cisco/Downloads/cml272-selected.zip -d /home/cisco/Downloads/cml272-selected')
+            shutil.rmtree('/home/cisco/Desktop/Lab_Build/cml')
             shutil.copytree(f'/home/cisco/Downloads/cml272-selected',
                             '/home/cisco/Desktop/Lab_Build/cml/')
             if os.name == 'posix':
@@ -141,6 +142,7 @@ def deploy_ise(datastore,vm_name,network1,user,password,host):
             print(
                 '!! Copying the folder from Download folder to Installation folder !!\n')
             run_subprocess_and_log(f'unzip /home/cisco/Downloads/ise321-selected.zip -d /home/cisco/Downloads/ise321-selected')
+            shutil.rmtree('/home/cisco/Desktop/Lab_Build/ISE')
             shutil.copytree(f'/home/cisco/Downloads/ise321-selected',
                             '/home/cisco/Desktop/Lab_Build/ISE/')
             if os.name == 'posix':
@@ -269,6 +271,7 @@ def deploy_cc(datastore,vm_name,network1,user,password,host):
             print(
                 '!! Copying the folder from Download folder to Installation folder !!\n')
             run_subprocess_and_log(f'unzip /home/cisco/Downloads/dnac276-selected.zip -d /home/cisco/Downloads/dnac276-selected')
+            shutil.rmtree('/home/cisco/Desktop/Lab_Build/DNAC')
             shutil.copytree(f'/home/cisco/Downloads/dnac276-selected',
                             '/home/cisco/Desktop/Lab_Build/DNAC/')
             if os.name == 'posix':
